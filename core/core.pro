@@ -12,17 +12,7 @@ OTHER_FILES += mainpage.h
 
 #--- SPECIFIES CORE CONFIGURATION
 system(qmake -set STARLAB       $$PWD/starlab.prf)
-system(qmake -set EIGENPATH     $$PWD/external/eigen-3.2.5)
-system(qmake -set CHOLMOD       $$PWD/external/cholmod-4.0.0/cholmod.prf)
-system(qmake -set QHULL         $$PWD/external/qhull-2012.1/qhull.prf)
-system(qmake -set CGAL          $$PWD/external/cgal-4.2/cgal.prf)
-system(qmake -set OPENNI        $$PWD/external/openni-2.1alpha/openni.prf)
-system(qmake -set NANOFLANN     $$PWD/external/nanoflann-1.1.9/nanoflann.prf)
-system(qmake -set FLANN         $$PWD/external/flann-1.8.4/flann.prf)
-system(qmake -set MATLAB        $$PWD/external/matlab/matlab.prf)
-system(qmake -set KDTREEMATLAB  $$PWD/external/kdtree-matlab/kdtree-matlab.prf)
 system(qmake -set OCTREE        $$PWD/external/octree/octree.prf)
-system(qmake -set PQP           $$PWD/external/pqp-2.0/pqp.prf)
 
 #--- THREE CORE BUILD APP/LIBRARIES
 SUBDIRS += starlib   #< SHARED LIBRARY

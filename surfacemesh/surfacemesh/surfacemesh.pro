@@ -1,8 +1,11 @@
 include($$[STARLAB])
+include($$PWD/../../depends/eigen.pri)
+
 StarlabTemplate(sharedlib)
  
 # Expose this to the global build
 system(qmake -set SURFACEMESH $$PWD/surfacemesh.prf)
+
 OTHER_FILES = surfacemesh.prf
 
 # THIS IS FOR OUR MODEL WRAPPER

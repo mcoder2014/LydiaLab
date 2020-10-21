@@ -1,5 +1,6 @@
 include($$[STARLAB])
 include($$[SURFACEMESH])
+include($$PWD/../../depends/eigen.pri)
 StarlabTemplate(plugin)
 
 # linux does not have GLU included in += opengl

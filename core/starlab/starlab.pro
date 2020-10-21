@@ -1,5 +1,6 @@
 # this project generates the application bundle Starlab.app
 include($$PWD/../starlab.prf)
+include($$PWD/../../depends/eigen.pri)
 StarlabTemplate(appbundle)
 
 TARGET = lydiaLab
