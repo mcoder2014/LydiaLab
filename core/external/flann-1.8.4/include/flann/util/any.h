@@ -24,7 +24,7 @@ namespace anyimpl
 
 struct bad_any_cast : public std::runtime_error
 {
-	bad_any_cast() : std::runtime_error("Cannot convert 'any' value") { }
+    bad_any_cast() : std::runtime_error("Cannot convert 'any' value") { }
 };
 
 struct empty_any
@@ -150,7 +150,7 @@ base_any_policy* get_policy()
 
 class any
 {
-	typedef any any_t; // workaround for the NVCC compiler under windows
+    typedef any any_t; // workaround for the NVCC compiler under windows
 private:
     // fields
     anyimpl::base_any_policy* policy;

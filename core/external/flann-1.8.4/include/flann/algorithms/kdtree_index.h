@@ -87,7 +87,7 @@ public:
      *          params = parameters passed to the kdtree algorithm
      */
     KDTreeIndex(const IndexParams& params = KDTreeIndexParams(), Distance d = Distance() ) :
-    	BaseClass(params, d), mean_(NULL), var_(NULL)
+        BaseClass(params, d), mean_(NULL), var_(NULL)
     {
         trees_ = get_param(index_params_,"trees",4);
     }
@@ -109,18 +109,18 @@ public:
     }
 
     KDTreeIndex(const KDTreeIndex& other) : BaseClass(other),
-    		trees_(other.trees_)
+            trees_(other.trees_)
     {
         tree_roots_.resize(other.tree_roots_.size());
         for (size_t i=0;i<tree_roots_.size();++i) {
-        	copyTree(tree_roots_[i], other.tree_roots_[i]);
+            copyTree(tree_roots_[i], other.tree_roots_[i]);
         }
     }
 
     KDTreeIndex& operator=(KDTreeIndex other)
     {
-    	this->swap(other);
-    	return *this;
+        this->swap(other);
+        return *this;
     }
 
     /**
@@ -128,12 +128,12 @@ public:
      */
     virtual ~KDTreeIndex()
     {
-    	freeIndex();
+        freeIndex();
     }
 
     BaseClass* clone() const
     {
-    	return new KDTreeIndex(*this);
+        return new KDTreeIndex(*this);
     }
 
     using BaseClass::buildIndex;
@@ -166,41 +166,41 @@ public:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	ar.setObject(this);
+        ar.setObject(this);
 
-    	ar & *static_cast<NNIndex<Distance>*>(this);
+        ar & *static_cast<NNIndex<Distance>*>(this);
 
-    	ar & trees_;
+        ar & trees_;
 
-    	if (Archive::is_loading::value) {
-    		tree_roots_.resize(trees_);
-    	}
-    	for (size_t i=0;i<tree_roots_.size();++i) {
-    		if (Archive::is_loading::value) {
-    			tree_roots_[i] = new(pool_) Node();
-    		}
-    		ar & *tree_roots_[i];
-    	}
+        if (Archive::is_loading::value) {
+            tree_roots_.resize(trees_);
+        }
+        for (size_t i=0;i<tree_roots_.size();++i) {
+            if (Archive::is_loading::value) {
+                tree_roots_[i] = new(pool_) Node();
+            }
+            ar & *tree_roots_[i];
+        }
 
-    	if (Archive::is_loading::value) {
+        if (Archive::is_loading::value) {
             index_params_["algorithm"] = getType();
             index_params_["trees"] = trees_;
-    	}
+        }
     }
 
 
     void saveIndex(FILE* stream)
     {
-    	serialization::SaveArchive sa(stream);
-    	sa & *this;
+        serialization::SaveArchive sa(stream);
+        sa & *this;
     }
 
 
     void loadIndex(FILE* stream)
     {
-    	freeIndex();
-    	serialization::LoadArchive la(stream);
-    	la & *this;
+        freeIndex();
+        serialization::LoadArchive la(stream);
+        la & *this;
     }
 
     /**
@@ -227,20 +227,20 @@ public:
         float epsError = 1+searchParams.eps;
 
         if (maxChecks==FLANN_CHECKS_UNLIMITED) {
-        	if (removed_) {
-        		getExactNeighbors<true>(result, vec, epsError);
-        	}
-        	else {
-        		getExactNeighbors<false>(result, vec, epsError);
-        	}
+            if (removed_) {
+                getExactNeighbors<true>(result, vec, epsError);
+            }
+            else {
+                getExactNeighbors<false>(result, vec, epsError);
+            }
         }
         else {
-        	if (removed_) {
-        		getNeighbors<true>(result, vec, maxChecks, epsError);
-        	}
-        	else {
-        		getNeighbors<false>(result, vec, maxChecks, epsError);
-        	}
+            if (removed_) {
+                getNeighbors<true>(result, vec, maxChecks, epsError);
+            }
+            else {
+                getNeighbors<false>(result, vec, maxChecks, epsError);
+            }
         }
     }
 
@@ -252,7 +252,7 @@ protected:
     void buildIndexImpl()
     {
         // Create a permutable array of indices to the input vectors.
-    	std::vector<int> ind(size_);
+        std::vector<int> ind(size_);
         for (size_t i = 0; i < size_; ++i) {
             ind[i] = int(i);
         }
@@ -273,11 +273,11 @@ protected:
 
     void freeIndex()
     {
-    	for (size_t i=0;i<tree_roots_.size();++i) {
-    		// using placement new, so call destructor explicitly
-    		if (tree_roots_[i]!=NULL) tree_roots_[i]->~Node();
-    	}
-    	pool_.free();
+        for (size_t i=0;i<tree_roots_.size();++i) {
+            // using placement new, so call destructor explicitly
+            if (tree_roots_[i]!=NULL) tree_roots_[i]->~Node();
+        }
+        pool_.free();
     }
 
 
@@ -286,7 +286,7 @@ private:
     /*--------------------- Internal Data Structures --------------------------*/
     struct Node
     {
-    	/**
+        /**
          * Dimension used for subdivision.
          */
         int divfeat;
@@ -304,42 +304,42 @@ private:
         Node* child1, * child2;
 
         ~Node() {
-        	if (child1!=NULL) child1->~Node();
-        	if (child2!=NULL) child2->~Node();
+            if (child1!=NULL) child1->~Node();
+            if (child2!=NULL) child2->~Node();
         }
 
     private:
-    	template<typename Archive>
-    	void serialize(Archive& ar)
-    	{
-    		typedef KDTreeIndex<Distance> Index;
-    		Index* obj = static_cast<Index*>(ar.getObject());
+        template<typename Archive>
+        void serialize(Archive& ar)
+        {
+            typedef KDTreeIndex<Distance> Index;
+            Index* obj = static_cast<Index*>(ar.getObject());
 
-    		ar & divfeat;
-    		ar & divval;
+            ar & divfeat;
+            ar & divval;
 
-    		bool leaf_node = false;
-    		if (Archive::is_saving::value) {
-    			leaf_node = ((child1==NULL) && (child2==NULL));
-    		}
-    		ar & leaf_node;
+            bool leaf_node = false;
+            if (Archive::is_saving::value) {
+                leaf_node = ((child1==NULL) && (child2==NULL));
+            }
+            ar & leaf_node;
 
-    		if (leaf_node) {
-    			if (Archive::is_loading::value) {
-    				point = obj->points_[divfeat];
-    			}
-    		}
+            if (leaf_node) {
+                if (Archive::is_loading::value) {
+                    point = obj->points_[divfeat];
+                }
+            }
 
-    		if (!leaf_node) {
-				if (Archive::is_loading::value) {
-					child1 = new(obj->pool_) Node();
-					child2 = new(obj->pool_) Node();
-				}
-    			ar & *child1;
-    			ar & *child2;
-    		}
-    	}
-    	friend struct serialization::access;
+            if (!leaf_node) {
+                if (Archive::is_loading::value) {
+                    child1 = new(obj->pool_) Node();
+                    child2 = new(obj->pool_) Node();
+                }
+                ar & *child1;
+                ar & *child2;
+            }
+        }
+        friend struct serialization::access;
     };
     typedef Node* NodePtr;
     typedef BranchStruct<NodePtr, DistanceType> BranchSt;
@@ -348,18 +348,18 @@ private:
 
     void copyTree(NodePtr& dst, const NodePtr& src)
     {
-    	dst = new(pool_) Node();
-    	dst->divfeat = src->divfeat;
-    	dst->divval = src->divval;
-    	if (src->child1==NULL && src->child2==NULL) {
-    		dst->point = points_[dst->divfeat];
-    		dst->child1 = NULL;
-    		dst->child2 = NULL;
-    	}
-    	else {
-    		copyTree(dst->child1, src->child1);
-    		copyTree(dst->child2, src->child2);
-    	}
+        dst = new(pool_) Node();
+        dst->divfeat = src->divfeat;
+        dst->divval = src->divval;
+        if (src->child1==NULL && src->child2==NULL) {
+            dst->point = points_[dst->divfeat];
+            dst->child1 = NULL;
+            dst->child2 = NULL;
+        }
+        else {
+            copyTree(dst->child1, src->child1);
+            copyTree(dst->child2, src->child2);
+        }
     }
 
     /**
@@ -519,7 +519,7 @@ private:
     template<bool with_removed>
     void getExactNeighbors(ResultSet<DistanceType>& result, const ElementType* vec, float epsError) const
     {
-        //		checkID -= 1;  /* Set a different unique ID for each search. */
+        //        checkID -= 1;  /* Set a different unique ID for each search. */
 
         if (trees_ > 1) {
             fprintf(stderr,"It doesn't make any sense to use more than one tree for exact search");
@@ -568,7 +568,7 @@ private:
                      float epsError, Heap<BranchSt>* heap, DynamicBitset& checked) const
     {
         if (result_set.worstDist()<mindist) {
-            //			printf("Ignoring branch, too far\n");
+            //            printf("Ignoring branch, too far\n");
             return;
         }
 
@@ -576,7 +576,7 @@ private:
         if ((node->child1 == NULL)&&(node->child2 == NULL)) {
             int index = node->divfeat;
             if (with_removed) {
-            	if (removed_points_.test(index)) return;
+                if (removed_points_.test(index)) return;
             }
             /*  Do not check same node more than once when searching multiple trees. */
             if ( checked.test(index) || ((checkCount>=maxCheck)&& result_set.full()) ) return;
@@ -603,7 +603,7 @@ private:
          */
 
         DistanceType new_distsq = mindist + distance_.accum_dist(val, node->divval, node->divfeat);
-        //		if (2 * checkCount < maxCheck  ||  !result.full()) {
+        //        if (2 * checkCount < maxCheck  ||  !result.full()) {
         if ((new_distsq*epsError < result_set.worstDist())||  !result_set.full()) {
             heap->insert( BranchSt(otherChild, new_distsq) );
         }
@@ -622,7 +622,7 @@ private:
         if ((node->child1 == NULL)&&(node->child2 == NULL)) {
             int index = node->divfeat;
             if (with_removed) {
-            	if (removed_points_.test(index)) return; // ignore removed points
+                if (removed_points_.test(index)) return; // ignore removed points
             }
             DistanceType dist = distance_(node->point, vec, veclen_);
             result_set.addPoint(dist,index);
@@ -703,10 +703,10 @@ private:
 private:
     void swap(KDTreeIndex& other)
     {
-    	BaseClass::swap(other);
-    	std::swap(trees_, other.trees_);
-    	std::swap(tree_roots_, other.tree_roots_);
-    	std::swap(pool_, other.pool_);
+        BaseClass::swap(other);
+        std::swap(trees_, other.trees_);
+        std::swap(tree_roots_, other.tree_roots_);
+        std::swap(pool_, other.pool_);
     }
 
 private:

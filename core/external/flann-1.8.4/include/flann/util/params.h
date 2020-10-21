@@ -52,21 +52,21 @@ typedef std::map<std::string, any> IndexParams;
 
 
 typedef enum {
-	FLANN_False = 0,
-	FLANN_True = 1,
-	FLANN_Undefined
+    FLANN_False = 0,
+    FLANN_True = 1,
+    FLANN_Undefined
 } tri_type;
 
 
 struct SearchParams
 {
     SearchParams(int checks_ = 32, float eps_ = 0.0, bool sorted_ = true ) :
-    	checks(checks_), eps(eps_), sorted(sorted_)
+        checks(checks_), eps(eps_), sorted(sorted_)
     {
-    	max_neighbors = -1;
-    	use_heap = FLANN_Undefined;
-    	cores = 1;
-    	matrices_in_gpu_ram = false;
+        max_neighbors = -1;
+        use_heap = FLANN_Undefined;
+        cores = 1;
+        matrices_in_gpu_ram = false;
     }
 
     // how many leafs to visit when searching for neighbours (-1 for unlimited)
@@ -88,7 +88,7 @@ struct SearchParams
 
 inline bool has_param(const IndexParams& params, std::string name)
 {
-	return params.find(name)!=params.end();
+    return params.find(name)!=params.end();
 }
 
 template<typename T>
@@ -126,10 +126,10 @@ inline void print_params(const IndexParams& params)
 
 inline void print_params(const SearchParams& params)
 {
-	std::cout << "checks : " << params.checks << std::endl;
-	std::cout << "eps : " << params.eps << std::endl;
-	std::cout << "sorted : " << params.sorted << std::endl;
-	std::cout << "max_neighbors : " << params.max_neighbors << std::endl;
+    std::cout << "checks : " << params.checks << std::endl;
+    std::cout << "eps : " << params.eps << std::endl;
+    std::cout << "sorted : " << params.sorted << std::endl;
+    std::cout << "max_neighbors : " << params.max_neighbors << std::endl;
 }
 
 

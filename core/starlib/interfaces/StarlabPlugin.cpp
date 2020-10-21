@@ -17,26 +17,26 @@ DrawArea* StarlabPlugin::drawArea(){
 }
 
 MainWindow* StarlabPlugin::mainWindow(){ 
-	return _mainWindow; 
+    return _mainWindow; 
 }
  
 Application* StarlabPlugin::application(){ 
-	return _application; 
+    return _application; 
 }
 
 Document* StarlabPlugin::document(){ 
-	Q_ASSERT(_application);
-	return _application->document(); 
+    Q_ASSERT(_application);
+    return _application->document(); 
 }
 
 Settings* StarlabPlugin::settings(){ 
-	Q_ASSERT(_application);
-	return _application->settings(); 
+    Q_ASSERT(_application);
+    return _application->settings(); 
 }
 
 PluginManager* StarlabPlugin::pluginManager(){ 
-	Q_ASSERT(_application);
-	return _application->pluginManager();
+    Q_ASSERT(_application);
+    return _application->pluginManager();
 }
 
 /// @internal action cannot be created in constructor. This is because 

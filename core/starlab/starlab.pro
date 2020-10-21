@@ -2,8 +2,10 @@
 include($$PWD/../starlab.prf)
 StarlabTemplate(appbundle)
 
-TARGET = starlab
-win32:DESTDIR = $$EXECUTABLEPATH
+TARGET = lydiaLab
+VERSION = 1.1.0
+
+DESTDIR = $$EXECUTABLEPATH
 
 HEADERS += FileOpenEater.h \
     StarlabApplicationGUI.h

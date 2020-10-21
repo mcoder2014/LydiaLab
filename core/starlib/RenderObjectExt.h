@@ -734,23 +734,23 @@ public:
 
         glBegin(GL_QUADS);
         glNormal3d(0,0,-1);
-        glVertex3dv(corners[0].data());	glVertex3dv(corners[1].data());
-        glVertex3dv(corners[2].data());	glVertex3dv(corners[3].data());
+        glVertex3dv(corners[0].data());    glVertex3dv(corners[1].data());
+        glVertex3dv(corners[2].data());    glVertex3dv(corners[3].data());
         glNormal3d(0,0,1);
-        glVertex3dv(corners[4].data());	glVertex3dv(corners[5].data());
-        glVertex3dv(corners[6].data());	glVertex3dv(corners[7].data());
+        glVertex3dv(corners[4].data());    glVertex3dv(corners[5].data());
+        glVertex3dv(corners[6].data());    glVertex3dv(corners[7].data());
         glNormal3d(0,-1,0);
-        glVertex3dv(corners[0].data());	glVertex3dv(corners[1].data());
-        glVertex3dv(corners[5].data());	glVertex3dv(corners[4].data());
+        glVertex3dv(corners[0].data());    glVertex3dv(corners[1].data());
+        glVertex3dv(corners[5].data());    glVertex3dv(corners[4].data());
         glNormal3d(0,1,0);
-        glVertex3dv(corners[2].data());	glVertex3dv(corners[3].data());
-        glVertex3dv(corners[7].data());	glVertex3dv(corners[6].data());
+        glVertex3dv(corners[2].data());    glVertex3dv(corners[3].data());
+        glVertex3dv(corners[7].data());    glVertex3dv(corners[6].data());
         glNormal3d(-1,0,0);
-        glVertex3dv(corners[3].data());	glVertex3dv(corners[0].data());
-        glVertex3dv(corners[4].data());	glVertex3dv(corners[7].data());
+        glVertex3dv(corners[3].data());    glVertex3dv(corners[0].data());
+        glVertex3dv(corners[4].data());    glVertex3dv(corners[7].data());
         glNormal3d(1,0,0);
-        glVertex3dv(corners[2].data());	glVertex3dv(corners[1].data());
-        glVertex3dv(corners[5].data());	glVertex3dv(corners[6].data());
+        glVertex3dv(corners[2].data());    glVertex3dv(corners[1].data());
+        glVertex3dv(corners[5].data());    glVertex3dv(corners[6].data());
         glEnd();
     }
 };

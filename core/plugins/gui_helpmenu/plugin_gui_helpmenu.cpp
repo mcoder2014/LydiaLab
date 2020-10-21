@@ -67,7 +67,7 @@ void MainWindow::submitBug() {
     mb.setText(tr("If Meshlab closed in unexpected way (e.g. it crashed badly) and"
                   "if you are able to repeat the bug, please consider to submit a report using the SourceForge tracking system.\n"
                  ) );
-    mb.setInformativeText(	tr(
+    mb.setInformativeText(    tr(
                                 "Hints for a good, useful bug report:\n"
                                 "- Be verbose and descriptive\n"
                                 "- Report meshlab version and OS\n"

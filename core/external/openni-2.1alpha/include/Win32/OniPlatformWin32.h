@@ -24,23 +24,23 @@
 //---------------------------------------------------------------------------
 // Prerequisites
 //---------------------------------------------------------------------------
-#ifndef WINVER						// Allow use of features specific to Windows XP or later
-	#define WINVER 0x0501
+#ifndef WINVER                        // Allow use of features specific to Windows XP or later
+    #define WINVER 0x0501
 #endif
-#ifndef _WIN32_WINNT				// Allow use of features specific to Windows XP or later
-	#define _WIN32_WINNT 0x0501
-#endif						
-#ifndef _WIN32_WINDOWS				// Allow use of features specific to Windows 98 or later
-	#define _WIN32_WINDOWS 0x0410
+#ifndef _WIN32_WINNT                // Allow use of features specific to Windows XP or later
+    #define _WIN32_WINNT 0x0501
+#endif                        
+#ifndef _WIN32_WINDOWS                // Allow use of features specific to Windows 98 or later
+    #define _WIN32_WINDOWS 0x0410
 #endif
-#ifndef _WIN32_IE					// Allow use of features specific to IE 6.0 or later
-	#define _WIN32_IE 0x0600
+#ifndef _WIN32_IE                    // Allow use of features specific to IE 6.0 or later
+    #define _WIN32_IE 0x0600
 #endif
-#define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN            // Exclude rarely-used stuff from Windows headers
 
 // Undeprecate CRT functions
 #ifndef _CRT_SECURE_NO_DEPRECATE 
-	#define _CRT_SECURE_NO_DEPRECATE 1
+    #define _CRT_SECURE_NO_DEPRECATE 1
 #endif
 
 //---------------------------------------------------------------------------
@@ -118,9 +118,9 @@
 
 /** Indicates a deprecated function */
 #if _MSC_VER < 1400 // Before VS2005 there was no support for declspec deprecated...
-	#define ONI_API_DEPRECATED(msg)
+    #define ONI_API_DEPRECATED(msg)
 #else
-	#define ONI_API_DEPRECATED(msg) __declspec(deprecated(msg))
+    #define ONI_API_DEPRECATED(msg) __declspec(deprecated(msg))
 #endif
 
 #endif //_ONI_PLATFORM_WIN32_H_

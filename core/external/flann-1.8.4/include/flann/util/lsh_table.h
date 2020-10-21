@@ -192,7 +192,7 @@ public:
 #endif
         // Add the features to the table
         for (size_t i = 0; i < features.size(); ++i) {
-        	add(features[i].first, features[i].second);
+            add(features[i].first, features[i].second);
         }
         // Now that the table is full, optimize it for speed/space
         optimize();
@@ -300,27 +300,27 @@ private:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	int val;
-    	if (Archive::is_saving::value) {
-    		val = (int)speed_level_;
-    	}
-    	ar & val;
-    	if (Archive::is_loading::value) {
-    		speed_level_ = (SpeedLevel) val;
-    	}
+        int val;
+        if (Archive::is_saving::value) {
+            val = (int)speed_level_;
+        }
+        ar & val;
+        if (Archive::is_loading::value) {
+            speed_level_ = (SpeedLevel) val;
+        }
 
-    	ar & key_size_;
-    	ar & mask_;
+        ar & key_size_;
+        ar & mask_;
 
-    	if (speed_level_==kArray) {
-    		ar & buckets_speed_;
-    	}
-    	if (speed_level_==kBitsetHash || speed_level_==kHash) {
-    		ar & buckets_space_;
-    	}
-		if (speed_level_==kBitsetHash) {
-			ar & key_bitset_;
-		}
+        if (speed_level_==kArray) {
+            ar & buckets_speed_;
+        }
+        if (speed_level_==kBitsetHash || speed_level_==kHash) {
+            ar & buckets_space_;
+        }
+        if (speed_level_==kBitsetHash) {
+            ar & key_bitset_;
+        }
     }
     friend struct serialization::access;
 

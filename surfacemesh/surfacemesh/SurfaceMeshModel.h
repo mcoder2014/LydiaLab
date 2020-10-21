@@ -33,12 +33,12 @@ namespace SurfaceMesh{
 /// @{
     // these are to avoid problems from conversion from Surface_mesh::Vector
     template <class T> Scalar dot(const T& a, const T&b){ return a.dot(b); }
-	template <class T> T cross(const T& a, const T&b){ return a.cross(b); }
+    template <class T> T cross(const T& a, const T&b){ return a.cross(b); }
     typedef Eigen::Vector3d Vec3d;
-	typedef Eigen::Vector4d Vec4d;
-	typedef Eigen::Vector3i Vec3i;
-	typedef Eigen::Vector3f Vec3f;
-	typedef Eigen::Vector2f Vec2f;
+    typedef Eigen::Vector4d Vec4d;
+    typedef Eigen::Vector3i Vec3i;
+    typedef Eigen::Vector3f Vec3f;
+    typedef Eigen::Vector2f Vec2f;
 /// @}
 
 /// @defgroup surfacemesh_property_names Default property names

@@ -26,7 +26,7 @@ class Octree
 {
 public:
 
-	Octree(){ trianglePerNode = -1; parent = NULL; mesh = NULL; }
+    Octree(){ trianglePerNode = -1; parent = NULL; mesh = NULL; }
 
     Octree( Surface_mesh * useMesh, int triPerNode = DEFAULT_OCTREE_NODE_SIZE )
     {
@@ -113,17 +113,17 @@ public:
 
     bool isIntersectsWithRay(const Ray & ray, double * distance)
     {
-		int faceIndex = -1;
-		if(distance) *distance = DBL_MAX;
+        int faceIndex = -1;
+        if(distance) *distance = DBL_MAX;
 
-		Eigen::Vector3d p = closestIntersectionPoint(ray, &faceIndex);
+        Eigen::Vector3d p = closestIntersectionPoint(ray, &faceIndex);
 
-		if(faceIndex >= 0){
-			if(distance) *distance = (p-ray.origin).norm();
-			return true;
-		}
+        if(faceIndex >= 0){
+            if(distance) *distance = (p-ray.origin).norm();
+            return true;
+        }
 
-		return false;
+        return false;
     }
 
     IndexSet intersectSphere( const Eigen::Vector3d& sphere_center, double radius )
@@ -136,13 +136,13 @@ public:
         return tris;
     }
 
-	BoundingBox boundingBox;
-	std::vector<Octree> children;
-	std::vector<Surface_mesh::Face> triangleData;
+    BoundingBox boundingBox;
+    std::vector<Octree> children;
+    std::vector<Surface_mesh::Face> triangleData;
 
 private:
-	int trianglePerNode;
-	Surface_mesh * mesh;
+    int trianglePerNode;
+    Surface_mesh * mesh;
     Surface_mesh::Vertex_property<Eigen::Vector3d> points;
 
     void initBuild( std::vector<Surface_mesh::Face>& tris, int triPerNode )
@@ -584,8 +584,8 @@ public:
 
     Octree * parent;
 
-	// Debug
-	std::vector<Octree *> selectedChildren;
+    // Debug
+    std::vector<Octree *> selectedChildren;
 };
 
 Q_DECLARE_METATYPE(Octree *)

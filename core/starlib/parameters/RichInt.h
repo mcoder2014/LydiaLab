@@ -34,10 +34,10 @@ public:
         int pval;
     public:
         Value(const int val) : pval(val) {}
-        inline int	getInt() const { return pval; }
+        inline int    getInt() const { return pval; }
         inline bool isInt() const { return true; }
         inline QString typeName() const { return QString("Int"); }
-        inline void	set(const RichParameter::Value& p) { pval = p.getInt(); }
+        inline void    set(const RichParameter::Value& p) { pval = p.getInt(); }
         QString toString() { return QString::number(getInt()); }
     };
 };

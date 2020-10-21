@@ -361,14 +361,14 @@ template<typename Scalar, int _Options, typename _StorageIndex>
 class SparseVector<Scalar,_Options,_StorageIndex>::InnerIterator
 {
   public:
-	explicit InnerIterator(const SparseVector& vec, Index outer=0)
+    explicit InnerIterator(const SparseVector& vec, Index outer=0)
       : m_data(vec.m_data), m_id(0), m_end(m_data.size())
     {
       EIGEN_UNUSED_VARIABLE(outer);
       eigen_assert(outer==0);
     }
 
-	explicit InnerIterator(const internal::CompressedStorage<Scalar,StorageIndex>& data)
+    explicit InnerIterator(const internal::CompressedStorage<Scalar,StorageIndex>& data)
       : m_data(data), m_id(0), m_end(m_data.size())
     {}
 
@@ -398,14 +398,14 @@ template<typename Scalar, int _Options, typename _StorageIndex>
 class SparseVector<Scalar,_Options,_StorageIndex>::ReverseInnerIterator
 {
   public:
-	explicit ReverseInnerIterator(const SparseVector& vec, Index outer=0)
+    explicit ReverseInnerIterator(const SparseVector& vec, Index outer=0)
       : m_data(vec.m_data), m_id(m_data.size()), m_start(0)
     {
       EIGEN_UNUSED_VARIABLE(outer);
       eigen_assert(outer==0);
     }
 
-	explicit ReverseInnerIterator(const internal::CompressedStorage<Scalar,StorageIndex>& data)
+    explicit ReverseInnerIterator(const internal::CompressedStorage<Scalar,StorageIndex>& data)
       : m_data(data), m_id(m_data.size()), m_start(0)
     {}
 

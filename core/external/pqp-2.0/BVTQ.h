@@ -88,14 +88,14 @@ private:
   int 
   LChild(int p)  
   { 
-	  return (2*p + 1); 
+      return (2*p + 1); 
   }
 
   inline 
   int 
   Parent(int c)  
   { 
-	  return ((c - 1)/2); 
+      return ((c - 1)/2); 
   }
 };
 
@@ -118,7 +118,7 @@ BVTQ::AddTest(BVT &t)
 
     temp = bvtp[p];
     bvtp[p] = bvtp[c];
-    bvtp[c] = temp;	 
+    bvtp[c] = temp;     
 
     // the bv tests pointed to by p and c need new indices
 
@@ -162,7 +162,7 @@ BVTQ::ExtractMinTest()
     if (c1 < numtests) 
     { 
       if (c2 < numtests) 
-      { 	
+      {     
         // p has both children, promote the minimum 
 
         if (bvtp[c1]->d < bvtp[c2]->d) c = c1; else c = c2; 
@@ -184,7 +184,7 @@ BVTQ::ExtractMinTest()
         } 
       } 
       else  
-      { 	
+      {     
         // p has only left child 
 
         if (bvtp[c1]->d < bvtp[p]->d) 
@@ -196,7 +196,7 @@ BVTQ::ExtractMinTest()
           bvtp[p]->pindex = p;
           bvtp[c1]->pindex = c1;
 
-          p = c1;	 
+          p = c1;     
         } 
         else 
         { 

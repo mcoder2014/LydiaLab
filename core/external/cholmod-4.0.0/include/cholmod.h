@@ -29,47 +29,47 @@
  * Naming convention:
  * ------------------
  *
- *	All routine names, data types, and CHOLMOD library files use the
- *	cholmod_ prefix.  All macros and other #define's use the CHOLMOD
- *	prefix.
+ *    All routine names, data types, and CHOLMOD library files use the
+ *    cholmod_ prefix.  All macros and other #define's use the CHOLMOD
+ *    prefix.
  * 
  * Return value:
  * -------------
  *
- *	Most CHOLMOD routines return an int (TRUE (1) if successful, or FALSE
- *	(0) otherwise.  A UF_long or double return value is >= 0 if successful,
- *	or -1 otherwise.  A size_t return value is > 0 if successful, or 0
- *	otherwise.
+ *    Most CHOLMOD routines return an int (TRUE (1) if successful, or FALSE
+ *    (0) otherwise.  A UF_long or double return value is >= 0 if successful,
+ *    or -1 otherwise.  A size_t return value is > 0 if successful, or 0
+ *    otherwise.
  *
- *	If a routine returns a pointer, it is a pointer to a newly allocated
- *	object or NULL if a failure occured, with one exception.  cholmod_free
- *	always returns NULL.
+ *    If a routine returns a pointer, it is a pointer to a newly allocated
+ *    object or NULL if a failure occured, with one exception.  cholmod_free
+ *    always returns NULL.
  *
  * "Common" parameter:
  * ------------------
  *
- *	The last parameter in all CHOLMOD routines is a pointer to the CHOLMOD
- *	"Common" object.  This contains control parameters, statistics, and
- *	workspace used between calls to CHOLMOD.  It is always an input/output
- *	parameter.
+ *    The last parameter in all CHOLMOD routines is a pointer to the CHOLMOD
+ *    "Common" object.  This contains control parameters, statistics, and
+ *    workspace used between calls to CHOLMOD.  It is always an input/output
+ *    parameter.
  *
  * Input, Output, and Input/Output parameters:
  * -------------------------------------------
  *
- *	Input parameters are listed first.  They are not modified by CHOLMOD.
+ *    Input parameters are listed first.  They are not modified by CHOLMOD.
  *
- *	Input/output are listed next.  They must be defined on input, and
- *	are modified on output.
+ *    Input/output are listed next.  They must be defined on input, and
+ *    are modified on output.
  *
- *	Output parameters are listed next.  If they are pointers, they must
- *	point to allocated space on input, but their contents are not defined
- *	on input.
+ *    Output parameters are listed next.  If they are pointers, they must
+ *    point to allocated space on input, but their contents are not defined
+ *    on input.
  *
- *	Workspace parameters appear next.  They are used in only two routines
- *	in the Supernodal module.
+ *    Workspace parameters appear next.  They are used in only two routines
+ *    in the Supernodal module.
  *
- *	The cholmod_common *Common parameter always appears as the last
- *	parameter.  It is always an input/output parameter.
+ *    The cholmod_common *Common parameter always appears as the last
+ *    parameter.  It is always an input/output parameter.
  */
 
 #ifndef CHOLMOD_H

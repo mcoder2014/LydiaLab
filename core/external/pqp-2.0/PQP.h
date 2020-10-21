@@ -336,23 +336,23 @@ PQP_Tolerance(PQP_ToleranceResult *res,
 #endif 
 
 private:
-	MatVec pqp_math;
-	void ToleranceQueueRecurse(PQP_ToleranceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], PQP_Model *o1, int b1, PQP_Model *o2, int b2);
-	void ToleranceRecurse(PQP_ToleranceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], PQP_Model *o1, int b1, PQP_Model *o2, int b2);
-	void DistanceQueueRecurse(PQP_DistanceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], PQP_Model *o1, int b1, PQP_Model *o2, int b2);
-	void DistanceRecurse(PQP_DistanceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], // b2 relative to b1
-		PQP_Model *o1, int b1, PQP_Model *o2, int b2);
+    MatVec pqp_math;
+    void ToleranceQueueRecurse(PQP_ToleranceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], PQP_Model *o1, int b1, PQP_Model *o2, int b2);
+    void ToleranceRecurse(PQP_ToleranceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], PQP_Model *o1, int b1, PQP_Model *o2, int b2);
+    void DistanceQueueRecurse(PQP_DistanceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], PQP_Model *o1, int b1, PQP_Model *o2, int b2);
+    void DistanceRecurse(PQP_DistanceResult *res, PQP_REAL R[3][3], PQP_REAL T[3], // b2 relative to b1
+        PQP_Model *o1, int b1, PQP_Model *o2, int b2);
 
-	void CollideRecurse(PQP_CollideResult *res, PQP_REAL R[3][3], PQP_REAL T[3], // b2 relative to b1
-		PQP_Model *o1, int b1,  PQP_Model *o2, int b2, int flag);
-	PQP_REAL TriDistance(PQP_REAL R[3][3], PQP_REAL T[3], Tri *t1, Tri *t2, PQP_REAL p[3], PQP_REAL q[3]);
-	int TriContact(PQP_REAL *P1, PQP_REAL *P2, PQP_REAL *P3, PQP_REAL *Q1, PQP_REAL *Q2, PQP_REAL *Q3);
-	int project6(PQP_REAL *ax, PQP_REAL *p1, PQP_REAL *p2, PQP_REAL *p3, PQP_REAL *q1, PQP_REAL *q2, PQP_REAL *q3);
-	PQP_REAL min(PQP_REAL a, PQP_REAL b, PQP_REAL c);
-	PQP_REAL max(PQP_REAL a, PQP_REAL b, PQP_REAL c);
+    void CollideRecurse(PQP_CollideResult *res, PQP_REAL R[3][3], PQP_REAL T[3], // b2 relative to b1
+        PQP_Model *o1, int b1,  PQP_Model *o2, int b2, int flag);
+    PQP_REAL TriDistance(PQP_REAL R[3][3], PQP_REAL T[3], Tri *t1, Tri *t2, PQP_REAL p[3], PQP_REAL q[3]);
+    int TriContact(PQP_REAL *P1, PQP_REAL *P2, PQP_REAL *P3, PQP_REAL *Q1, PQP_REAL *Q2, PQP_REAL *Q3);
+    int project6(PQP_REAL *ax, PQP_REAL *p1, PQP_REAL *p2, PQP_REAL *p3, PQP_REAL *q1, PQP_REAL *q2, PQP_REAL *q3);
+    PQP_REAL min(PQP_REAL a, PQP_REAL b, PQP_REAL c);
+    PQP_REAL max(PQP_REAL a, PQP_REAL b, PQP_REAL c);
 
-	Tri_Processor triProcessor;
-	BV_Processor bvProcessor;
+    Tri_Processor triProcessor;
+    BV_Processor bvProcessor;
 };
 
 

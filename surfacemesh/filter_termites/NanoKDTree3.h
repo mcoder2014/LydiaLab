@@ -71,7 +71,7 @@ public:
     void build(){
         if(tree) delete tree;
         tree = new my_kd_tree(3 /*dim*/, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(10 /* max leaf */) );
-		tree->buildIndex();        
+        tree->buildIndex();        
     }
     
     /// Static insert, tree deleted otherwise
@@ -94,19 +94,19 @@ public:
         
         k = k < (int)cloud.pts.size() ? k : cloud.pts.size();
 
-		ret_matches.clear();
-		ret_matches.resize(k);
+        ret_matches.clear();
+        ret_matches.resize(k);
 
-		std::vector<size_t> ret_index(k);
-		std::vector<double> out_dist(k);
+        std::vector<size_t> ret_index(k);
+        std::vector<double> out_dist(k);
 
         tree->knnSearch(query, k, &(ret_index[0]), &(out_dist[0]));
 
-		for(int i = 0; i < k; i++)
-			ret_matches[i] = std::make_pair(ret_index[i], out_dist[i]);
+        for(int i = 0; i < k; i++)
+            ret_matches[i] = std::make_pair(ret_index[i], out_dist[i]);
 
-		return k;
-	}
+        return k;
+    }
        
     /// @todo: this one returns a type-free result (only uses std::)
     void k_closest(double query[3], int k, std::vector<size_t>& /*=*/ idxs, std::vector<value_type>& /*=*/ dists){
@@ -130,10 +130,10 @@ public:
         assert(tree);
 
         ret_matches.clear();
-		nanoflann::SearchParams params;
-		//params.sorted = false;
-		return tree->radiusSearch(query, search_radius, ret_matches, params);
-	}
+        nanoflann::SearchParams params;
+        //params.sorted = false;
+        return tree->radiusSearch(query, search_radius, ret_matches, params);
+    }
 
     int closest_index(double query[3]){
         assert(tree);
@@ -157,13 +157,13 @@ public:
         return cloud.pts[ match[0].first ] ;
     }
 
-	inline bool has(double query[3], Scalar eps_distance = 1e-7){
+    inline bool has(double query[3], Scalar eps_distance = 1e-7){
         assert(tree);
 
         KDResults match;
-		ball_search(query, eps_distance, match);
-		return match.size();
-	}
+        ball_search(query, eps_distance, match);
+        return match.size();
+    }
 /// @}
     
 /// @{

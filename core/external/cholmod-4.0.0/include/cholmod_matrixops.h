@@ -15,15 +15,15 @@
  *
  * Basic operations on sparse and dense matrices.
  *
- * cholmod_drop		    A = entries in A with abs. value >= tol
- * cholmod_norm_dense	    s = norm (X), 1-norm, inf-norm, or 2-norm
- * cholmod_norm_sparse	    s = norm (A), 1-norm or inf-norm
- * cholmod_horzcat	    C = [A,B]
- * cholmod_scale	    A = diag(s)*A, A*diag(s), s*A or diag(s)*A*diag(s)
- * cholmod_sdmult	    Y = alpha*(A*X) + beta*Y or alpha*(A'*X) + beta*Y
- * cholmod_ssmult	    C = A*B
- * cholmod_submatrix	    C = A (i,j), where i and j are arbitrary vectors
- * cholmod_vertcat	    C = [A ; B]
+ * cholmod_drop            A = entries in A with abs. value >= tol
+ * cholmod_norm_dense        s = norm (X), 1-norm, inf-norm, or 2-norm
+ * cholmod_norm_sparse        s = norm (A), 1-norm or inf-norm
+ * cholmod_horzcat        C = [A,B]
+ * cholmod_scale        A = diag(s)*A, A*diag(s), s*A or diag(s)*A*diag(s)
+ * cholmod_sdmult        Y = alpha*(A*X) + beta*Y or alpha*(A'*X) + beta*Y
+ * cholmod_ssmult        C = A*B
+ * cholmod_submatrix        C = A (i,j), where i and j are arbitrary vectors
+ * cholmod_vertcat        C = [A ; B]
  *
  * A, B, C: sparse matrices (cholmod_sparse)
  * X, Y: dense matrices (cholmod_dense)
@@ -44,9 +44,9 @@
 int cholmod_drop
 (
     /* ---- input ---- */
-    double tol,		/* keep entries with absolute value > tol */
+    double tol,        /* keep entries with absolute value > tol */
     /* ---- in/out --- */
-    cholmod_sparse *A,	/* matrix to drop entries from */
+    cholmod_sparse *A,    /* matrix to drop entries from */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -60,8 +60,8 @@ int cholmod_l_drop (double, cholmod_sparse *, cholmod_common *) ;
 double cholmod_norm_dense
 (
     /* ---- input ---- */
-    cholmod_dense *X,	/* matrix to compute the norm of */
-    int norm,		/* type of norm: 0: inf. norm, 1: 1-norm, 2: 2-norm */
+    cholmod_dense *X,    /* matrix to compute the norm of */
+    int norm,        /* type of norm: 0: inf. norm, 1: 1-norm, 2: 2-norm */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -75,8 +75,8 @@ double cholmod_l_norm_dense (cholmod_dense *, int, cholmod_common *) ;
 double cholmod_norm_sparse
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* matrix to compute the norm of */
-    int norm,		/* type of norm: 0: inf. norm, 1: 1-norm */
+    cholmod_sparse *A,    /* matrix to compute the norm of */
+    int norm,        /* type of norm: 0: inf. norm, 1: 1-norm */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -90,9 +90,9 @@ double cholmod_l_norm_sparse (cholmod_sparse *, int, cholmod_common *) ;
 cholmod_sparse *cholmod_horzcat
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* left matrix to concatenate */
-    cholmod_sparse *B,	/* right matrix to concatenate */
-    int values,		/* if TRUE compute the numerical values of C */
+    cholmod_sparse *A,    /* left matrix to concatenate */
+    cholmod_sparse *B,    /* right matrix to concatenate */
+    int values,        /* if TRUE compute the numerical values of C */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -105,18 +105,18 @@ cholmod_sparse *cholmod_l_horzcat (cholmod_sparse *, cholmod_sparse *, int,
 /* -------------------------------------------------------------------------- */
 
 /* scaling modes, selected by the scale input parameter: */
-#define CHOLMOD_SCALAR 0	/* A = s*A */
-#define CHOLMOD_ROW 1		/* A = diag(s)*A */
-#define CHOLMOD_COL 2		/* A = A*diag(s) */
-#define CHOLMOD_SYM 3		/* A = diag(s)*A*diag(s) */
+#define CHOLMOD_SCALAR 0    /* A = s*A */
+#define CHOLMOD_ROW 1        /* A = diag(s)*A */
+#define CHOLMOD_COL 2        /* A = A*diag(s) */
+#define CHOLMOD_SYM 3        /* A = diag(s)*A*diag(s) */
 
 int cholmod_scale
 (
     /* ---- input ---- */
-    cholmod_dense *S,	/* scale factors (scalar or vector) */
-    int scale,		/* type of scaling to compute */
+    cholmod_dense *S,    /* scale factors (scalar or vector) */
+    int scale,        /* type of scaling to compute */
     /* ---- in/out --- */
-    cholmod_sparse *A,	/* matrix to scale */
+    cholmod_sparse *A,    /* matrix to scale */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -132,13 +132,13 @@ int cholmod_l_scale (cholmod_dense *, int, cholmod_sparse *, cholmod_common *) ;
 int cholmod_sdmult
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* sparse matrix to multiply */
-    int transpose,	/* use A if 0, or A' otherwise */
+    cholmod_sparse *A,    /* sparse matrix to multiply */
+    int transpose,    /* use A if 0, or A' otherwise */
     double alpha [2],   /* scale factor for A */
     double beta [2],    /* scale factor for Y */
-    cholmod_dense *X,	/* dense matrix to multiply */
+    cholmod_dense *X,    /* dense matrix to multiply */
     /* ---- in/out --- */
-    cholmod_dense *Y,	/* resulting dense matrix */
+    cholmod_dense *Y,    /* resulting dense matrix */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -155,11 +155,11 @@ int cholmod_l_sdmult (cholmod_sparse *, int, double *, double *,
 cholmod_sparse *cholmod_ssmult
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* left matrix to multiply */
-    cholmod_sparse *B,	/* right matrix to multiply */
-    int stype,		/* requested stype of C */
-    int values,		/* TRUE: do numerical values, FALSE: pattern only */
-    int sorted,		/* if TRUE then return C with sorted columns */
+    cholmod_sparse *A,    /* left matrix to multiply */
+    cholmod_sparse *B,    /* right matrix to multiply */
+    int stype,        /* requested stype of C */
+    int values,        /* TRUE: do numerical values, FALSE: pattern only */
+    int sorted,        /* if TRUE then return C with sorted columns */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -180,13 +180,13 @@ cholmod_sparse *cholmod_l_ssmult (cholmod_sparse *, cholmod_sparse *, int, int,
 cholmod_sparse *cholmod_submatrix
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* matrix to subreference */
-    int *rset,		/* set of row indices, duplicates OK */
-    UF_long rsize,	/* size of r; rsize < 0 denotes ":" */
-    int *cset,		/* set of column indices, duplicates OK */
-    UF_long csize,	/* size of c; csize < 0 denotes ":" */
-    int values,		/* if TRUE compute the numerical values of C */
-    int sorted,		/* if TRUE then return C with sorted columns */
+    cholmod_sparse *A,    /* matrix to subreference */
+    int *rset,        /* set of row indices, duplicates OK */
+    UF_long rsize,    /* size of r; rsize < 0 denotes ":" */
+    int *cset,        /* set of column indices, duplicates OK */
+    UF_long csize,    /* size of c; csize < 0 denotes ":" */
+    int values,        /* if TRUE compute the numerical values of C */
+    int sorted,        /* if TRUE then return C with sorted columns */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -201,9 +201,9 @@ cholmod_sparse *cholmod_l_submatrix (cholmod_sparse *, UF_long *, UF_long,
 cholmod_sparse *cholmod_vertcat
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* left matrix to concatenate */
-    cholmod_sparse *B,	/* right matrix to concatenate */
-    int values,		/* if TRUE compute the numerical values of C */
+    cholmod_sparse *A,    /* left matrix to concatenate */
+    cholmod_sparse *B,    /* right matrix to concatenate */
+    int values,        /* if TRUE compute the numerical values of C */
     /* --------------- */
     cholmod_common *Common
 ) ;

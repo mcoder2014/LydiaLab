@@ -140,11 +140,11 @@ struct L2
     /**
      *  Compute the squared Euclidean distance between two vectors.
      *
-     *	This is highly optimised, with loop unrolling, as it is one
-     *	of the most expensive inner loops.
+     *    This is highly optimised, with loop unrolling, as it is one
+     *    of the most expensive inner loops.
      *
-     *	The computation of squared root at the end is omitted for
-     *	efficiency.
+     *    The computation of squared root at the end is omitted for
+     *    efficiency.
      */
     template <typename Iterator1, typename Iterator2>
     ResultType operator()(Iterator1 a, Iterator2 b, size_t size, ResultType worst_dist = -1) const
@@ -177,10 +177,10 @@ struct L2
     }
 
     /**
-     *	Partial euclidean distance, using just one dimension. This is used by the
-     *	kd-tree when computing partial distances while traversing the tree.
+     *    Partial euclidean distance, using just one dimension. This is used by the
+     *    kd-tree when computing partial distances while traversing the tree.
      *
-     *	Squared root is omitted for efficiency.
+     *    Squared root is omitted for efficiency.
      */
     template <typename U, typename V>
     inline ResultType accum_dist(const U& a, const V& b, int) const
@@ -204,8 +204,8 @@ struct L1
     /**
      *  Compute the Manhattan (L_1) distance between two vectors.
      *
-     *	This is highly optimised, with loop unrolling, as it is one
-     *	of the most expensive inner loops.
+     *    This is highly optimised, with loop unrolling, as it is one
+     *    of the most expensive inner loops.
      */
     template <typename Iterator1, typename Iterator2>
     ResultType operator()(Iterator1 a, Iterator2 b, size_t size, ResultType worst_dist = -1) const
@@ -264,11 +264,11 @@ struct MinkowskiDistance
     /**
      *  Compute the Minkowsky (L_p) distance between two vectors.
      *
-     *	This is highly optimised, with loop unrolling, as it is one
-     *	of the most expensive inner loops.
+     *    This is highly optimised, with loop unrolling, as it is one
+     *    of the most expensive inner loops.
      *
-     *	The computation of squared root at the end is omitted for
-     *	efficiency.
+     *    The computation of squared root at the end is omitted for
+     *    efficiency.
      */
     template <typename Iterator1, typename Iterator2>
     ResultType operator()(Iterator1 a, Iterator2 b, size_t size, ResultType worst_dist = -1) const
@@ -566,9 +566,9 @@ struct Hamming
         ResultType result = 0;
         size /= (sizeof(uint32_t)/sizeof(unsigned char));
         for(size_t i = 0; i < size; ++i ) {
-        	result += popcnt32(*pa ^ *pb);
-        	++pa;
-        	++pb;
+            result += popcnt32(*pa ^ *pb);
+            ++pa;
+            ++pb;
         }
 #endif
         return result;
@@ -780,7 +780,7 @@ struct KL_Divergence
             if (ratio>0) {
                 result = a * log(ratio);
             }
-		}
+        }
         return result;
     }
 };

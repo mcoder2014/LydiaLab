@@ -261,18 +261,18 @@ private:
     /*--------------------- Internal Data Structures --------------------------*/
     struct Node
     {
-    	/**
-    	 * Indices of points in leaf node
-    	 */
-    	int left, right;
-    	/**
-    	 * Dimension used for subdivision.
-    	 */
-    	int divfeat;
-    	/**
-    	 * The values used for subdivision.
-    	 */
-    	DistanceType divlow, divhigh;
+        /**
+         * Indices of points in leaf node
+         */
+        int left, right;
+        /**
+         * Dimension used for subdivision.
+         */
+        int divfeat;
+        /**
+         * The values used for subdivision.
+         */
+        DistanceType divlow, divhigh;
         /**
          * The child nodes.
          */
@@ -427,8 +427,8 @@ private:
             node->divhigh = right_bbox[cutfeat].low;
 
             for (size_t i=0; i<veclen_; ++i) {
-            	bbox[i].low = std::min(left_bbox[i].low, right_bbox[i].low);
-            	bbox[i].high = std::max(left_bbox[i].high, right_bbox[i].high);
+                bbox[i].low = std::min(left_bbox[i].low, right_bbox[i].low);
+                bbox[i].high = std::max(left_bbox[i].high, right_bbox[i].high);
             }
         }
 

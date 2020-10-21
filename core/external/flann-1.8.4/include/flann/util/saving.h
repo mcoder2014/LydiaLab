@@ -53,7 +53,7 @@ struct IndexHeader
     IndexHeaderStruct h;
 
     IndexHeader()
-	{
+    {
         memset(h.signature, 0, sizeof(h.signature));
         strcpy(h.signature, FLANN_SIGNATURE_);
         memset(h.version, 0, sizeof(h.version));
@@ -61,7 +61,7 @@ struct IndexHeader
 
         h.compression = 0;
         h.uncompressed_size = 0;
-	}
+    }
 
 private:
     template<typename Archive>

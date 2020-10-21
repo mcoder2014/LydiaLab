@@ -101,32 +101,32 @@ public:
     }
 
     AutotunedIndex(const AutotunedIndex& other) : BaseClass(other),
-    		bestParams_(other.bestParams_),
-    		bestSearchParams_(other.bestSearchParams_),
-    		speedup_(other.speedup_),
-    		dataset_(other.dataset_),
-    		target_precision_(other.target_precision_),
-    		build_weight_(other.build_weight_),
-    		memory_weight_(other.memory_weight_),
-    		sample_fraction_(other.sample_fraction_)
+            bestParams_(other.bestParams_),
+            bestSearchParams_(other.bestSearchParams_),
+            speedup_(other.speedup_),
+            dataset_(other.dataset_),
+            target_precision_(other.target_precision_),
+            build_weight_(other.build_weight_),
+            memory_weight_(other.memory_weight_),
+            sample_fraction_(other.sample_fraction_)
     {
-    		bestIndex_ = other.bestIndex_->clone();
+            bestIndex_ = other.bestIndex_->clone();
     }
 
     AutotunedIndex& operator=(AutotunedIndex other)
     {
-    	this->swap(other);
-    	return * this;
+        this->swap(other);
+        return * this;
     }
 
     virtual ~AutotunedIndex()
     {
-    	delete bestIndex_;
+        delete bestIndex_;
     }
 
     BaseClass* clone() const
     {
-    	return new AutotunedIndex(*this);
+        return new AutotunedIndex(*this);
     }
 
     /**
@@ -138,7 +138,7 @@ public:
         Logger::info("----------------------------------------------------\n");
         Logger::info("Autotuned parameters:\n");
         if (Logger::getLevel()>=FLANN_LOG_INFO)
-        	print_params(bestParams_);
+            print_params(bestParams_);
         Logger::info("----------------------------------------------------\n");
 
         flann_algorithm_t index_type = get_param<flann_algorithm_t>(bestParams_,"algorithm");
@@ -148,7 +148,7 @@ public:
         Logger::info("----------------------------------------------------\n");
         Logger::info("Search parameters:\n");
         if (Logger::getLevel()>=FLANN_LOG_INFO)
-        	print_params(bestSearchParams_);
+            print_params(bestSearchParams_);
         Logger::info("----------------------------------------------------\n");
         bestParams_["search_params"] = bestSearchParams_;
         bestParams_["speedup"] = speedup_;
@@ -156,8 +156,8 @@ public:
     
     void buildIndex(const Matrix<ElementType>& dataset)
     {
-    	dataset_ = dataset;
-    	this->buildIndex();
+        dataset_ = dataset;
+        this->buildIndex();
     }
 
 
@@ -179,45 +179,45 @@ public:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	ar.setObject(this);
+        ar.setObject(this);
 
-    	ar & *static_cast<NNIndex<Distance>*>(this);
+        ar & *static_cast<NNIndex<Distance>*>(this);
 
-    	ar & target_precision_;
-    	ar & build_weight_;
-    	ar & memory_weight_;
-    	ar & sample_fraction_;
+        ar & target_precision_;
+        ar & build_weight_;
+        ar & memory_weight_;
+        ar & sample_fraction_;
 
-    	flann_algorithm_t index_type;
-    	if (Archive::is_saving::value) {
-    		index_type = get_param<flann_algorithm_t>(bestParams_,"algorithm");
-    	}
-    	ar & index_type;
-    	ar & bestSearchParams_.checks;
+        flann_algorithm_t index_type;
+        if (Archive::is_saving::value) {
+            index_type = get_param<flann_algorithm_t>(bestParams_,"algorithm");
+        }
+        ar & index_type;
+        ar & bestSearchParams_.checks;
 
-    	if (Archive::is_loading::value) {
-    		bestParams_["algorithm"] = index_type;
+        if (Archive::is_loading::value) {
+            bestParams_["algorithm"] = index_type;
 
-    		index_params_["algorithm"] = getType();
+            index_params_["algorithm"] = getType();
             index_params_["target_precision_"] = target_precision_;
             index_params_["build_weight_"] = build_weight_;
             index_params_["memory_weight_"] = memory_weight_;
             index_params_["sample_fraction_"] = sample_fraction_;
-    	}
+        }
     }
 
     void saveIndex(FILE* stream)
     {
-    	serialization::SaveArchive sa(stream);
-    	sa & *this;
+        serialization::SaveArchive sa(stream);
+        sa & *this;
 
-    	bestIndex_->saveIndex(stream);
+        bestIndex_->saveIndex(stream);
     }
 
     void loadIndex(FILE* stream)
     {
-    	serialization::LoadArchive la(stream);
-    	la & *this;
+        serialization::LoadArchive la(stream);
+        la & *this;
 
         IndexParams params;
         flann_algorithm_t index_type = get_param<flann_algorithm_t>(bestParams_,"algorithm");
@@ -581,9 +581,9 @@ private:
         int repeats = 0;
         t.reset();
         while (t.value<0.2) {
-        	repeats++;
+            repeats++;
             t.start();
-        	compute_ground_truth<Distance>(sampledDataset_, testDataset_, gt_matches_, 0, distance_);
+            compute_ground_truth<Distance>(sampledDataset_, testDataset_, gt_matches_, 0, distance_);
             t.stop();
         }
 
@@ -611,18 +611,18 @@ private:
         }
         Logger::debug("Best time cost: %g\n", bestTimeCost);
 
-    	IndexParams bestParams = costs[0].params;
+        IndexParams bestParams = costs[0].params;
         if (bestTimeCost > 0) {
-        	float bestCost = (costs[0].buildTimeCost * build_weight_ + costs[0].searchTimeCost) / bestTimeCost;
-        	for (size_t i = 0; i < costs.size(); ++i) {
-        		float crtCost = (costs[i].buildTimeCost * build_weight_ + costs[i].searchTimeCost) / bestTimeCost +
-        				memory_weight_ * costs[i].memoryCost;
-        		Logger::debug("Cost: %g\n", crtCost);
-        		if (crtCost < bestCost) {
-        			bestCost = crtCost;
-        			bestParams = costs[i].params;
-        		}
-        	}
+            float bestCost = (costs[0].buildTimeCost * build_weight_ + costs[0].searchTimeCost) / bestTimeCost;
+            for (size_t i = 0; i < costs.size(); ++i) {
+                float crtCost = (costs[i].buildTimeCost * build_weight_ + costs[i].searchTimeCost) / bestTimeCost +
+                        memory_weight_ * costs[i].memoryCost;
+                Logger::debug("Cost: %g\n", crtCost);
+                if (crtCost < bestCost) {
+                    bestCost = crtCost;
+                    bestParams = costs[i].params;
+                }
+            }
             Logger::debug("Best cost: %g\n", bestCost);
         }
 
@@ -661,9 +661,9 @@ private:
             int repeats = 0;
             t.reset();
             while (t.value<0.2) {
-            	repeats++;
+                repeats++;
                 t.start();
-            	compute_ground_truth<Distance>(dataset_, testDataset, gt_matches, 1, distance_);
+                compute_ground_truth<Distance>(dataset_, testDataset, gt_matches, 1, distance_);
                 t.stop();
             }
             float linear = (float)t.value/repeats;
@@ -715,16 +715,16 @@ private:
 
     void swap(AutotunedIndex& other)
     {
-    	BaseClass::swap(other);
-    	std::swap(bestIndex_, other.bestIndex_);
-    	std::swap(bestParams_, other.bestParams_);
-    	std::swap(bestSearchParams_, other.bestSearchParams_);
-    	std::swap(speedup_, other.speedup_);
-    	std::swap(dataset_, other.dataset_);
-    	std::swap(target_precision_, other.target_precision_);
-    	std::swap(build_weight_, other.build_weight_);
-    	std::swap(memory_weight_, other.memory_weight_);
-    	std::swap(sample_fraction_, other.sample_fraction_);
+        BaseClass::swap(other);
+        std::swap(bestIndex_, other.bestIndex_);
+        std::swap(bestParams_, other.bestParams_);
+        std::swap(bestSearchParams_, other.bestSearchParams_);
+        std::swap(speedup_, other.speedup_);
+        std::swap(dataset_, other.dataset_);
+        std::swap(target_precision_, other.target_precision_);
+        std::swap(build_weight_, other.build_weight_);
+        std::swap(memory_weight_, other.memory_weight_);
+        std::swap(sample_fraction_, other.sample_fraction_);
     }
 
 private:

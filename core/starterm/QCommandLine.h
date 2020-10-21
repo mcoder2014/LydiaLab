@@ -32,22 +32,22 @@ public:
      * Enum used to determine entry type in QCommandLineConfigEntry
      */
     typedef enum {
-	None = 0, /**< can be used for the last line of a QCommandLineConfigEntry[] . */
-	Switch, /**< a simple switch wihout argument (eg: ls -l) */
-	Option, /**< an option with an argument (eg: tar -f test.tar) */
-	Param /**< a parameter without '-' delimiter (eg: cp foo bar) */
+    None = 0, /**< can be used for the last line of a QCommandLineConfigEntry[] . */
+    Switch, /**< a simple switch wihout argument (eg: ls -l) */
+    Option, /**< an option with an argument (eg: tar -f test.tar) */
+    Param /**< a parameter without '-' delimiter (eg: cp foo bar) */
     } Type;
 
     /**
      * Flags that can be applied to a QCommandLineConfigEntry
      */
     typedef enum {
-	Default = 0, /**< can be used for the last line of a QCommandLineConfigEntry[] . */
-	Mandatory = 0x01, /**< mandatory argument, will produce a parse error if not present */
-	Optional = 0x02, /**< optional argument */
-	Multiple = 0x04, /**< argument can be used multiple time and will produce multiple signals. */
-	MandatoryMultiple = Mandatory|Multiple,
-	OptionalMultiple = Optional|Multiple,
+    Default = 0, /**< can be used for the last line of a QCommandLineConfigEntry[] . */
+    Mandatory = 0x01, /**< mandatory argument, will produce a parse error if not present */
+    Optional = 0x02, /**< optional argument */
+    Multiple = 0x04, /**< argument can be used multiple time and will produce multiple signals. */
+    MandatoryMultiple = Mandatory|Multiple,
+    OptionalMultiple = Optional|Multiple,
     } Flags;
 
     /**
@@ -64,8 +64,8 @@ public:
      * @sa setConfig
      */
     QCommandLine(const QCoreApplication & app,
-		 const QCommandLineConfig & config = QCommandLineConfig(),
-		 QObject * parent = 0);
+         const QCommandLineConfig & config = QCommandLineConfig(),
+         QObject * parent = 0);
 
     /**
      * QCommandLine constructor
@@ -77,8 +77,8 @@ public:
      * @sa setConfig
      */
     QCommandLine(int argc, char *argv[],
-		 const QCommandLineConfig & config = QCommandLineConfig(),
-		 QObject * parent = 0);
+         const QCommandLineConfig & config = QCommandLineConfig(),
+         QObject * parent = 0);
 
     /**
      * QCommandLine constructor
@@ -89,8 +89,8 @@ public:
      * @sa setConfig
      */
     QCommandLine(const QStringList args,
-		 const QCommandLineConfig & config = QCommandLineConfig(),
-		 QObject * parent = 0);
+         const QCommandLineConfig & config = QCommandLineConfig(),
+         QObject * parent = 0);
 
     /**
      * QCommandLine destructor
@@ -186,9 +186,9 @@ public:
      * @sa addParam
      */
     void addOption(const QChar & shortName,
-		   const QString & longName = QString(),
-		   const QString & descr = QString(),
-		   QCommandLine::Flags flags = QCommandLine::Optional);
+           const QString & longName = QString(),
+           const QString & descr = QString(),
+           QCommandLine::Flags flags = QCommandLine::Optional);
 
     /**
      * Define a new switch: an option without parameters
@@ -200,9 +200,9 @@ public:
      * @sa addParam
      */
     void addSwitch(const QChar & shortName,
-		   const QString & longName = QString(),
-		   const QString & descr = QString(),
-		   QCommandLine::Flags flags = QCommandLine::Optional);
+           const QString & longName = QString(),
+           const QString & descr = QString(),
+           QCommandLine::Flags flags = QCommandLine::Optional);
 
     /**
      * Define a new parameter: everything that is not an option (i.e. input of program)
@@ -213,8 +213,8 @@ public:
      * @sa addOption
      */
     void addParam(const QString & name,
-		  const QString & descr = QString(),
-		  QCommandLine::Flags flags = QCommandLine::Optional);
+          const QString & descr = QString(),
+          QCommandLine::Flags flags = QCommandLine::Optional);
 
     /**
      * Remove any option of type QCommandLine::Option with a given shortName or longName.

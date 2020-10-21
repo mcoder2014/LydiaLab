@@ -118,11 +118,11 @@
 { \
     if ((A) == NULL) \
     { \
-	if (Common->status != CHOLMOD_OUT_OF_MEMORY) \
-	{ \
-	    ERROR (CHOLMOD_INVALID, "argument missing") ; \
-	} \
-	return (result) ; \
+    if (Common->status != CHOLMOD_OUT_OF_MEMORY) \
+    { \
+        ERROR (CHOLMOD_INVALID, "argument missing") ; \
+    } \
+    return (result) ; \
     } \
 }
 
@@ -131,21 +131,21 @@
 { \
     if (Common == NULL) \
     { \
-	return (result) ; \
+    return (result) ; \
     } \
     if (Common->itype != ITYPE || Common->dtype != DTYPE) \
     { \
-	Common->status = CHOLMOD_INVALID ; \
-	return (result) ; \
+    Common->status = CHOLMOD_INVALID ; \
+    return (result) ; \
     } \
 }
 
-#define IS_NAN(x)	CHOLMOD_IS_NAN(x)
-#define IS_ZERO(x)	CHOLMOD_IS_ZERO(x)
-#define IS_NONZERO(x)	CHOLMOD_IS_NONZERO(x)
-#define IS_LT_ZERO(x)	CHOLMOD_IS_LT_ZERO(x)
-#define IS_GT_ZERO(x)	CHOLMOD_IS_GT_ZERO(x)
-#define IS_LE_ZERO(x)	CHOLMOD_IS_LE_ZERO(x)
+#define IS_NAN(x)    CHOLMOD_IS_NAN(x)
+#define IS_ZERO(x)    CHOLMOD_IS_ZERO(x)
+#define IS_NONZERO(x)    CHOLMOD_IS_NONZERO(x)
+#define IS_LT_ZERO(x)    CHOLMOD_IS_LT_ZERO(x)
+#define IS_GT_ZERO(x)    CHOLMOD_IS_GT_ZERO(x)
+#define IS_LE_ZERO(x)    CHOLMOD_IS_LE_ZERO(x)
 
 /* 1e308 is a huge number that doesn't take many characters to print in a
  * file, in CHOLMOD/Check/cholmod_read and _write.  Numbers larger than this
@@ -160,14 +160,14 @@
 
 /* CHOLMOD is designed for 3 types of integer variables:
  *
- *	(1) all integers are int
- *	(2) most integers are int, some are UF_long
- *	(3) all integers are UF_long
+ *    (1) all integers are int
+ *    (2) most integers are int, some are UF_long
+ *    (3) all integers are UF_long
  *
  * and two kinds of floating-point values:
  *
- *	(1) double
- *	(2) float
+ *    (1) double
+ *    (2) float
  *
  * the complex types (ANSI-compatible complex, and MATLAB-compatable zomplex)
  * are based on the double or float type, and are not selected here.  They
@@ -176,12 +176,12 @@
  * This gives 6 different modes in which CHOLMOD can be compiled (only the
  * first two are currently supported):
  *
- *	DINT	double, int			prefix: cholmod_
- *	DLONG	double, UF_long			prefix: cholmod_l_
- *	DMIX	double, mixed int/UF_long	prefix: cholmod_m_
- *	SINT	float, int			prefix: cholmod_si_
- *	SLONG	float, UF_long			prefix: cholmod_sl_
- *	SMIX	float, mixed int/log		prefix: cholmod_sm_
+ *    DINT    double, int            prefix: cholmod_
+ *    DLONG    double, UF_long            prefix: cholmod_l_
+ *    DMIX    double, mixed int/UF_long    prefix: cholmod_m_
+ *    SINT    float, int            prefix: cholmod_si_
+ *    SLONG    float, UF_long            prefix: cholmod_sl_
+ *    SMIX    float, mixed int/log        prefix: cholmod_sm_
  *
  * These are selected with compile time flags (-DDLONG, for example).  If no
  * flag is selected, the default is DINT.
@@ -325,11 +325,11 @@ int  cholmod_dump_parent (int *, size_t, char *, cholmod_common *) ;
 void cholmod_dump_init (char *, cholmod_common *) ;
 int  cholmod_dump_mem (char *, UF_long, cholmod_common *) ;
 void cholmod_dump_real (char *, Real *, UF_long, UF_long, int, int,
-	cholmod_common *) ;
+    cholmod_common *) ;
 void cholmod_dump_super (UF_long, int *, int *, int *, int *, double *, int,
-	cholmod_common *) ;
+    cholmod_common *) ;
 int  cholmod_dump_partition (UF_long, int *, int *, int *, int *, UF_long,
-	cholmod_common *) ;
+    cholmod_common *) ;
 int  cholmod_dump_work(int, int, UF_long, cholmod_common *) ;
 
 /* double, UF_long */
@@ -346,11 +346,11 @@ int  cholmod_l_dump_parent (UF_long *, size_t, char *, cholmod_common *) ;
 void cholmod_l_dump_init (char *, cholmod_common *) ;
 int  cholmod_l_dump_mem (char *, UF_long, cholmod_common *) ;
 void cholmod_l_dump_real (char *, Real *, UF_long, UF_long, int, int,
-	cholmod_common *) ;
+    cholmod_common *) ;
 void cholmod_l_dump_super (UF_long, UF_long *, UF_long *, UF_long *, UF_long *,
         double *, int, cholmod_common *) ;
 int  cholmod_l_dump_partition (UF_long, UF_long *, UF_long *, UF_long *,
-	UF_long *, UF_long, cholmod_common *) ;
+    UF_long *, UF_long, cholmod_common *) ;
 int  cholmod_l_dump_work(int, int, UF_long, cholmod_common *) ;
 
 #define DEBUG_INIT(s,Common)  { CHOLMOD(dump_init)(s, Common) ; }
@@ -360,7 +360,7 @@ int  cholmod_l_dump_work(int, int, UF_long, cholmod_common *) ;
 { \
     if (CHOLMOD(dump) >= (k) && Common->print_function != NULL) \
     { \
-	(Common->print_function) params ; \
+    (Common->print_function) params ; \
     } \
 }
 
@@ -373,7 +373,7 @@ int  cholmod_l_dump_work(int, int, UF_long, cholmod_common *) ;
 { \
     if (CHOLMOD(dump_malloc) > 0) \
     { \
-	printf params ; \
+    printf params ; \
     } \
 }
 

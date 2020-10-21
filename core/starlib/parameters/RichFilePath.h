@@ -5,7 +5,7 @@ public:
     inline QString getFileName() const {return pval;}
     inline bool isFileName() const {return true;}
     inline QString typeName() const {return QString("FileName");}
-    inline void	set(const Value& p) {pval = p.getFileName();}
+    inline void    set(const Value& p) {pval = p.getFileName();}
     QString toString() { return getFileName(); }    
     ~FileValue() {}
 private:

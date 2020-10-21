@@ -20,25 +20,25 @@
  *
  * Primary routines:
  * -----------------
- * cholmod_super_symbolic	supernodal symbolic analysis
- * cholmod_super_numeric	supernodal numeric factorization
- * cholmod_super_lsolve		supernodal Lx=b solve
- * cholmod_super_ltsolve	supernodal L'x=b solve
+ * cholmod_super_symbolic    supernodal symbolic analysis
+ * cholmod_super_numeric    supernodal numeric factorization
+ * cholmod_super_lsolve        supernodal Lx=b solve
+ * cholmod_super_ltsolve    supernodal L'x=b solve
  *
  * Prototypes for the BLAS and LAPACK routines that CHOLMOD uses are listed
  * below, including how they are used in CHOLMOD.
  *
  * BLAS routines:
  * --------------
- * dtrsv	solve Lx=b or L'x=b, L non-unit diagonal, x and b stride-1
- * dtrsm	solve LX=B or L'X=b, L non-unit diagonal
- * dgemv	y=y-A*x or y=y-A'*x (x and y stride-1)
- * dgemm	C=A*B', C=C-A*B, or C=C-A'*B
- * dsyrk	C=tril(A*A')
+ * dtrsv    solve Lx=b or L'x=b, L non-unit diagonal, x and b stride-1
+ * dtrsm    solve LX=B or L'X=b, L non-unit diagonal
+ * dgemv    y=y-A*x or y=y-A'*x (x and y stride-1)
+ * dgemm    C=A*B', C=C-A*B, or C=C-A'*B
+ * dsyrk    C=tril(A*A')
  *
  * LAPACK routines:
  * ----------------
- * dpotrf	LAPACK: A=chol(tril(A))
+ * dpotrf    LAPACK: A=chol(tril(A))
  *
  * Requires the Core module, and two external packages: LAPACK and the BLAS.
  * Optionally used by the Cholesky module.
@@ -61,12 +61,12 @@
 int cholmod_super_symbolic
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* matrix to analyze */
-    cholmod_sparse *F,	/* F = A' or A(:,f)' */
-    int *Parent,	/* elimination tree */
+    cholmod_sparse *A,    /* matrix to analyze */
+    cholmod_sparse *F,    /* F = A' or A(:,f)' */
+    int *Parent,    /* elimination tree */
     /* ---- in/out --- */
-    cholmod_factor *L,	/* simplicial symbolic on input,
-			 * supernodal symbolic on output */
+    cholmod_factor *L,    /* simplicial symbolic on input,
+             * supernodal symbolic on output */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -86,11 +86,11 @@ int cholmod_l_super_symbolic (cholmod_sparse *, cholmod_sparse *, UF_long *,
 int cholmod_super_numeric
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* matrix to factorize */
-    cholmod_sparse *F,	/* F = A' or A(:,f)' */
-    double beta [2],	/* beta*I is added to diagonal of matrix to factorize */
+    cholmod_sparse *A,    /* matrix to factorize */
+    cholmod_sparse *F,    /* F = A' or A(:,f)' */
+    double beta [2],    /* beta*I is added to diagonal of matrix to factorize */
     /* ---- in/out --- */
-    cholmod_factor *L,	/* factorization */
+    cholmod_factor *L,    /* factorization */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -109,11 +109,11 @@ int cholmod_l_super_numeric (cholmod_sparse *, cholmod_sparse *, double *,
 int cholmod_super_lsolve
 (
     /* ---- input ---- */
-    cholmod_factor *L,	/* factor to use for the forward solve */
+    cholmod_factor *L,    /* factor to use for the forward solve */
     /* ---- output ---- */
-    cholmod_dense *X,	/* b on input, solution to Lx=b on output */
+    cholmod_dense *X,    /* b on input, solution to Lx=b on output */
     /* ---- workspace   */
-    cholmod_dense *E,	/* workspace of size nrhs*(L->maxesize) */
+    cholmod_dense *E,    /* workspace of size nrhs*(L->maxesize) */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -132,11 +132,11 @@ int cholmod_l_super_lsolve (cholmod_factor *, cholmod_dense *, cholmod_dense *,
 int cholmod_super_ltsolve
 (
     /* ---- input ---- */
-    cholmod_factor *L,	/* factor to use for the backsolve */
+    cholmod_factor *L,    /* factor to use for the backsolve */
     /* ---- output ---- */
-    cholmod_dense *X,	/* b on input, solution to L'x=b on output */
+    cholmod_dense *X,    /* b on input, solution to L'x=b on output */
     /* ---- workspace   */
-    cholmod_dense *E,	/* workspace of size nrhs*(L->maxesize) */
+    cholmod_dense *E,    /* workspace of size nrhs*(L->maxesize) */
     /* --------------- */
     cholmod_common *Common
 ) ;

@@ -102,26 +102,26 @@ bool read_off(Surface_mesh& mesh, const std::string& filename)
         assert(c != NULL);
     }
 
-	// (ennetws) bug fix for comments, empty lines..
-	while(!binary && true && !feof(in)){
-		fgets(line, 100, in);
-		if(strlen(line) > 4 && line[0] != '#')
-			break;
-	}
+    // (ennetws) bug fix for comments, empty lines..
+    while(!binary && true && !feof(in)){
+        fgets(line, 100, in);
+        if(strlen(line) > 4 && line[0] != '#')
+            break;
+    }
 
 
-	// #Vertice, #Faces, #Edges
-	if (binary)
-	{
-		read(in, nV);
-		read(in, nF);
-		read(in, nE);
-	}
-	else
-	{
-		err = sscanf(line, "%d %d %d", (int*)&nV, (int*)&nF, (int*)&nE); // (ennetws) bug fix
-	}
-	mesh.reserve(nV, std::max(3*nV, nE), nF);
+    // #Vertice, #Faces, #Edges
+    if (binary)
+    {
+        read(in, nV);
+        read(in, nF);
+        read(in, nE);
+    }
+    else
+    {
+        err = sscanf(line, "%d %d %d", (int*)&nV, (int*)&nF, (int*)&nE); // (ennetws) bug fix
+    }
+    mesh.reserve(nV, std::max(3*nV, nE), nF);
 
     // read vertices: pos [norma] [texcoord]
     if (has_normals && has_texcoords)

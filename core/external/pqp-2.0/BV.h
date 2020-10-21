@@ -104,9 +104,9 @@ BV_Distance(PQP_REAL R[3][3], PQP_REAL T[3], BV *b1, BV *b2);
 
 private:
 #if PQP_BV_TYPE & OBB_TYPE
-	OBB_Processor o;
+    OBB_Processor o;
 #endif
-	Rect_Processor p;
+    Rect_Processor p;
 };
 
 } // namespace

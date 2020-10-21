@@ -62,7 +62,7 @@ inline int countCorrectMatches(size_t* neighbors, size_t* groundTruth, int n)
 
 template <typename Distance>
 typename Distance::ResultType computeDistanceRaport(const Matrix<typename Distance::ElementType>& inputData, typename Distance::ElementType* target,
-		size_t* neighbors, size_t* groundTruth, int veclen, int n, const Distance& distance)
+        size_t* neighbors, size_t* groundTruth, int veclen, int n, const Distance& distance)
 {
     typedef typename Distance::ResultType DistanceType;
 

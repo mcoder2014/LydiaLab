@@ -29,46 +29,46 @@
 #define ONI_PLATFORM_ANDROID_ARM 5
 
 #if (defined _WIN32)
-#	ifndef RC_INVOKED
-#		if _MSC_VER < 1300
-#			error OpenNI Platform Abstraction Layer - Win32 - Microsoft Visual Studio version below 2003 (7.0) are not supported!
-#		endif
-#		if _MSC_VER > 1600
-#			error OpenNI Platform Abstraction Layer - Win32 - Microsoft Visual Studio version above 2010 (10.0) are not supported!
-#		endif
-#	endif
-#	include "Win32/OniPlatformWin32.h"
+#    ifndef RC_INVOKED
+#        if _MSC_VER < 1300
+#            error OpenNI Platform Abstraction Layer - Win32 - Microsoft Visual Studio version below 2003 (7.0) are not supported!
+#        endif
+#        if _MSC_VER > 1600
+#            error OpenNI Platform Abstraction Layer - Win32 - Microsoft Visual Studio version above 2010 (10.0) are not supported!
+#        endif
+#    endif
+#    include "Win32/OniPlatformWin32.h"
 #elif defined (ANDROID) && defined (__arm__)
-#	include "Android-Arm/OniPlatformAndroid-Arm.h"
+#    include "Android-Arm/OniPlatformAndroid-Arm.h"
 #elif (linux && (i386 || __x86_64__))
-#	include "Linux-x86/OniPlatformLinux-x86.h"
+#    include "Linux-x86/OniPlatformLinux-x86.h"
 #elif (linux && __arm__)
-#	include "Linux-Arm/OniPlatformLinux-Arm.h"
+#    include "Linux-Arm/OniPlatformLinux-Arm.h"
 #elif _ARC
-#	include "ARC/OniPlaformARC.h"
+#    include "ARC/OniPlaformARC.h"
 #elif (__APPLE__)
-#	include "MacOSX/OniPlatformMacOSX.h"
+#    include "MacOSX/OniPlatformMacOSX.h"
 #else
-#	error Xiron Platform Abstraction Layer - Unsupported Platform!
+#    error Xiron Platform Abstraction Layer - Unsupported Platform!
 #endif
 
 #ifdef __cplusplus
-#	define ONI_C extern "C"
-#	define ONI_C_API_EXPORT ONI_C ONI_API_EXPORT
-#	define ONI_C_API_IMPORT ONI_C ONI_API_IMPORT
-#	define ONI_CPP_API_EXPORT ONI_API_EXPORT
-#	define ONI_CPP_API_IMPORT ONI_API_IMPORT
+#    define ONI_C extern "C"
+#    define ONI_C_API_EXPORT ONI_C ONI_API_EXPORT
+#    define ONI_C_API_IMPORT ONI_C ONI_API_IMPORT
+#    define ONI_CPP_API_EXPORT ONI_API_EXPORT
+#    define ONI_CPP_API_IMPORT ONI_API_IMPORT
 #else // __cplusplus
-#	define ONI_C_API_EXPORT ONI_API_EXPORT
-#	define ONI_C_API_IMPORT ONI_API_IMPORT
+#    define ONI_C_API_EXPORT ONI_API_EXPORT
+#    define ONI_C_API_IMPORT ONI_API_IMPORT
 #endif  // __cplusplus
 
 #ifdef OPENNI2_EXPORT
-#	define ONI_C_API ONI_C_API_EXPORT
-#	define ONI_CPP_API ONI_CPP_API_EXPORT
+#    define ONI_C_API ONI_C_API_EXPORT
+#    define ONI_CPP_API ONI_CPP_API_EXPORT
 #else // OPENNI2_EXPORT
-#	define ONI_C_API ONI_C_API_IMPORT
-#	define ONI_CPP_API ONI_CPP_API_IMPORT
+#    define ONI_C_API ONI_C_API_IMPORT
+#    define ONI_CPP_API ONI_CPP_API_IMPORT
 #endif // OPENNI2_EXPORT
 
 

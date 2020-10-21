@@ -86,7 +86,7 @@ public:
      * @return
      */
     CompositeIndex(const IndexParams& params = CompositeIndexParams(), Distance d = Distance()) :
-    	BaseClass(params, d)
+        BaseClass(params, d)
     {
         kdtree_index_ = new KDTreeIndex<Distance>(params, d);
         kmeans_index_ = new KMeansIndex<Distance>(params, d);
@@ -101,14 +101,14 @@ public:
     }
 
     CompositeIndex(const CompositeIndex& other) : BaseClass(other),
-    	kmeans_index_(other.kmeans_index_), kdtree_index_(other.kdtree_index_)
+        kmeans_index_(other.kmeans_index_), kdtree_index_(other.kdtree_index_)
     {
     }
 
     CompositeIndex& operator=(CompositeIndex other)
     {
-    	this->swap(other);
-    	return *this;
+        this->swap(other);
+        return *this;
     }
 
     virtual ~CompositeIndex()
@@ -119,7 +119,7 @@ public:
 
     BaseClass* clone() const
     {
-    	return new CompositeIndex(*this);
+        return new CompositeIndex(*this);
     }
 
     /**
@@ -211,8 +211,8 @@ public:
 protected:
     void swap(CompositeIndex& other)
     {
-    	std::swap(kmeans_index_, other.kmeans_index_);
-    	std::swap(kdtree_index_, other.kdtree_index_);
+        std::swap(kmeans_index_, other.kmeans_index_);
+        std::swap(kdtree_index_, other.kdtree_index_);
     }
 
     void buildIndexImpl()

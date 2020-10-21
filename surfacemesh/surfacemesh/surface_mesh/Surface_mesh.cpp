@@ -757,7 +757,7 @@ update_vertex_normals()
     Vertex_iterator vit, vend=vertices_end();
 
     for (vit=vertices_begin(); vit!=vend; ++vit)
-	{
+    {
         if (!is_deleted(vit))
             vnormal_[vit] = compute_vertex_normal(vit);
     }

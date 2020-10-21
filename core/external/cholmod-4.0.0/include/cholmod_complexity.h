@@ -21,47 +21,47 @@
 /* pattern */
 /* -------------------------------------------------------------------------- */
 
-#define P_TEMPLATE(name)		p_ ## name
-#define P_ASSIGN2(x,z,p,ax,az,q)	x [p] = 1
-#define P_PRINT(k,x,z,p)		PRK(k, ("1"))
+#define P_TEMPLATE(name)        p_ ## name
+#define P_ASSIGN2(x,z,p,ax,az,q)    x [p] = 1
+#define P_PRINT(k,x,z,p)        PRK(k, ("1"))
 
 /* -------------------------------------------------------------------------- */
 /* real */
 /* -------------------------------------------------------------------------- */
 
-#define R_TEMPLATE(name)			r_ ## name
-#define R_ASSEMBLE(x,z,p,ax,az,q)		x [p] += ax [q]
-#define R_ASSIGN(x,z,p,ax,az,q)			x [p]  = ax [q]
-#define R_ASSIGN_CONJ(x,z,p,ax,az,q)		x [p]  = ax [q]
-#define R_ASSIGN_REAL(x,p,ax,q)			x [p]  = ax [q]
-#define R_XTYPE_OK(type)			((type) == CHOLMOD_REAL)
-#define R_IS_NONZERO(ax,az,q)			IS_NONZERO (ax [q])
-#define R_IS_ZERO(ax,az,q)			IS_ZERO (ax [q])
-#define R_IS_ONE(ax,az,q)			(ax [q] == 1)
-#define R_MULT(x,z,p, ax,az,q, bx,bz,r)		x [p]  = ax [q] * bx [r]
-#define R_MULTADD(x,z,p, ax,az,q, bx,bz,r)	x [p] += ax [q] * bx [r]
-#define R_MULTSUB(x,z,p, ax,az,q, bx,bz,r)	x [p] -= ax [q] * bx [r]
-#define R_MULTADDCONJ(x,z,p, ax,az,q, bx,bz,r)	x [p] += ax [q] * bx [r]
-#define R_MULTSUBCONJ(x,z,p, ax,az,q, bx,bz,r)	x [p] -= ax [q] * bx [r]
-#define R_ADD(x,z,p, ax,az,q, bx,bz,r)		x [p]  = ax [q] + bx [r]
-#define R_ADD_REAL(x,p, ax,q, bx,r)		x [p]  = ax [q] + bx [r]
-#define R_CLEAR(x,z,p)				x [p]  = 0
+#define R_TEMPLATE(name)            r_ ## name
+#define R_ASSEMBLE(x,z,p,ax,az,q)        x [p] += ax [q]
+#define R_ASSIGN(x,z,p,ax,az,q)            x [p]  = ax [q]
+#define R_ASSIGN_CONJ(x,z,p,ax,az,q)        x [p]  = ax [q]
+#define R_ASSIGN_REAL(x,p,ax,q)            x [p]  = ax [q]
+#define R_XTYPE_OK(type)            ((type) == CHOLMOD_REAL)
+#define R_IS_NONZERO(ax,az,q)            IS_NONZERO (ax [q])
+#define R_IS_ZERO(ax,az,q)            IS_ZERO (ax [q])
+#define R_IS_ONE(ax,az,q)            (ax [q] == 1)
+#define R_MULT(x,z,p, ax,az,q, bx,bz,r)        x [p]  = ax [q] * bx [r]
+#define R_MULTADD(x,z,p, ax,az,q, bx,bz,r)    x [p] += ax [q] * bx [r]
+#define R_MULTSUB(x,z,p, ax,az,q, bx,bz,r)    x [p] -= ax [q] * bx [r]
+#define R_MULTADDCONJ(x,z,p, ax,az,q, bx,bz,r)    x [p] += ax [q] * bx [r]
+#define R_MULTSUBCONJ(x,z,p, ax,az,q, bx,bz,r)    x [p] -= ax [q] * bx [r]
+#define R_ADD(x,z,p, ax,az,q, bx,bz,r)        x [p]  = ax [q] + bx [r]
+#define R_ADD_REAL(x,p, ax,q, bx,r)        x [p]  = ax [q] + bx [r]
+#define R_CLEAR(x,z,p)                x [p]  = 0
 #define R_CLEAR_IMAG(x,z,p)
-#define R_DIV(x,z,p,ax,az,q)			x [p] /= ax [q]
-#define R_LLDOT(x,p, ax,az,q)			x [p] -= ax [q] * ax [q]
-#define R_PRINT(k,x,z,p)			PRK(k, ("%24.16e", x [p]))
+#define R_DIV(x,z,p,ax,az,q)            x [p] /= ax [q]
+#define R_LLDOT(x,p, ax,az,q)            x [p] -= ax [q] * ax [q]
+#define R_PRINT(k,x,z,p)            PRK(k, ("%24.16e", x [p]))
 
-#define R_DIV_REAL(x,z,p, ax,az,q, bx,r)	x [p] = ax [q] / bx [r]
-#define R_MULT_REAL(x,z,p, ax,az,q, bx,r)	x [p] = ax [q] * bx [r]
+#define R_DIV_REAL(x,z,p, ax,az,q, bx,r)    x [p] = ax [q] / bx [r]
+#define R_MULT_REAL(x,z,p, ax,az,q, bx,r)    x [p] = ax [q] * bx [r]
 
-#define R_LDLDOT(x,p, ax,az,q, bx,r)		x [p] -=(ax[q] * ax[q])/ bx[r]
+#define R_LDLDOT(x,p, ax,az,q, bx,r)        x [p] -=(ax[q] * ax[q])/ bx[r]
 
 /* -------------------------------------------------------------------------- */
 /* complex */
 /* -------------------------------------------------------------------------- */
 
-#define C_TEMPLATE(name)		c_ ## name
-#define CT_TEMPLATE(name)		ct_ ## name
+#define C_TEMPLATE(name)        c_ ## name
+#define CT_TEMPLATE(name)        ct_ ## name
 
 #define C_ASSEMBLE(x,z,p,ax,az,q) \
     x [2*(p)  ] += ax [2*(q)  ] ; \
@@ -71,13 +71,13 @@
     x [2*(p)  ] = ax [2*(q)  ] ; \
     x [2*(p)+1] = ax [2*(q)+1]
 
-#define C_ASSIGN_REAL(x,p,ax,q)			x [2*(p)]  = ax [2*(q)]
+#define C_ASSIGN_REAL(x,p,ax,q)            x [2*(p)]  = ax [2*(q)]
 
 #define C_ASSIGN_CONJ(x,z,p,ax,az,q) \
     x [2*(p)  ] =  ax [2*(q)  ] ; \
     x [2*(p)+1] = -ax [2*(q)+1]
 
-#define C_XTYPE_OK(type)		((type) == CHOLMOD_COMPLEX)
+#define C_XTYPE_OK(type)        ((type) == CHOLMOD_COMPLEX)
 
 #define C_IS_NONZERO(ax,az,q) \
     (IS_NONZERO (ax [2*(q)]) || IS_NONZERO (ax [2*(q)+1]))
@@ -129,9 +129,9 @@ x [2*(p)+1] -= (-ax [2*(q)+1]) * bx [2*(r)] + ax [2*(q)  ] * bx [2*(r)+1]
 /* s = s / a */
 #define C_DIV(x,z,p,ax,az,q) \
     Common->complex_divide ( \
-	      x [2*(p)],  x [2*(p)+1], \
-	     ax [2*(q)], ax [2*(q)+1], \
-	     &x [2*(p)], &x [2*(p)+1])
+          x [2*(p)],  x [2*(p)+1], \
+         ax [2*(q)], ax [2*(q)+1], \
+         &x [2*(p)], &x [2*(p)+1])
 
 /* s -= conj(a)*a ; note that the result of conj(a)*a is real */
 #define C_LLDOT(x,p, ax,az,q) \
@@ -155,8 +155,8 @@ x [2*(p)+1] -= (-ax [2*(q)+1]) * bx [2*(r)] + ax [2*(q)  ] * bx [2*(r)+1]
 /* zomplex */
 /* -------------------------------------------------------------------------- */
 
-#define Z_TEMPLATE(name)		z_ ## name
-#define ZT_TEMPLATE(name)		zt_ ## name
+#define Z_TEMPLATE(name)        z_ ## name
+#define ZT_TEMPLATE(name)        zt_ ## name
 
 #define Z_ASSEMBLE(x,z,p,ax,az,q) \
     x [p] += ax [q] ; \
@@ -166,13 +166,13 @@ x [2*(p)+1] -= (-ax [2*(q)+1]) * bx [2*(r)] + ax [2*(q)  ] * bx [2*(r)+1]
     x [p] = ax [q] ; \
     z [p] = az [q]
 
-#define Z_ASSIGN_REAL(x,p,ax,q)			x [p]  = ax [q]
+#define Z_ASSIGN_REAL(x,p,ax,q)            x [p]  = ax [q]
 
 #define Z_ASSIGN_CONJ(x,z,p,ax,az,q) \
     x [p] =  ax [q] ; \
     z [p] = -az [q]
 
-#define Z_XTYPE_OK(type)		((type) == CHOLMOD_ZOMPLEX)
+#define Z_XTYPE_OK(type)        ((type) == CHOLMOD_ZOMPLEX)
 
 #define Z_IS_NONZERO(ax,az,q) \
     (IS_NONZERO (ax [q]) || IS_NONZERO (az [q]))
@@ -206,11 +206,11 @@ x [2*(p)+1] -= (-ax [2*(q)+1]) * bx [2*(r)] + ax [2*(q)  ] * bx [2*(r)+1]
     z [p] -= (-az [q]) * bx [r] + ax [q] * bz [r]
 
 #define Z_ADD(x,z,p, ax,az,q, bx,bz,r) \
-	x [p] = ax [q] + bx [r] ; \
-	z [p] = az [q] + bz [r]
+    x [p] = ax [q] + bx [r] ; \
+    z [p] = az [q] + bz [r]
 
 #define Z_ADD_REAL(x,p, ax,q, bx,r) \
-	x [p] = ax [q] + bx [r]
+    x [p] = ax [q] + bx [r]
 
 #define Z_CLEAR(x,z,p) \
     x [p] = 0 ; \
@@ -227,7 +227,7 @@ x [2*(p)+1] -= (-ax [2*(q)+1]) * bx [2*(r)] + ax [2*(q)  ] * bx [2*(r)+1]
 #define Z_LLDOT(x,p, ax,az,q) \
     x [p] -= ax [q] * ax [q] + az [q] * az [q]
 
-#define Z_PRINT(k,x,z,p)	PRK(k, ("(%24.16e,%24.16e)", x [p], z [p]))
+#define Z_PRINT(k,x,z,p)    PRK(k, ("(%24.16e,%24.16e)", x [p], z [p]))
 
 #define Z_DIV_REAL(x,z,p, ax,az,q, bx,r) \
     x [p] = ax [q] / bx [r] ; \
@@ -253,12 +253,12 @@ x [2*(p)+1] -= (-ax [2*(q)+1]) * bx [2*(r)] + ax [2*(q)  ] * bx [2*(r)+1]
 { \
     if ((A)->xtype < (xtype1) || (A)->xtype > (xtype2) || \
         ((A)->xtype != CHOLMOD_PATTERN && ((A)->x) == NULL) || \
-	((A)->xtype == CHOLMOD_ZOMPLEX && ((A)->z) == NULL)) \
+    ((A)->xtype == CHOLMOD_ZOMPLEX && ((A)->z) == NULL)) \
     { \
-	if (Common->status != CHOLMOD_OUT_OF_MEMORY) \
-	{ \
-	    ERROR (CHOLMOD_INVALID, "invalid xtype") ; \
-	} \
-	return (result) ; \
+    if (Common->status != CHOLMOD_OUT_OF_MEMORY) \
+    { \
+        ERROR (CHOLMOD_INVALID, "invalid xtype") ; \
+    } \
+    return (result) ; \
     } \
 }

@@ -33,17 +33,17 @@ SUBDIRS += surfacemesh/surfacemesh_render_transparent
 #--- Filter Plugins [[ @TODO: FIX COMPILE ISSUES ]]
 SUBDIRS += surfacemesh/surfacemesh_filter_create
 SUBDIRS += surfacemesh/surfacemesh_filter_normalize
-SUBDIRS += surfacemesh/surfacemesh_filter_butterfly_subdivision
-SUBDIRS += surfacemesh/surfacemesh_filter_isotropic_remesher
+#SUBDIRS += surfacemesh/surfacemesh_filter_butterfly_subdivision
+#SUBDIRS += surfacemesh/surfacemesh_filter_isotropic_remesher
 SUBDIRS += surfacemesh/surfacemesh_filter_laplacian_smoothing
 SUBDIRS += surfacemesh/surfacemesh_filter_simplification
-SUBDIRS += surfacemesh/surfacemesh_filter_geoheat
-SUBDIRS += surfacemesh/surfacemesh_filter_ballpivoting
+#SUBDIRS += surfacemesh/surfacemesh_filter_geoheat
+#SUBDIRS += surfacemesh/surfacemesh_filter_ballpivoting
 #SUBDIRS += surfacemesh/surfacemesh_filter_au_skeleton
 #SUBDIRS += surfacemesh/filter_depthscanner
 #--- Mode Plugins
 SUBDIRS += surfacemesh/surfacemesh_mode_info
-SUBDIRS += surfacemesh/surfacemesh_mode_arapdeform
+#SUBDIRS += surfacemesh/surfacemesh_mode_arapdeform
 #--- Decorate Plugins [[ @TODO: INTERFACE NOT READY!! ]]
 #SUBDIRS += surfacemesh/surfacemesh_decorate_normals
 #SUBDIRS += surfacemesh/surfacemesh_decorate_selection

@@ -41,7 +41,7 @@ public:
     ~DrawArea();
 private:
     MainWindow* const _mainWindow;
-	bool isBackgroundEffects;
+    bool isBackgroundEffects;
 
 public:
     MainWindow* mainWindow(){ return _mainWindow; }
@@ -60,7 +60,7 @@ public slots:
     void setPerspectiveProjection();
     void setOrthoProjection();
     void setIsoProjection();
-	void toggleBackgroundEffect();
+    void toggleBackgroundEffect();
 private:
     void init();              ///< Initializes the scene (qGLViewer)
 public:

@@ -283,12 +283,12 @@ void MainWindow::saveRecentFileList(const QString &fileName) {
 #if 0
 void MainWindow::openRecentMesh() {
     QAction *action = qobject_cast<QAction *>(sender());
-    if (action)	loadModel(action->data().toString());
+    if (action)    loadModel(action->data().toString());
 }
 
 void MainWindow::openRecentProj() {
     QAction *action = qobject_cast<QAction *>(sender());
-    if (action)	
+    if (action)    
         loadProject(action->data().toString());
 }
 #endif
@@ -424,7 +424,7 @@ bool MainWindow::exportMesh(QString /*fileName*/, Model* /*mod*/, bool /*saveAll
 
     if (fileName.isEmpty()) {
         int dialogRet = saveDialog.exec();
-        if(dialogRet==QDialog::Rejected	) return false;
+        if(dialogRet==QDialog::Rejected    ) return false;
         fileName=saveDialog.selectedFiles ().first();
         QFileInfo fni(fileName);
         if(fni.suffix().isEmpty()) {

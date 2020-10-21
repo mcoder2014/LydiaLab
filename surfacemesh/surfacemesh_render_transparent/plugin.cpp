@@ -92,7 +92,7 @@ public:
                     FaceItr fit = f.second;
                     fvit = fvend = mesh()->vertices(fit);
     
-                    do{	
+                    do{    
                         if(has_vertex_color){
                             // Fog like effect
                             Eigen::Vector4d colv(vcolor[fvit][0],vcolor[fvit][1],vcolor[fvit][2], 1 - f.first);

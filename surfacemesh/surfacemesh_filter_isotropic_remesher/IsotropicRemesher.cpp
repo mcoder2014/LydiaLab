@@ -197,21 +197,21 @@ inline int IsotropicRemesher::targetValence(const SurfaceMeshModel::Vertex& _vh 
 
 inline bool IsotropicRemesher::isBoundary(const SurfaceMeshModel::Vertex& _vh )
 {
-	foreach( Halfedge hvit, mesh()->onering_hedges(_vh) )
-	{
-		if ( mesh()->is_boundary( mesh()->edge( hvit ) ) )
-			return true;
-	}
+    foreach( Halfedge hvit, mesh()->onering_hedges(_vh) )
+    {
+        if ( mesh()->is_boundary( mesh()->edge( hvit ) ) )
+            return true;
+    }
     return false;
 }
 
 inline bool IsotropicRemesher::isFeature(const SurfaceMeshModel::Vertex& _vh )
 {
-	foreach( Halfedge hvit, mesh()->onering_hedges(_vh) )
-	{
-		if(efeature[mesh()->edge(hvit)])
-			return true;
-	}
+    foreach( Halfedge hvit, mesh()->onering_hedges(_vh) )
+    {
+        if(efeature[mesh()->edge(hvit)])
+            return true;
+    }
 
     return false;
 }
@@ -262,7 +262,7 @@ Vector3 IsotropicRemesher::findNearestPoint(SurfaceMeshModel * original_mesh, co
 {
     Vector3VertexProperty orig_points = original_mesh->vertex_property<Vector3>( VPOINT );
 
-	double fc = original_mesh->bbox().diagonal().norm() * 2;
+    double fc = original_mesh->bbox().diagonal().norm() * 2;
     Vector3  p_best = Vector3(fc,fc,fc) + Vector3(original_mesh->bbox().center());
     SurfaceMeshModel::Scalar d_best = (_point - p_best).squaredNorm();
     SurfaceMeshModel::Face fh_best;
@@ -365,8 +365,8 @@ void IsotropicRemesher::initParameters(RichParameterSet* parameters)
     parameters->addParam(new RichFloat("edgelength_TH",edgelength_TH,"Target edge length", "By default it's 2% of bbox diagonal"));
 
     parameters->addParam(new RichInt("num_iters",10,"#Iterations", "The number of applied iterations"));
-	parameters->addParam(new RichBool("sharp_features",true,"Preserve sharp features", ""));
-	parameters->addParam(new RichFloat("sharp_features_angle",44.0,"Sharp angle max", ""));
+    parameters->addParam(new RichBool("sharp_features",true,"Preserve sharp features", ""));
+    parameters->addParam(new RichFloat("sharp_features_angle",44.0,"Sharp angle max", ""));
     parameters->addParam(new RichBool("project_surface",true,"Project to original", ""));
     parameters->addParam(new RichBool("keep_shortedges",false,"Keep short edges", ""));
 
@@ -379,20 +379,20 @@ void IsotropicRemesher::applyFilter(RichParameterSet* pars)
     Scalar longest_edge_length  = pars->getFloat("edgelength_TH");
     Counter num_split_iters     = pars->getInt("num_iters");
 
-	points = mesh()->vertex_property<Vector3>( VPOINT );
+    points = mesh()->vertex_property<Vector3>( VPOINT );
 
-	// Prepare for sharp features
-	efeature = mesh()->edge_property<bool>("e:feature", false);
-	if(pars->getBool("sharp_features")){
-		double angleDeg = pars->getFloat("sharp_features_angle");
-		double angleThreshold = deg_to_rad(angleDeg);
+    // Prepare for sharp features
+    efeature = mesh()->edge_property<bool>("e:feature", false);
+    if(pars->getBool("sharp_features")){
+        double angleDeg = pars->getFloat("sharp_features_angle");
+        double angleThreshold = deg_to_rad(angleDeg);
 
-		foreach(Edge e, mesh()->edges())
-		{
-			if (abs(calc_dihedral_angle(*mesh(), mesh()->halfedge(e,0))) > angleThreshold)
-				efeature[e] = true;
-		}
-	}
+        foreach(Edge e, mesh()->edges())
+        {
+            if (abs(calc_dihedral_angle(*mesh(), mesh()->halfedge(e,0))) > angleThreshold)
+                efeature[e] = true;
+        }
+    }
 
     // Prepare for short edges on original mesh
     if(pars->getBool("keep_shortedges")){
@@ -410,6 +410,6 @@ void IsotropicRemesher::applyFilter(RichParameterSet* pars)
     /// Perform refinement
     this->remesh(longest_edge_length, num_split_iters, pars->getBool("project_surface"), pars->getBool("keep_shortedges"));
 
-	// Clean up
-	mesh()->remove_edge_property(efeature);
+    // Clean up
+    mesh()->remove_edge_property(efeature);
 }

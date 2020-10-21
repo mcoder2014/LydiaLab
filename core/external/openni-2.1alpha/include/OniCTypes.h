@@ -40,18 +40,18 @@ typedef int OniBool;
 struct OniCallbackHandleImpl;
 typedef struct OniCallbackHandleImpl* OniCallbackHandle;
 
-#define _ONI_DECLARE_VERSION(name)																\
-/** Holds an OpenNI version number, which consists of four separate numbers in the format: @c major.minor.maintenance.build. For example: 2.0.0.20. */	\
-typedef struct																					\
-{																								\
-	/** Major version number, incremented for major API restructuring. */						\
-	int major;																					\
-	/** Minor version number, incremented when signficant new features added. */				\
-	int minor;																					\
-	/** Mainenance build number, incremented for new releases that primarily provide minor bug fixes. */ \
-	int maintenance;																			\
-	/** Build number. Incremented for each new API build. Generally not shown on the installer and download site. */ \
-	int build;																					\
+#define _ONI_DECLARE_VERSION(name)                                                                \
+/** Holds an OpenNI version number, which consists of four separate numbers in the format: @c major.minor.maintenance.build. For example: 2.0.0.20. */    \
+typedef struct                                                                                    \
+{                                                                                                \
+    /** Major version number, incremented for major API restructuring. */                        \
+    int major;                                                                                    \
+    /** Minor version number, incremented when signficant new features added. */                \
+    int minor;                                                                                    \
+    /** Mainenance build number, incremented for new releases that primarily provide minor bug fixes. */ \
+    int maintenance;                                                                            \
+    /** Build number. Incremented for each new API build. Generally not shown on the installer and download site. */ \
+    int build;                                                                                    \
 } name;
 
 _ONI_DECLARE_VERSION(OniVersion);
@@ -61,28 +61,28 @@ typedef int OniHardwareVersion;
 /** Description of the output: format and resolution */
 typedef struct
 {
-	OniPixelFormat pixelFormat;
-	int resolutionX;
-	int resolutionY;
-	int fps;
+    OniPixelFormat pixelFormat;
+    int resolutionX;
+    int resolutionY;
+    int fps;
 } OniVideoMode;
 
 /** List of supported video modes by a specific source */
 typedef struct
 {
-	OniSensorType sensorType;
-	int numSupportedVideoModes;
-	OniVideoMode *pSupportedVideoModes;
+    OniSensorType sensorType;
+    int numSupportedVideoModes;
+    OniVideoMode *pSupportedVideoModes;
 } OniSensorInfo;
 
 /** Basic description of a device */
 typedef struct
 {
-	char uri[ONI_MAX_STR];
-	char vendor[ONI_MAX_STR];
-	char name[ONI_MAX_STR];
-	uint16_t usbVendorId;
-	uint16_t usbProductId;
+    char uri[ONI_MAX_STR];
+    char vendor[ONI_MAX_STR];
+    char name[ONI_MAX_STR];
+    uint16_t usbVendorId;
+    uint16_t usbProductId;
 } OniDeviceInfo;
 
 struct _OniDevice;
@@ -97,22 +97,22 @@ typedef _OniRecorder* OniRecorderHandle;
 /** All information of the current frame */
 typedef struct
 {
-	int dataSize;
-	void* data;
+    int dataSize;
+    void* data;
 
-	OniSensorType sensorType;
-	uint64_t timestamp;
-	int frameIndex;
+    OniSensorType sensorType;
+    uint64_t timestamp;
+    int frameIndex;
 
-	int width;
-	int height;
+    int width;
+    int height;
 
-	OniVideoMode videoMode;
-	OniBool croppingEnabled;
-	int cropOriginX;
-	int cropOriginY;
+    OniVideoMode videoMode;
+    OniBool croppingEnabled;
+    int cropOriginX;
+    int cropOriginY;
 
-	int stride;
+    int stride;
 } OniFrame;
 
 typedef void (ONI_CALLBACK_TYPE* OniNewFrameCallback)(OniStreamHandle stream, void* pCookie);
@@ -122,18 +122,18 @@ typedef void (ONI_CALLBACK_TYPE* OniDeviceStateCallback)(const OniDeviceInfo* pI
 
 typedef struct
 {
-	OniDeviceInfoCallback		deviceConnected;
-	OniDeviceInfoCallback		deviceDisconnected;
-	OniDeviceStateCallback		deviceStateChanged;
+    OniDeviceInfoCallback        deviceConnected;
+    OniDeviceInfoCallback        deviceDisconnected;
+    OniDeviceStateCallback        deviceStateChanged;
 } OniDeviceCallbacks;
 
 typedef struct
 {
-	int enabled;
-	int originX;
-	int originY;
-	int width;
-	int height;
+    int enabled;
+    int originX;
+    int originY;
+    int width;
+    int height;
 } OniCropping;
 
 // Pixel types
@@ -149,36 +149,36 @@ typedef uint16_t OniGrayscale16Pixel;
 
 #pragma pack (push, 1)
 
-#define _ONI_DECLARE_RGB888_PIXEL(name)										\
-/** Holds the value of a single color image pixel in 24-bit RGB format. */	\
-typedef struct																\
-{																			\
-	/* Red value of this pixel. */											\
-	uint8_t r;																\
-	/* Green value of this pixel. */										\
-	uint8_t g;																\
-	/* Blue value of this pixel. */											\
-	uint8_t b;																\
+#define _ONI_DECLARE_RGB888_PIXEL(name)                                        \
+/** Holds the value of a single color image pixel in 24-bit RGB format. */    \
+typedef struct                                                                \
+{                                                                            \
+    /* Red value of this pixel. */                                            \
+    uint8_t r;                                                                \
+    /* Green value of this pixel. */                                        \
+    uint8_t g;                                                                \
+    /* Blue value of this pixel. */                                            \
+    uint8_t b;                                                                \
 } name;
 
 _ONI_DECLARE_RGB888_PIXEL(OniRGB888Pixel)
 
-#define _ONI_DECLARE_YUV422_PIXEL(name)															\
-/**																								\
- Holds the value of two pixels in YUV422 format (Luminance/Chrominance,16-bits/pixel).			\
- The first pixel has the values y1, u, v.														\
- The second pixel has the values y2, u, v.														\
-*/																								\
-typedef struct																					\
-{																								\
-	/** First chrominance value for two pixels, stored as blue luminance difference signal. */	\
-	uint8_t u;																					\
-	/** Overall luminance value of first pixel. */												\
-	uint8_t y1;																					\
-	/** Second chrominance value for two pixels, stored as red luminance difference signal. */	\
-	uint8_t v;																					\
-	/** Overall luminance value of second pixel. */												\
-	uint8_t y2;																					\
+#define _ONI_DECLARE_YUV422_PIXEL(name)                                                            \
+/**                                                                                                \
+ Holds the value of two pixels in YUV422 format (Luminance/Chrominance,16-bits/pixel).            \
+ The first pixel has the values y1, u, v.                                                        \
+ The second pixel has the values y2, u, v.                                                        \
+*/                                                                                                \
+typedef struct                                                                                    \
+{                                                                                                \
+    /** First chrominance value for two pixels, stored as blue luminance difference signal. */    \
+    uint8_t u;                                                                                    \
+    /** Overall luminance value of first pixel. */                                                \
+    uint8_t y1;                                                                                    \
+    /** Second chrominance value for two pixels, stored as red luminance difference signal. */    \
+    uint8_t v;                                                                                    \
+    /** Overall luminance value of second pixel. */                                                \
+    uint8_t y2;                                                                                    \
 } name;
 
 _ONI_DECLARE_YUV422_PIXEL(OniYUV422DoublePixel)
@@ -187,8 +187,8 @@ _ONI_DECLARE_YUV422_PIXEL(OniYUV422DoublePixel)
 
 typedef struct
 {
-	int frameIndex;
-	OniStreamHandle stream;
+    int frameIndex;
+    OniStreamHandle stream;
 } OniSeek;
 
 #endif // _ONI_TYPES_H_

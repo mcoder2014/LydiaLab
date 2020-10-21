@@ -270,12 +270,12 @@ struct bool_ {
 class ArchiveBase
 {
 public:
-	void* getObject() { return object_; }
+    void* getObject() { return object_; }
 
-	void setObject(void* object) { object_ = object; }
+    void setObject(void* object) { object_ = object; }
 
 private:
-	void* object_;
+    void* object_;
 };
 
 
@@ -334,7 +334,7 @@ public:
     template<typename T>
     void save_binary(T* ptr, size_t size)
     {
-    	size_ += size;
+        size_ += size;
     }
 
 
@@ -423,9 +423,9 @@ public:
         if (buffer_) {
             free(buffer_);
         }
-    	if (own_stream_) {
-    		fclose(stream_);
-    	}
+        if (own_stream_) {
+            fclose(stream_);
+        }
     }
 
     template<typename T>
@@ -439,7 +439,7 @@ public:
     template<typename T>
     void save(T* const& val)
     {
-    	// don't save pointers
+        // don't save pointers
         //fwrite(&val, sizeof(val), 1, handle_);
     }
     
@@ -529,9 +529,9 @@ public:
     ~LoadArchive()
     {
         free(buffer_);
-    	if (own_stream_) {
-    		fclose(stream_);
-    	}
+        if (own_stream_) {
+            fclose(stream_);
+        }
     }
 
     template<typename T>
@@ -544,7 +544,7 @@ public:
     template<typename T>
     void load(T*& val)
     {
-    	// don't load pointers
+        // don't load pointers
         //fread(&val, sizeof(val), 1, handle_);
     }
 

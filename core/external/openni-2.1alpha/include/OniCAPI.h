@@ -133,8 +133,8 @@ ONI_C_API void oniFrameRelease(OniFrame* pFrame);
 
 /**
  * Creates a recorder that records to a file.
- * @param	[in]	fileName	The name of the file that will contain the recording.
- * @param	[out]	pRecorder	Points to the handle to the newly created recorder.
+ * @param    [in]    fileName    The name of the file that will contain the recording.
+ * @param    [out]    pRecorder    Points to the handle to the newly created recorder.
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
@@ -144,9 +144,9 @@ ONI_C_API OniStatus oniCreateRecorder(const char* fileName, OniRecorderHandle* p
  * Attaches a stream to a recorder. The amount of attached streams is virtually
  * infinite. You cannot attach a stream after you have started a recording, if
  * you do: an error will be returned by oniRecorderAttachStream.
- * @param	[in]	recorder				The handle to the recorder.
- * @param	[in]	stream					The handle to the stream.
- * @param	[in]	allowLossyCompression	Allows/denies lossy compression
+ * @param    [in]    recorder                The handle to the recorder.
+ * @param    [in]    stream                    The handle to the stream.
+ * @param    [in]    allowLossyCompression    Allows/denies lossy compression
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
@@ -174,8 +174,8 @@ ONI_C_API void oniRecorderStop(OniRecorderHandle recorder);
 
 /**
  * Stops recording if needed, and destroys a recorder.
- * @param	[in,out]	recorder	The handle to the recorder, the handle will be
- *									invalidated (nullified) when the function returns.
+ * @param    [in,out]    recorder    The handle to the recorder, the handle will be
+ *                                    invalidated (nullified) when the function returns.
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */

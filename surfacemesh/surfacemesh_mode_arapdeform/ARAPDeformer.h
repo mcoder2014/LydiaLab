@@ -15,66 +15,66 @@ using namespace Eigen;
 class ARAPDeformer{
 
 public:
-	ARAPDeformer(Surface_mesh * usingMesh);
-	~ARAPDeformer();
+    ARAPDeformer(Surface_mesh * usingMesh);
+    ~ARAPDeformer();
 
 private:
-	void ComputeCotWeights();
-	void BuildAndFactor();
-	void SVDRotation();
+    void ComputeCotWeights();
+    void BuildAndFactor();
+    void SVDRotation();
 
 public:
-	void Deform(int ARAPIteration = 1);
+    void Deform(int ARAPIteration = 1);
 
 private:
-	std::vector<Matrix3d> R;
-	std::vector<Vector3d> OrigMesh;
-	std::vector<VectorXd> xyz;
-	std::vector<VectorXd> b;
+    std::vector<Matrix3d> R;
+    std::vector<Vector3d> OrigMesh;
+    std::vector<VectorXd> xyz;
+    std::vector<VectorXd> b;
 
-	// Frequently used
-	int nVerts;
+    // Frequently used
+    int nVerts;
     Surface_mesh::Vertex_property<Surface_mesh::Point> points;
     Surface_mesh::Vertex_property<Surface_mesh::Normal> normals;
-	Surface_mesh::Vertex_iterator vit, vend;
-	Surface_mesh::Vertex_property< std::map<Surface_mesh::Vertex, double> > wij_weight;
-	Surface_mesh::Vertex_property< bool > isAnchorPoint, isControlPoint;
-	Surface_mesh::Vertex_around_vertex_circulator vvit, vvend;
+    Surface_mesh::Vertex_iterator vit, vend;
+    Surface_mesh::Vertex_property< std::map<Surface_mesh::Vertex, double> > wij_weight;
+    Surface_mesh::Vertex_property< bool > isAnchorPoint, isControlPoint;
+    Surface_mesh::Vertex_around_vertex_circulator vvit, vvend;
 
-	SparseMatrix<double> At;
+    SparseMatrix<double> At;
     CholmodSupernodalLLT< SparseMatrix<double> > solver;
-	bool isSolverReady;
+    bool isSolverReady;
 
 public:
-	Surface_mesh * mesh;
+    Surface_mesh * mesh;
 
-	// Control points
+    // Control points
     void SetAnchor( const Surface_mesh::Vertex & v ){
         isAnchorPoint[v] = true;
     }
 
-	void UpdateControl( const Surface_mesh::Vertex & v, const Eigen::Vector3d & newPos ){
-		isControlPoint[v] = true;
-		points[v] = newPos;
-		isSolverReady = false;
-	}
+    void UpdateControl( const Surface_mesh::Vertex & v, const Eigen::Vector3d & newPos ){
+        isControlPoint[v] = true;
+        points[v] = newPos;
+        isSolverReady = false;
+    }
 
-	void ClearAnchors(){
-		for (vit = mesh->vertices_begin(); vit != vend; ++vit)
-			isAnchorPoint[vit] = false;
-		isSolverReady = false;
-	}
+    void ClearAnchors(){
+        for (vit = mesh->vertices_begin(); vit != vend; ++vit)
+            isAnchorPoint[vit] = false;
+        isSolverReady = false;
+    }
 
-	void ClearControl(){
-		for (vit = mesh->vertices_begin(); vit != vend; ++vit)
-			isControlPoint[vit] = false;
-		isSolverReady = false;
-	}
+    void ClearControl(){
+        for (vit = mesh->vertices_begin(); vit != vend; ++vit)
+            isControlPoint[vit] = false;
+        isSolverReady = false;
+    }
 
-	void ClearAll(){
-		ClearAnchors();
-		ClearControl();
-	}
+    void ClearAll(){
+        ClearAnchors();
+        ClearControl();
+    }
 
     Surface_mesh::Halfedge find_halfedge(Surface_mesh::Vertex start, Surface_mesh::Vertex end){
         Surface_mesh::Halfedge h  = mesh->halfedge(start);

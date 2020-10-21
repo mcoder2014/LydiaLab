@@ -134,24 +134,24 @@ public:
 
 
     HierarchicalClusteringIndex(const HierarchicalClusteringIndex& other) : BaseClass(other),
-    		memoryCounter_(other.memoryCounter_),
-    		branching_(other.branching_),
-    		trees_(other.trees_),
-    		centers_init_(other.centers_init_),
-    		leaf_max_size_(other.leaf_max_size_)
+            memoryCounter_(other.memoryCounter_),
+            branching_(other.branching_),
+            trees_(other.trees_),
+            centers_init_(other.centers_init_),
+            leaf_max_size_(other.leaf_max_size_)
 
     {
-    	initCenterChooser();
+        initCenterChooser();
         tree_roots_.resize(other.tree_roots_.size());
         for (size_t i=0;i<tree_roots_.size();++i) {
-        	copyTree(tree_roots_[i], other.tree_roots_[i]);
+            copyTree(tree_roots_[i], other.tree_roots_[i]);
         }
     }
 
     HierarchicalClusteringIndex& operator=(HierarchicalClusteringIndex other)
     {
-    	this->swap(other);
-    	return *this;
+        this->swap(other);
+        return *this;
     }
 
 
@@ -159,14 +159,14 @@ public:
     {
         switch(centers_init_) {
         case FLANN_CENTERS_RANDOM:
-        	chooseCenters_ = new RandomCenterChooser<Distance>(distance_, points_);
-        	break;
+            chooseCenters_ = new RandomCenterChooser<Distance>(distance_, points_);
+            break;
         case FLANN_CENTERS_GONZALES:
-        	chooseCenters_ = new GonzalesCenterChooser<Distance>(distance_, points_);
-        	break;
+            chooseCenters_ = new GonzalesCenterChooser<Distance>(distance_, points_);
+            break;
         case FLANN_CENTERS_KMEANSPP:
             chooseCenters_ = new KMeansppCenterChooser<Distance>(distance_, points_);
-        	break;
+            break;
         case FLANN_CENTERS_GROUPWISE:
             chooseCenters_ = new GroupWiseCenterChooser<Distance>(distance_, points_);
             break;
@@ -182,13 +182,13 @@ public:
      */
     virtual ~HierarchicalClusteringIndex()
     {
-    	delete chooseCenters_;
-    	freeIndex();
+        delete chooseCenters_;
+        freeIndex();
     }
 
     BaseClass* clone() const
     {
-    	return new HierarchicalClusteringIndex(*this);
+        return new HierarchicalClusteringIndex(*this);
     }
 
     /**
@@ -231,45 +231,45 @@ public:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	ar.setObject(this);
+        ar.setObject(this);
 
-    	ar & *static_cast<NNIndex<Distance>*>(this);
+        ar & *static_cast<NNIndex<Distance>*>(this);
 
-    	ar & branching_;
-    	ar & trees_;
-    	ar & centers_init_;
-    	ar & leaf_max_size_;
+        ar & branching_;
+        ar & trees_;
+        ar & centers_init_;
+        ar & leaf_max_size_;
 
-    	if (Archive::is_loading::value) {
-    		tree_roots_.resize(trees_);
-    	}
-    	for (size_t i=0;i<tree_roots_.size();++i) {
-    		if (Archive::is_loading::value) {
-    			tree_roots_[i] = new(pool_) Node();
-    		}
-    		ar & *tree_roots_[i];
-    	}
+        if (Archive::is_loading::value) {
+            tree_roots_.resize(trees_);
+        }
+        for (size_t i=0;i<tree_roots_.size();++i) {
+            if (Archive::is_loading::value) {
+                tree_roots_[i] = new(pool_) Node();
+            }
+            ar & *tree_roots_[i];
+        }
 
-    	if (Archive::is_loading::value) {
+        if (Archive::is_loading::value) {
             index_params_["algorithm"] = getType();
             index_params_["branching"] = branching_;
             index_params_["trees"] = trees_;
             index_params_["centers_init"] = centers_init_;
             index_params_["leaf_size"] = leaf_max_size_;
-    	}
+        }
     }
 
     void saveIndex(FILE* stream)
     {
-    	serialization::SaveArchive sa(stream);
-    	sa & *this;
+        serialization::SaveArchive sa(stream);
+        sa & *this;
     }
 
 
     void loadIndex(FILE* stream)
     {
-    	serialization::LoadArchive la(stream);
-    	la & *this;
+        serialization::LoadArchive la(stream);
+        la & *this;
     }
 
 
@@ -285,12 +285,12 @@ public:
 
     void findNeighbors(ResultSet<DistanceType>& result, const ElementType* vec, const SearchParams& searchParams) const
     {
-    	if (removed_) {
-    		findNeighborsWithRemoved<true>(result, vec, searchParams);
-    	}
-    	else {
-    		findNeighborsWithRemoved<false>(result, vec, searchParams);
-    	}
+        if (removed_) {
+            findNeighborsWithRemoved<true>(result, vec, searchParams);
+        }
+        else {
+            findNeighborsWithRemoved<false>(result, vec, searchParams);
+        }
     }
 
 protected:
@@ -320,26 +320,26 @@ private:
 
     struct PointInfo
     {
-    	/** Point index */
-    	size_t index;
-    	/** Point data */
-    	ElementType* point;
+        /** Point index */
+        size_t index;
+        /** Point data */
+        ElementType* point;
 
     private:
-    	template<typename Archive>
-    	void serialize(Archive& ar)
-    	{
-    		typedef HierarchicalClusteringIndex<Distance> Index;
-    		Index* obj = static_cast<Index*>(ar.getObject());
+        template<typename Archive>
+        void serialize(Archive& ar)
+        {
+            typedef HierarchicalClusteringIndex<Distance> Index;
+            Index* obj = static_cast<Index*>(ar.getObject());
 
-    		ar & index;
-//    		ar & point;
+            ar & index;
+//            ar & point;
 
-			if (Archive::is_loading::value) {
-				point = obj->points_[index];
-			}
-    	}
-    	friend struct serialization::access;
+            if (Archive::is_loading::value) {
+                point = obj->points_[index];
+            }
+        }
+        friend struct serialization::access;
     };
 
     /**
@@ -350,8 +350,8 @@ private:
         /**
          * The cluster center
          */
-    	ElementType* pivot;
-    	size_t pivot_index;
+        ElementType* pivot;
+        size_t pivot_index;
         /**
          * Child nodes (only for non-terminal nodes)
          */
@@ -367,44 +367,44 @@ private:
          */
         ~Node()
         {
-        	for(size_t i=0; i<childs.size(); i++){
-        		childs[i]->~Node();
-        	}
+            for(size_t i=0; i<childs.size(); i++){
+                childs[i]->~Node();
+            }
         };
 
     private:
-    	template<typename Archive>
-    	void serialize(Archive& ar)
-    	{
-    		typedef HierarchicalClusteringIndex<Distance> Index;
-    		Index* obj = static_cast<Index*>(ar.getObject());
-    		ar & pivot_index;
-    		if (Archive::is_loading::value) {
-    			pivot = obj->points_[pivot_index];
-    		}
-    		size_t childs_size;
-    		if (Archive::is_saving::value) {
-    			childs_size = childs.size();
-    		}
-    		ar & childs_size;
+        template<typename Archive>
+        void serialize(Archive& ar)
+        {
+            typedef HierarchicalClusteringIndex<Distance> Index;
+            Index* obj = static_cast<Index*>(ar.getObject());
+            ar & pivot_index;
+            if (Archive::is_loading::value) {
+                pivot = obj->points_[pivot_index];
+            }
+            size_t childs_size;
+            if (Archive::is_saving::value) {
+                childs_size = childs.size();
+            }
+            ar & childs_size;
 
-    		if (childs_size==0) {
-    			ar & points;
-    		}
-    		else {
-    			if (Archive::is_loading::value) {
-    				childs.resize(childs_size);
-    			}
-    			for (size_t i=0;i<childs_size;++i) {
-    				if (Archive::is_loading::value) {
-    					childs[i] = new(obj->pool_) Node();
-    				}
-    				ar & *childs[i];
-    			}
-    		}
+            if (childs_size==0) {
+                ar & points;
+            }
+            else {
+                if (Archive::is_loading::value) {
+                    childs.resize(childs_size);
+                }
+                for (size_t i=0;i<childs_size;++i) {
+                    if (Archive::is_loading::value) {
+                        childs[i] = new(obj->pool_) Node();
+                    }
+                    ar & *childs[i];
+                }
+            }
 
-    	}
-    	friend struct serialization::access;
+        }
+        friend struct serialization::access;
     };
     typedef Node* NodePtr;
 
@@ -421,27 +421,27 @@ private:
      * calling Node destructor explicitly
      */
     void freeIndex(){
-    	for (size_t i=0; i<tree_roots_.size(); ++i) {
-    		tree_roots_[i]->~Node();
-    	}
-    	pool_.free();
+        for (size_t i=0; i<tree_roots_.size(); ++i) {
+            tree_roots_[i]->~Node();
+        }
+        pool_.free();
     }
 
     void copyTree(NodePtr& dst, const NodePtr& src)
     {
-    	dst = new(pool_) Node();
-    	dst->pivot_index = src->pivot_index;
-    	dst->pivot = points_[dst->pivot_index];
+        dst = new(pool_) Node();
+        dst->pivot_index = src->pivot_index;
+        dst->pivot = points_[dst->pivot_index];
 
-    	if (src->childs.size()==0) {
-    		dst->points = src->points;
-    	}
-    	else {
-    		dst->childs.resize(src->childs.size());
-    		for (size_t i=0;i<src->childs.size();++i) {
-    			copyTree(dst->childs[i], src->childs[i]);
-    		}
-    	}
+        if (src->childs.size()==0) {
+            dst->points = src->points;
+        }
+        else {
+            dst->childs.resize(src->childs.size());
+            for (size_t i=0;i<src->childs.size();++i) {
+                copyTree(dst->childs[i], src->childs[i]);
+            }
+        }
     }
 
 
@@ -479,8 +479,8 @@ private:
         if (indices_length < leaf_max_size_) { // leaf node
             node->points.resize(indices_length);
             for (int i=0;i<indices_length;++i) {
-            	node->points[i].index = indices[i];
-            	node->points[i].point = points_[indices[i]];
+                node->points[i].index = indices[i];
+                node->points[i].point = points_[indices[i]];
             }
             node->childs.clear();
             return;
@@ -495,8 +495,8 @@ private:
         if (centers_length<branching_) {
             node->points.resize(indices_length);
             for (int i=0;i<indices_length;++i) {
-            	node->points[i].index = indices[i];
-            	node->points[i].point = points_[indices[i]];
+                node->points[i].index = indices[i];
+                node->points[i].point = points_[indices[i]];
             }
             node->childs.clear();
             return;
@@ -575,10 +575,10 @@ private:
             }
 
             for (size_t i=0; i<node->points.size(); ++i) {
-            	PointInfo& pointInfo = node->points[i];
-            	if (with_removed) {
-            		if (removed_points_.test(pointInfo.index)) continue;
-            	}
+                PointInfo& pointInfo = node->points[i];
+                if (with_removed) {
+                    if (removed_points_.test(pointInfo.index)) continue;
+                }
                 if (checked.test(pointInfo.index)) continue;
                 DistanceType dist = distance_(pointInfo.point, vec, veclen_);
                 result.addPoint(dist, pointInfo.index);
@@ -611,16 +611,16 @@ private:
         ElementType* point = points_[index];
         
         if (node->childs.empty()) { // leaf node
-        	PointInfo pointInfo;
-        	pointInfo.point = point;
-        	pointInfo.index = index;
+            PointInfo pointInfo;
+            pointInfo.point = point;
+            pointInfo.index = index;
             node->points.push_back(pointInfo);
 
             if (node->points.size()>=size_t(branching_)) {
                 std::vector<int> indices(node->points.size());
 
                 for (size_t i=0;i<node->points.size();++i) {
-                	indices[i] = node->points[i].index;
+                    indices[i] = node->points[i].index;
                 }
                 computeClustering(node, &indices[0], indices.size());
             }
@@ -644,16 +644,16 @@ private:
 
     void swap(HierarchicalClusteringIndex& other)
     {
-    	BaseClass::swap(other);
+        BaseClass::swap(other);
 
-    	std::swap(tree_roots_, other.tree_roots_);
-    	std::swap(pool_, other.pool_);
-    	std::swap(memoryCounter_, other.memoryCounter_);
-    	std::swap(branching_, other.branching_);
-    	std::swap(trees_, other.trees_);
-    	std::swap(centers_init_, other.centers_init_);
-    	std::swap(leaf_max_size_, other.leaf_max_size_);
-    	std::swap(chooseCenters_, other.chooseCenters_);
+        std::swap(tree_roots_, other.tree_roots_);
+        std::swap(pool_, other.pool_);
+        std::swap(memoryCounter_, other.memoryCounter_);
+        std::swap(branching_, other.branching_);
+        std::swap(trees_, other.trees_);
+        std::swap(centers_init_, other.centers_init_);
+        std::swap(leaf_max_size_, other.leaf_max_size_);
+        std::swap(chooseCenters_, other.chooseCenters_);
     }
 
 private:

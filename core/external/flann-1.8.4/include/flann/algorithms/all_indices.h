@@ -116,8 +116,8 @@ template<template <typename> class Index, typename Distance, typename ElemType>
 struct valid_combination
 {
     static const bool value = same_type<ElemType,typename Distance::ElementType>::value &&
-    				(!needs_kdtree_distance<Index<DummyDistance> >::value || is_kdtree_distance<Distance>::value) &&
-    				(!needs_vector_space_distance<Index<DummyDistance> >::value || is_kdtree_distance<Distance>::value || is_vector_space_distance<Distance>::value);
+                    (!needs_kdtree_distance<Index<DummyDistance> >::value || is_kdtree_distance<Distance>::value) &&
+                    (!needs_vector_space_distance<Index<DummyDistance> >::value || is_kdtree_distance<Distance>::value || is_vector_space_distance<Distance>::value);
 
 };
 
@@ -127,14 +127,14 @@ struct valid_combination
  **********************************************************/
 template <template<typename> class Index, typename Distance, typename T>
 inline NNIndex<Distance>* create_index_(flann::Matrix<T> data, const flann::IndexParams& params, const Distance& distance,
-		typename enable_if<valid_combination<Index,Distance,T>::value,void>::type* = 0)
+        typename enable_if<valid_combination<Index,Distance,T>::value,void>::type* = 0)
 {
     return new Index<Distance>(data, params, distance);
 }
 
 template <template<typename> class Index, typename Distance, typename T>
 inline NNIndex<Distance>* create_index_(flann::Matrix<T> data, const flann::IndexParams& params, const Distance& distance,
-		typename disable_if<valid_combination<Index,Distance,T>::value,void>::type* = 0)
+        typename disable_if<valid_combination<Index,Distance,T>::value,void>::type* = 0)
 {
     return NULL;
 }
@@ -142,52 +142,52 @@ inline NNIndex<Distance>* create_index_(flann::Matrix<T> data, const flann::Inde
 template<typename Distance>
 inline NNIndex<Distance>*
   create_index_by_type(const flann_algorithm_t index_type,
-		const Matrix<typename Distance::ElementType>& dataset, const IndexParams& params, const Distance& distance)
+        const Matrix<typename Distance::ElementType>& dataset, const IndexParams& params, const Distance& distance)
 {
-	typedef typename Distance::ElementType ElementType;
+    typedef typename Distance::ElementType ElementType;
 
-	NNIndex<Distance>* nnIndex;
+    NNIndex<Distance>* nnIndex;
 
-	switch (index_type) {
+    switch (index_type) {
 
-	case FLANN_INDEX_LINEAR:
-		nnIndex = create_index_<LinearIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	case FLANN_INDEX_KDTREE_SINGLE:
-		nnIndex = create_index_<KDTreeSingleIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	case FLANN_INDEX_KDTREE:
-		nnIndex = create_index_<KDTreeIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-		//! #define this symbol before including flann.h to enable GPU search algorithms. But you have
-		//! to link libflann_cuda then!
+    case FLANN_INDEX_LINEAR:
+        nnIndex = create_index_<LinearIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    case FLANN_INDEX_KDTREE_SINGLE:
+        nnIndex = create_index_<KDTreeSingleIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    case FLANN_INDEX_KDTREE:
+        nnIndex = create_index_<KDTreeIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+        //! #define this symbol before including flann.h to enable GPU search algorithms. But you have
+        //! to link libflann_cuda then!
 #ifdef FLANN_USE_CUDA
-	case FLANN_INDEX_KDTREE_CUDA:
-		nnIndex = create_index_<KDTreeCuda3dIndex,Distance,ElementType>(dataset, params, distance);
-		break;
+    case FLANN_INDEX_KDTREE_CUDA:
+        nnIndex = create_index_<KDTreeCuda3dIndex,Distance,ElementType>(dataset, params, distance);
+        break;
 #endif
 
-	case FLANN_INDEX_KMEANS:
-		nnIndex = create_index_<KMeansIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	case FLANN_INDEX_COMPOSITE:
-		nnIndex = create_index_<CompositeIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	case FLANN_INDEX_AUTOTUNED:
-		nnIndex = create_index_<AutotunedIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	case FLANN_INDEX_HIERARCHICAL:
-		nnIndex = create_index_<HierarchicalClusteringIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	case FLANN_INDEX_LSH:
-		nnIndex = create_index_<LshIndex,Distance,ElementType>(dataset, params, distance);
-		break;
-	default:
-		throw FLANNException("Unknown index type");
-	}
+    case FLANN_INDEX_KMEANS:
+        nnIndex = create_index_<KMeansIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    case FLANN_INDEX_COMPOSITE:
+        nnIndex = create_index_<CompositeIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    case FLANN_INDEX_AUTOTUNED:
+        nnIndex = create_index_<AutotunedIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    case FLANN_INDEX_HIERARCHICAL:
+        nnIndex = create_index_<HierarchicalClusteringIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    case FLANN_INDEX_LSH:
+        nnIndex = create_index_<LshIndex,Distance,ElementType>(dataset, params, distance);
+        break;
+    default:
+        throw FLANNException("Unknown index type");
+    }
 
     if (nnIndex==NULL) {
-    	throw FLANNException("Unsupported index/distance combination");
+        throw FLANNException("Unsupported index/distance combination");
     }
     return nnIndex;
 }

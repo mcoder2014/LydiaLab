@@ -37,7 +37,7 @@ public:
         inline QString getString() const { return pval; }
         inline bool isString() const { return true; }
         inline QString typeName() const { return QString("String"); }
-        inline void	set(const RichParameter::Value& p) { pval = p.getString(); }
+        inline void    set(const RichParameter::Value& p) { pval = p.getString(); }
         QString toString() { return getString(); }
         ~Value() {}
     private:

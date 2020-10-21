@@ -26,14 +26,14 @@ private:
   QLabel *label;
   QTreeWidget *treeWidget;
   QLabel * labelInfo;
-	QPushButton *okButton;
+    QPushButton *okButton;
   QIcon interfaceIcon;
-	QIcon featureIcon;
-	QSpacerItem *spacerItem;
-	QGroupBox *groupBox;
-//	QGroupBox *groupBox;
-	QString pathDirectory;
+    QIcon featureIcon;
+    QSpacerItem *spacerItem;
+    QGroupBox *groupBox;
+//    QGroupBox *groupBox;
+    QString pathDirectory;
 public slots:
-	void displayInfo(QTreeWidgetItem* item,int ncolumn);
+    void displayInfo(QTreeWidgetItem* item,int ncolumn);
 
 };

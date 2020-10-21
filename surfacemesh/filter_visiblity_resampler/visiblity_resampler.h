@@ -16,5 +16,5 @@ public:
     void initParameters(RichParameterSet* pars);
     void applyFilter(RichParameterSet* pars);
 
-	QMap<QString,QVariant> my;
+    QMap<QString,QVariant> my;
 };

@@ -43,9 +43,9 @@ public:
 
   /// construct quadric from upper triangle of symmetrix 4x4 matrix
   Quadric(double _a, double _b, double _c, double _d,
-	                   double _e, double _f, double _g,
+                       double _e, double _f, double _g,
                                 double _h, double _i,
-	                                         double _j)
+                                             double _j)
     : a(_a), b(_b), c(_c), d(_d),
              e(_e), f(_f), g(_g),
                     h(_h), i(_i),
@@ -79,7 +79,7 @@ public:
     a += _q.a;  b += _q.b;  c += _q.c;  d += _q.d;
                 e += _q.e;  f += _q.f;  g += _q.g;
                             h += _q.h;  i += _q.i;
-			                            j += _q.j;
+                                        j += _q.j;
     return *this;
   }
 
@@ -101,7 +101,7 @@ public:
     const double x(p[0]), y(p[1]), z(p[2]);
     return a*x*x + 2.0*b*x*y + 2.0*c*x*z + 2.0*d*x
                  +     e*y*y + 2.0*f*y*z + 2.0*g*y
-	                     +     h*z*z + 2.0*i*z
+                         +     h*z*z + 2.0*i*z
                                          +     j;
   }
 

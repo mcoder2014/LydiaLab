@@ -8,30 +8,30 @@
 
 class PointSoup : public RenderObject::Base{
     QVector< Vector3 > points;
-	QVector< QColor > points_colors;
+    QVector< QColor > points_colors;
 public:
-	PointSoup():RenderObject::Base(1, Qt::black){}
+    PointSoup():RenderObject::Base(1, Qt::black){}
 
     virtual void draw(QGLWidget& widget){
         Q_UNUSED(widget)
 
-		glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHTING);
 
-		glPointSize(6);
-		glBegin(GL_POINTS);
-		for(int i = 0; i < (int) points.size(); i++){
-			glColorQt(points_colors[i]);
-			glVertQt(points[i]);
-		}
-		glEnd();
+        glPointSize(6);
+        glBegin(GL_POINTS);
+        for(int i = 0; i < (int) points.size(); i++){
+            glColorQt(points_colors[i]);
+            glVertQt(points[i]);
+        }
+        glEnd();
 
-		glEnable(GL_LIGHTING);
-	}
+        glEnable(GL_LIGHTING);
+    }
 
     void addPoint(const Vector3& p, const QColor& c = Qt::blue){
-		points.push_back(p);
-		points_colors.push_back(c);
-	}
+        points.push_back(p);
+        points_colors.push_back(c);
+    }
 };
 
 class VectorSoup : public RenderObject::Base{

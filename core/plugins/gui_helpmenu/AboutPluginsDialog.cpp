@@ -141,7 +141,7 @@ void PluginDialog::displayInfo(QTreeWidgetItem* /*item*/,int /* ncolumn*/) {
     QString parent;
     QString actionName;
     if(item==NULL) return;
-    if (item->parent()!=NULL)	{
+    if (item->parent()!=NULL)    {
         parent=item->parent()->text(0);
         actionName=item->text(0);
     } else parent=item->text(0);

@@ -32,8 +32,8 @@ int main(int argc, char *argv[]){
         QCoreApplication::setOrganizationName("Free Software Foundation");
         QCoreApplication::setApplicationName("starterm");
         QCoreApplication::setApplicationVersion(Application::version());
-		QSharedPointer<CmdLineParser> parser = QSharedPointer<CmdLineParser>(new CmdLineParser(argc, argv, app));
-		QSharedPointer<Application> starlab = QSharedPointer<Application>(new Application());
+        QSharedPointer<CmdLineParser> parser = QSharedPointer<CmdLineParser>(new CmdLineParser(argc, argv, app));
+        QSharedPointer<Application> starlab = QSharedPointer<Application>(new Application());
         Document* document = starlab->document();
         
         /// Print a bunch of examples to command line

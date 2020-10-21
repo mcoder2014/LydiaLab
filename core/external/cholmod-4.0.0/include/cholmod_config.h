@@ -23,26 +23,26 @@
  *
  * Compiler flags for CHOLMOD:
  *
- * -DNCHECK	    do not include the Check module.        License: GNU LGPL
- * -DNCHOLESKY	    do not include the Cholesky module.     License: GNU LGPL
- * -DNPARTITION	    do not include the Partition module.    License: GNU LGPL
+ * -DNCHECK        do not include the Check module.        License: GNU LGPL
+ * -DNCHOLESKY        do not include the Cholesky module.     License: GNU LGPL
+ * -DNPARTITION        do not include the Partition module.    License: GNU LGPL
  *
- * -DNGPL	    do not include any GNU GPL Modules in the CHOLMOD library.
- * -DNMATRIXOPS	    do not include the MatrixOps module.    License: GNU GPL
- * -DNMODIFY	    do not include the Modify module.       License: GNU GPL
+ * -DNGPL        do not include any GNU GPL Modules in the CHOLMOD library.
+ * -DNMATRIXOPS        do not include the MatrixOps module.    License: GNU GPL
+ * -DNMODIFY        do not include the Modify module.       License: GNU GPL
  * -DNSUPERNODAL    do not include the Supernodal module.   License: GNU GPL
  *
- * -DNPRINT	    do not print anything
+ * -DNPRINT        do not print anything
  *
  * -D'LONGBLAS=long' or -DLONGBLAS='long long' defines the integers used by
- *		    LAPACK and the BLAS.  Use LONGBLAS=long on Solaris to use
- *		    the 64-bit Sun Performance BLAS in cholmod_l_* routines.
- *		    You may need to use -D'LONGBLAS=long long' on the SGI
- *		    (this is not tested).
+ *            LAPACK and the BLAS.  Use LONGBLAS=long on Solaris to use
+ *            the 64-bit Sun Performance BLAS in cholmod_l_* routines.
+ *            You may need to use -D'LONGBLAS=long long' on the SGI
+ *            (this is not tested).
  *
- * -DNSUNPERF	    for Solaris only.  If defined, do not use the Sun
- *		    Performance Library.  The default is to use SunPerf.
- *		    You must compile CHOLMOD with -xlic_lib=sunperf.
+ * -DNSUNPERF        for Solaris only.  If defined, do not use the Sun
+ *            Performance Library.  The default is to use SunPerf.
+ *            You must compile CHOLMOD with -xlic_lib=sunperf.
  *
  * The Core Module (License GNU LGPL) is always included in the CHOLMOD library.
  */

@@ -260,10 +260,10 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
   {
     if (((UA1_lx > b[0]) || 
           InVoronoi(b[1],a[1],A1_dot_B0,aA0_dot_B0 - b[0] - Tba[0],
-		                A1_dot_B1, aA0_dot_B1 - Tba[1], 
+                        A1_dot_B1, aA0_dot_B1 - Tba[1], 
                     -Tab[1] - bA1_dot_B0))
         &&
-	
+    
         ((UB1_lx > a[0]) || 
           InVoronoi(a[1],b[1],A0_dot_B1,Tab[0] + bA0_dot_B0 - a[0],
                     A1_dot_B1,Tab[1] + bA1_dot_B0,Tba[1] - aA0_dot_B1)))
@@ -309,7 +309,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[1],a[1],A1_dot_B0,-Tba[0] - b[0],
                     A1_dot_B1,-Tba[1], -Tab[1] - bA1_dot_B0))
           &&
-	
+    
         ((UB1_ux < 0) || 
           InVoronoi(a[1],b[1],-A0_dot_B1, -Tab[0] - bA0_dot_B0,
                     A1_dot_B1, Tab[1] + bA1_dot_B0,Tba[1])))
@@ -393,7 +393,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[0],a[1],A1_dot_B1, aA0_dot_B1 - Tba[1] - b[1],
                     A1_dot_B0, aA0_dot_B0 - Tba[0], -Tab[1] - bA1_dot_B1))
           &&
-	
+    
         ((UB0_lx > a[0]) || 
           InVoronoi(a[1],b[0],A0_dot_B0, Tab[0] - a[0] + bA0_dot_B1,
                     A1_dot_B0, Tab[1] + bA1_dot_B1, Tba[0] - aA0_dot_B0)))
@@ -466,7 +466,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
                     Tab[1],Tba[0])))
     {
       SegCoords(t,u,a[1],b[0],A1_dot_B0,Tab[1],Tba[0]);
-	
+    
       S[0] = Tab[0] + Rab[0][0]*u;
       S[1] = Tab[1] + Rab[1][0]*u - t;
       S[2] = Tab[2] + Rab[2][0]*u;
@@ -521,7 +521,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[1],a[0],A0_dot_B0, aA1_dot_B0 - Tba[0] - b[0],
                     A0_dot_B1,aA1_dot_B1 - Tba[1], -Tab[0] - bA0_dot_B0))
         &&
-	
+    
         ((UB1_ly > a[1]) || 
           InVoronoi(a[0],b[1],A1_dot_B1, Tab[1] - a[1] + bA1_dot_B0,
                     A0_dot_B1,Tab[0] + bA0_dot_B0, Tba[1] - aA1_dot_B1)))
@@ -588,7 +588,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[1],a[0],-A0_dot_B0,Tba[0],A0_dot_B1,-Tba[1],
                     -Tab[0]))
         &&
-	
+    
         ((LB1_uy < 0) || 
           InVoronoi(a[0],b[1],-A1_dot_B1,-Tab[1],A0_dot_B1,
                     Tab[0],Tba[1])))
@@ -642,7 +642,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[0],a[0],A0_dot_B1, aA1_dot_B1 - Tba[1] - b[1],
                     A0_dot_B0, aA1_dot_B0 - Tba[0], -Tab[0] - bA0_dot_B1))
         &&
-	
+    
         ((UB0_ly > a[1]) || 
           InVoronoi(a[0],b[0],A1_dot_B0,Tab[1] - a[1] + bA1_dot_B1,A0_dot_B0,
                     Tab[0] + bA0_dot_B1, Tba[0] - aA1_dot_B0)))
@@ -687,7 +687,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[0],a[0],A0_dot_B1,-Tba[1] - b[1], A0_dot_B0,-Tba[0],
                     -Tab[0] - bA0_dot_B1))
         &&
-	
+    
         ((UB0_uy < 0) ||
           InVoronoi(a[0],b[0],-A1_dot_B0, -Tab[1] - bA1_dot_B1, A0_dot_B0,
                     Tab[0] + bA0_dot_B1,Tba[0])))
@@ -709,7 +709,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
           InVoronoi(b[0],a[0],-A0_dot_B1,Tba[1],A0_dot_B0,
                     -Tba[0],-Tab[0]))
         &&
-	
+    
         ((LB0_uy < 0) || 
           InVoronoi(a[0],b[0],-A1_dot_B0,-Tab[1],A0_dot_B0,
                     Tab[0],Tba[0])))
@@ -758,7 +758,7 @@ RectDist(PQP_REAL Rab[3][3], PQP_REAL Tab[3],
 }
 
 private:
-	MatVec pqp_math;
+    MatVec pqp_math;
 };
 
 } // namespace

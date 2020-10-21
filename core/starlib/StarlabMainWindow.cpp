@@ -51,7 +51,7 @@ MainWindow::MainWindow(Application* _application) :
         // QIcon icon;
         // icon.addPixmap(QPixmap(":images/___.png"));
         // setWindowIcon(icon);
-        setWindowTitle("Starlab v1.1");        
+        setWindowTitle("LydiaLab");
     }
        
     /// Instantiate Menus (plugins will fill them in)
@@ -178,7 +178,7 @@ QSize MainWindow::sizeHint() const{
     QRect geom = QApplication::desktop()->screenGeometry();
     int scrw = geom.width();
     int scrh = geom.height();   
-	return QSize(scrw * 0.75, scrh * 0.75);
+    return QSize(scrw * 0.75, scrh * 0.75);
 }
 
 void MainWindow::triggerFilterByName(QString name){

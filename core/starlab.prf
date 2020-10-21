@@ -13,6 +13,10 @@
 #   - within the body of this file it is the path of this file
 #-------------------------------------------------------------------------------
 
+# Define Output Path
+BASE_PATH = $$(BASE_PATH)
+unix: BASE_PATH = $$(HOME)/Desktop
+
 #--------------------------- CHECK COMPATIBILITY -------------------------------
 #
 # Here we make sure your system compiler/configuration is compatible with Starlab
@@ -25,8 +29,6 @@ defineTest( checkSupportedOsAndCompiler ){
     # @todo ibraheem
     win32: return(true)
     # @todo return false if not 64 bits
-    mac: return(true)
-    # @todo return false if not 32 bits see "contains(QMAKE_TARGET.arch, x86_64)"
     unix:!mac: return(true)
     return(false)
 }
@@ -42,34 +44,41 @@ defineTest( checkSupportedOsAndCompiler ){
 #-------------------------------------------------------------------------------
 # attempt to see if user specified a path
 STARLABPREFIX = $$(STARLABPREFIX)
+
 isEmpty(STARLABPREFIX){
-    mac:        STARLABPREFIX = /Applications
     win32:      STARLABPREFIX = $$(HOMEDRIVE)$$(HOMEPATH)/Desktop
-    unix:!mac:  STARLABPREFIX = $$(HOME)/Desktop
-    ## @todo this warning is useful, but it will be fired every single time
-    ##       the PRF file is loaded. Any better solution?
-    # warning(STARLABPREFIX defaulted to $$STARLABPREFIX)
+    unix:!mac:  STARLABPREFIX = $$BASE_PATH/LydiaLab
 }
 
 #------------------------------- STARALB PATHS ---------------------------------
 #
 # Where do I go and look for libraries? This is highly platform dependant
 #-------------------------------------------------------------------------------
-mac:       LIBRARIESPATH  = $$STARLABPREFIX/Starlab.app/Contents/MacOS
-win32:     LIBRARIESPATH  = $$STARLABPREFIX/StarlabPackage
-unix:!mac: LIBRARIESPATH  = $$STARLABPREFIX/StarlabPackage
-mac:       EXECUTABLEPATH = $$STARLABPREFIX/Starlab.app/Contents/MacOS
-win32:     EXECUTABLEPATH = $$STARLABPREFIX/StarlabPackage
-unix:!mac: EXECUTABLEPATH = $$STARLABPREFIX/StarlabPackage
-mac:       PLUGINSPATH    = $$STARLABPREFIX/Starlab.app/plugins
-win32:     PLUGINSPATH    = $$STARLABPREFIX/StarlabPackage/plugins
-unix:!mac: PLUGINSPATH    = $$STARLABPREFIX/StarlabPackage/plugins
+win32:CONFIG(debu, debug|release) {
+    LIBRARIESPATH  = $$STARLABPREFIX/LydiaLabD
+    EXECUTABLEPATH = $$STARLABPREFIX/LydiaLabD
+    PLUGINSPATH    = $$STARLABPREFIX/LydiaLabD/plugins
+}
 
 # Windows : release folder
 win32:CONFIG(release, debug|release) {
     LIBRARIESPATH  = $$STARLABPREFIX/StarlabPackageRelease
     EXECUTABLEPATH = $$STARLABPREFIX/StarlabPackageRelease
     PLUGINSPATH    = $$STARLABPREFIX/StarlabPackageRelease/plugins
+}
+
+# Debug
+unix:!mac:CONFIG(debug, debug|release) {
+    LIBRARIESPATH  = $$STARLABPREFIX/LydiaLabD
+    EXECUTABLEPATH = $$STARLABPREFIX/LydiaLabD
+    PLUGINSPATH    = $$STARLABPREFIX/LydiaLabD/plugins
+}
+
+# Release
+unix:!mac:CONFIG(release, debug|release) {
+    LIBRARIESPATH  = $$STARLABPREFIX/LydiaLab
+    EXECUTABLEPATH = $$STARLABPREFIX/LydiaLab
+    PLUGINSPATH    = $$STARLABPREFIX/LydiaLab/plugins
 }
 
 #------------------------------- SETUP STARLIB ---------------------------------
@@ -84,7 +93,6 @@ win32:CONFIG(release, debug|release) {
 PROJECTBASENAME=$$basename(_PRO_FILE_)
 !equals(PROJECTBASENAME,starlib.pro){
     win32:      LIBS *= $$LIBRARIESPATH/starlib.lib
-    mac:        LIBS *= -L$$LIBRARIESPATH -lstarlib
     unix:!mac:  LIBS *= -L$$LIBRARIESPATH -lstarlib
     unix:!mac:  QMAKE_LFLAGS *= -Wl,--rpath=.
     DEPENDPATH  *= $$PWD/starlib

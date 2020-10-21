@@ -144,21 +144,21 @@ public:
 
 
     KMeansIndex(const KMeansIndex& other) : BaseClass(other),
-    		branching_(other.branching_),
-    		iterations_(other.iterations_),
-    		centers_init_(other.centers_init_),
-    		cb_index_(other.cb_index_),
-    		memoryCounter_(other.memoryCounter_)
+            branching_(other.branching_),
+            iterations_(other.iterations_),
+            centers_init_(other.centers_init_),
+            cb_index_(other.cb_index_),
+            memoryCounter_(other.memoryCounter_)
     {
-    	initCenterChooser();
+        initCenterChooser();
 
-    	copyTree(root_, other.root_);
+        copyTree(root_, other.root_);
     }
 
     KMeansIndex& operator=(KMeansIndex other)
     {
-    	this->swap(other);
-    	return *this;
+        this->swap(other);
+        return *this;
     }
 
 
@@ -166,14 +166,14 @@ public:
     {
         switch(centers_init_) {
         case FLANN_CENTERS_RANDOM:
-        	chooseCenters_ = new RandomCenterChooser<Distance>(distance_, points_);
-        	break;
+            chooseCenters_ = new RandomCenterChooser<Distance>(distance_, points_);
+            break;
         case FLANN_CENTERS_GONZALES:
-        	chooseCenters_ = new GonzalesCenterChooser<Distance>(distance_, points_);
-        	break;
+            chooseCenters_ = new GonzalesCenterChooser<Distance>(distance_, points_);
+            break;
         case FLANN_CENTERS_KMEANSPP:
             chooseCenters_ = new KMeansppCenterChooser<Distance>(distance_, points_);
-        	break;
+            break;
         default:
             throw FLANNException("Unknown algorithm for choosing initial centers.");
         }
@@ -186,13 +186,13 @@ public:
      */
     virtual ~KMeansIndex()
     {
-    	delete chooseCenters_;
-    	freeIndex();
+        delete chooseCenters_;
+        freeIndex();
     }
 
     BaseClass* clone() const
     {
-    	return new KMeansIndex(*this);
+        return new KMeansIndex(*this);
     }
 
 
@@ -233,41 +233,41 @@ public:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	ar.setObject(this);
+        ar.setObject(this);
 
-    	ar & *static_cast<NNIndex<Distance>*>(this);
+        ar & *static_cast<NNIndex<Distance>*>(this);
 
-    	ar & branching_;
-    	ar & iterations_;
-    	ar & memoryCounter_;
-    	ar & cb_index_;
-    	ar & centers_init_;
+        ar & branching_;
+        ar & iterations_;
+        ar & memoryCounter_;
+        ar & cb_index_;
+        ar & centers_init_;
 
-    	if (Archive::is_loading::value) {
-    		root_ = new(pool_) Node();
-    	}
-    	ar & *root_;
+        if (Archive::is_loading::value) {
+            root_ = new(pool_) Node();
+        }
+        ar & *root_;
 
-    	if (Archive::is_loading::value) {
+        if (Archive::is_loading::value) {
             index_params_["algorithm"] = getType();
             index_params_["branching"] = branching_;
             index_params_["iterations"] = iterations_;
             index_params_["centers_init"] = centers_init_;
             index_params_["cb_index"] = cb_index_;
-    	}
+        }
     }
 
     void saveIndex(FILE* stream)
     {
-    	serialization::SaveArchive sa(stream);
-    	sa & *this;
+        serialization::SaveArchive sa(stream);
+        sa & *this;
     }
 
     void loadIndex(FILE* stream)
     {
-    	freeIndex();
-    	serialization::LoadArchive la(stream);
-    	la & *this;
+        freeIndex();
+        serialization::LoadArchive la(stream);
+        la & *this;
     }
 
     /**
@@ -282,12 +282,12 @@ public:
 
     void findNeighbors(ResultSet<DistanceType>& result, const ElementType* vec, const SearchParams& searchParams) const
     {
-    	if (removed_) {
-    		findNeighborsWithRemoved<true>(result, vec, searchParams);
-    	}
-    	else {
-    		findNeighborsWithRemoved<false>(result, vec, searchParams);
-    	}
+        if (removed_) {
+            findNeighborsWithRemoved<true>(result, vec, searchParams);
+        }
+        else {
+            findNeighborsWithRemoved<false>(result, vec, searchParams);
+        }
 
     }
 
@@ -336,7 +336,7 @@ protected:
 
         std::vector<int> indices(size_);
         for (size_t i=0; i<size_; ++i) {
-        	indices[i] = int(i);
+            indices[i] = int(i);
         }
 
         root_ = new(pool_) Node();
@@ -348,21 +348,21 @@ private:
 
     struct PointInfo
     {
-    	size_t index;
-    	ElementType* point;
+        size_t index;
+        ElementType* point;
     private:
-    	template<typename Archive>
-    	void serialize(Archive& ar)
-    	{
-    		typedef KMeansIndex<Distance> Index;
-    		Index* obj = static_cast<Index*>(ar.getObject());
+        template<typename Archive>
+        void serialize(Archive& ar)
+        {
+            typedef KMeansIndex<Distance> Index;
+            Index* obj = static_cast<Index*>(ar.getObject());
 
-    		ar & index;
-//    		ar & point;
+            ar & index;
+//            ar & point;
 
-			if (Archive::is_loading::value) point = obj->points_[index];
-    	}
-    	friend struct serialization::access;
+            if (Archive::is_loading::value) point = obj->points_[index];
+        }
+        friend struct serialization::access;
     };
 
     /**
@@ -409,42 +409,42 @@ private:
             }
         }
 
-    	template<typename Archive>
-    	void serialize(Archive& ar)
-    	{
-    		typedef KMeansIndex<Distance> Index;
-    		Index* obj = static_cast<Index*>(ar.getObject());
+        template<typename Archive>
+        void serialize(Archive& ar)
+        {
+            typedef KMeansIndex<Distance> Index;
+            Index* obj = static_cast<Index*>(ar.getObject());
 
-    		if (Archive::is_loading::value) {
-    			pivot = new DistanceType[obj->veclen_];
-    		}
-    		ar & serialization::make_binary_object(pivot, obj->veclen_*sizeof(DistanceType));
-    		ar & radius;
-    		ar & variance;
-    		ar & size;
+            if (Archive::is_loading::value) {
+                pivot = new DistanceType[obj->veclen_];
+            }
+            ar & serialization::make_binary_object(pivot, obj->veclen_*sizeof(DistanceType));
+            ar & radius;
+            ar & variance;
+            ar & size;
 
-    		size_t childs_size;
-    		if (Archive::is_saving::value) {
-    			childs_size = childs.size();
-    		}
-    		ar & childs_size;
+            size_t childs_size;
+            if (Archive::is_saving::value) {
+                childs_size = childs.size();
+            }
+            ar & childs_size;
 
-    		if (childs_size==0) {
-    			ar & points;
-    		}
-    		else {
-    			if (Archive::is_loading::value) {
-    				childs.resize(childs_size);
-    			}
-    			for (size_t i=0;i<childs_size;++i) {
-    				if (Archive::is_loading::value) {
-    					childs[i] = new(obj->pool_) Node();
-    				}
-    				ar & *childs[i];
-    			}
-    		}
-    	}
-    	friend struct serialization::access;
+            if (childs_size==0) {
+                ar & points;
+            }
+            else {
+                if (Archive::is_loading::value) {
+                    childs.resize(childs_size);
+                }
+                for (size_t i=0;i<childs_size;++i) {
+                    if (Archive::is_loading::value) {
+                        childs[i] = new(obj->pool_) Node();
+                    }
+                    ar & *childs[i];
+                }
+            }
+        }
+        friend struct serialization::access;
     };
     typedef Node* NodePtr;
 
@@ -459,29 +459,29 @@ private:
      */
     void freeIndex()
     {
-    	if (root_) root_->~Node();
-    	root_ = NULL;
-    	pool_.free();
+        if (root_) root_->~Node();
+        root_ = NULL;
+        pool_.free();
     }
 
     void copyTree(NodePtr& dst, const NodePtr& src)
     {
-    	dst = new(pool_) Node();
-    	dst->pivot = new DistanceType[veclen_];
-    	std::copy(src->pivot, src->pivot+veclen_, dst->pivot);
-    	dst->radius = src->radius;
-    	dst->variance = src->variance;
-    	dst->size = src->size;
+        dst = new(pool_) Node();
+        dst->pivot = new DistanceType[veclen_];
+        std::copy(src->pivot, src->pivot+veclen_, dst->pivot);
+        dst->radius = src->radius;
+        dst->variance = src->variance;
+        dst->size = src->size;
 
-    	if (src->childs.size()==0) {
-    		dst->points = src->points;
-    	}
-    	else {
-    		dst->childs.resize(src->childs.size());
-    		for (size_t i=0;i<src->childs.size();++i) {
-    			copyTree(dst->childs[i], src->childs[i]);
-    		}
-    	}
+        if (src->childs.size()==0) {
+            dst->points = src->points;
+        }
+        else {
+            dst->childs.resize(src->childs.size());
+            for (size_t i=0;i<src->childs.size();++i) {
+                copyTree(dst->childs[i], src->childs[i]);
+            }
+        }
     }
 
 
@@ -546,8 +546,8 @@ private:
         if (indices_length < branching) {
             node->points.resize(indices_length);
             for (int i=0;i<indices_length;++i) {
-            	node->points[i].index = indices[i];
-            	node->points[i].point = points_[indices[i]];
+                node->points[i].index = indices[i];
+                node->points[i].point = points_[indices[i]];
             }
             node->childs.clear();
             return;
@@ -560,8 +560,8 @@ private:
         if (centers_length<branching) {
             node->points.resize(indices_length);
             for (int i=0;i<indices_length;++i) {
-            	node->points[i].index = indices[i];
-            	node->points[i].point = points_[indices[i]];
+                node->points[i].index = indices[i];
+                node->points[i].point = points_[indices[i]];
             }
             node->childs.clear();
             return;
@@ -579,7 +579,7 @@ private:
         std::vector<DistanceType> radiuses(branching,0);
         std::vector<int> count(branching,0);
 
-        //	assign points to clusters
+        //    assign points to clusters
         std::vector<int> belongs_to(indices_length);
         for (int i=0; i<indices_length; ++i) {
 
@@ -775,10 +775,10 @@ private:
                 if (result.full()) return;
             }
             for (int i=0; i<node->size; ++i) {
-            	PointInfo& point_info = node->points[i];
+                PointInfo& point_info = node->points[i];
                 int index = point_info.index;
                 if (with_removed) {
-                	if (removed_points_.test(index)) continue;
+                    if (removed_points_.test(index)) continue;
                 }
                 DistanceType dist = distance_(point_info.point, vec, veclen_);
                 result.addPoint(dist, index);
@@ -811,15 +811,15 @@ private:
             }
         }
 
-        //		float* best_center = node->childs[best_index]->pivot;
+        //        float* best_center = node->childs[best_index]->pivot;
         for (int i=0; i<branching_; ++i) {
             if (i != best_index) {
                 domain_distances[i] -= cb_index_*node->childs[i]->variance;
 
-                //				float dist_to_border = getDistanceToBorder(node.childs[i].pivot,best_center,q);
-                //				if (domain_distances[i]<dist_to_border) {
-                //					domain_distances[i] = dist_to_border;
-                //				}
+                //                float dist_to_border = getDistanceToBorder(node.childs[i].pivot,best_center,q);
+                //                if (domain_distances[i]<dist_to_border) {
+                //                    domain_distances[i] = dist_to_border;
+                //                }
                 heap->insert(BranchSt(node->childs[i],domain_distances[i]));
             }
         }
@@ -851,10 +851,10 @@ private:
 
         if (node->childs.empty()) {
             for (int i=0; i<node->size; ++i) {
-            	PointInfo& point_info = node->points[i];
+                PointInfo& point_info = node->points[i];
                 int index = point_info.index;
                 if (with_removed) {
-                	if (removed_points_.test(index)) continue;
+                    if (removed_points_.test(index)) continue;
                 }
                 DistanceType dist = distance_(point_info.point, vec, veclen_);
                 result.addPoint(dist, index);
@@ -977,14 +977,14 @@ private:
         node->size++;
         
         if (node->childs.empty()) { // leaf node
-        	PointInfo point_info;
-        	point_info.index = index;
-        	point_info.point = point;
-        	node->points.push_back(point_info);
+            PointInfo point_info;
+            point_info.index = index;
+            point_info.point = point;
+            node->points.push_back(point_info);
 
             std::vector<int> indices(node->points.size());
             for (size_t i=0;i<node->points.size();++i) {
-            	indices[i] = node->points[i].index;
+                indices[i] = node->points[i].index;
             }
             computeNodeStatistics(node, indices);
             if (indices.size()>=size_t(branching_)) {
@@ -1009,14 +1009,14 @@ private:
 
     void swap(KMeansIndex& other)
     {
-    	std::swap(branching_, other.branching_);
-    	std::swap(iterations_, other.iterations_);
-    	std::swap(centers_init_, other.centers_init_);
-    	std::swap(cb_index_, other.cb_index_);
-    	std::swap(root_, other.root_);
-    	std::swap(pool_, other.pool_);
-    	std::swap(memoryCounter_, other.memoryCounter_);
-    	std::swap(chooseCenters_, other.chooseCenters_);
+        std::swap(branching_, other.branching_);
+        std::swap(iterations_, other.iterations_);
+        std::swap(centers_init_, other.centers_init_);
+        std::swap(cb_index_, other.cb_index_);
+        std::swap(root_, other.root_);
+        std::swap(pool_, other.pool_);
+        std::swap(memoryCounter_, other.memoryCounter_);
+        std::swap(chooseCenters_, other.chooseCenters_);
     }
 
 

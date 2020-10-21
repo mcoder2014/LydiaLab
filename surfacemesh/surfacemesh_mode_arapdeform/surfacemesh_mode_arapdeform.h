@@ -31,7 +31,7 @@ public:
     void drawHandle();
     void drawWithNames();
 
-	void update();
+    void update();
 
     /// User interactions
     bool wheelEvent(QWheelEvent *);

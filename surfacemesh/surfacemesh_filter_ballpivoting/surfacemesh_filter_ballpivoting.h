@@ -10,7 +10,7 @@ public:
     QString description() { return "The ball-pivoting algorithm for surface reconstruction. "
                                     " Bernardini F., Mittleman J., Rushmeier H., Silva C., Taubin G. "
                                     " IEEE TVCG 1999"; }
-								
-	void initParameters(RichParameterSet* pars);
+                                
+    void initParameters(RichParameterSet* pars);
     void applyFilter(RichParameterSet*);
 };

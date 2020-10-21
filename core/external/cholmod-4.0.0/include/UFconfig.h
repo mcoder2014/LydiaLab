@@ -78,19 +78,19 @@ extern "C" {
  *
  * SuiteSparse Version 3.1.0 contains the following packages:
  *
- *  AMD		    version 2.2.0
- *  CAMD	    version 2.2.0
- *  COLAMD	    version 2.7.1
- *  CCOLAMD	    version 2.7.1
- *  CHOLMOD	    version 1.6.0
- *  CSparse	    version 2.2.1
- *  CXSparse	    version 2.2.1
- *  KLU		    version 1.0.1
- *  BTF		    version 1.0.1
- *  LDL		    version 2.0.1
- *  UFconfig	    version number is the same as SuiteSparse
- *  UMFPACK	    version 5.2.0
- *  RBio	    version 1.1.1
+ *  AMD            version 2.2.0
+ *  CAMD        version 2.2.0
+ *  COLAMD        version 2.7.1
+ *  CCOLAMD        version 2.7.1
+ *  CHOLMOD        version 1.6.0
+ *  CSparse        version 2.2.1
+ *  CXSparse        version 2.2.1
+ *  KLU            version 1.0.1
+ *  BTF            version 1.0.1
+ *  LDL            version 2.0.1
+ *  UFconfig        version number is the same as SuiteSparse
+ *  UMFPACK        version 5.2.0
+ *  RBio        version 1.1.1
  *  UFcollection    version 1.1.1
  *  LINFACTOR       version 1.1.0
  *  MESHND          version 1.1.0
@@ -98,9 +98,9 @@ extern "C" {
  *  MATLAB_Tools    no specific version number
  *
  * Other package dependencies:
- *  BLAS	    required by CHOLMOD and UMFPACK
- *  LAPACK	    required by CHOLMOD
- *  METIS 4.0.1	    required by CHOLMOD (optional) and KLU (optional)
+ *  BLAS        required by CHOLMOD and UMFPACK
+ *  LAPACK        required by CHOLMOD
+ *  METIS 4.0.1        required by CHOLMOD (optional) and KLU (optional)
  */
 
 #define SUITESPARSE_DATE "Nov 1, 2007"

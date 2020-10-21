@@ -13,7 +13,7 @@ protected:
     ScalarVertexProperty  varea;  /// NULL
     Vector3VertexProperty vnormal; /// NULL
     Vector3FaceProperty   fnormal; /// NULL
-	ScalarFaceProperty   farea; /// NULL
+    ScalarFaceProperty   farea; /// NULL
     ScalarEdgeProperty    elenght;  /// NULL
     
 public:
@@ -22,7 +22,7 @@ public:
         vnormal = mesh->get_vertex_property<Vector3>(VNORMAL);
         varea = mesh->get_vertex_property<Scalar>(VAREA);
         fnormal = mesh->get_face_property<Vector3>(FNORMAL);  
-		farea = mesh->get_face_property<Scalar>(FAREA);  
+        farea = mesh->get_face_property<Scalar>(FAREA);  
         elenght = mesh->get_edge_property<Scalar>(ELENGTH);
     }
     
@@ -53,23 +53,23 @@ public:
         return mesh->face_property<Vector3>(property,init);
     }
     
-	Surface_mesh::Face_property<Scalar> computeFaceAreas(std::string property=FAREA){
-		farea = mesh->face_property<Scalar>(property);
+    Surface_mesh::Face_property<Scalar> computeFaceAreas(std::string property=FAREA){
+        farea = mesh->face_property<Scalar>(property);
 
-		Surface_mesh::Face_iterator fit, fend=mesh->faces_end();
-		Surface_mesh::Vertex_around_face_circulator vit, vend;
-		QVector<Vector3> pnts;
+        Surface_mesh::Face_iterator fit, fend=mesh->faces_end();
+        Surface_mesh::Vertex_around_face_circulator vit, vend;
+        QVector<Vector3> pnts;
 
-		for (fit=mesh->faces_begin(); fit!=fend; ++fit){
-			// Collect points of face
-			pnts.clear(); vit = vend = mesh->vertices(fit);
-			do{ pnts.push_back(points[vit]); } while(++vit != vend);
+        for (fit=mesh->faces_begin(); fit!=fend; ++fit){
+            // Collect points of face
+            pnts.clear(); vit = vend = mesh->vertices(fit);
+            do{ pnts.push_back(points[vit]); } while(++vit != vend);
 
             farea[fit] = 0.5 * (pnts[1] - pnts[0]).cross(pnts[2] - pnts[0]).norm();
-		}
+        }
 
-		return farea;
-	}
+        return farea;
+    }
     
     ScalarEdgeProperty computeEdgeLengths(std::string property=ELENGTH){
         elenght = mesh->edge_property<Scalar>(property,0.0f);
@@ -112,7 +112,7 @@ public:
         return varea;
     }
 
-	template<class Type>
+    template<class Type>
     Surface_mesh::Vertex_property<Type> smoothVertexProperty(const std::string property, int iterations = 1, Type defaultValue = Type()){
         Surface_mesh::Vertex_property<Type> vprop = mesh->vertex_property<Type>(property, defaultValue);
 

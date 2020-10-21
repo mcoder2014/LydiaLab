@@ -92,10 +92,10 @@ public:
      * @param centers indices of chosen centers
      * @param centers_length length of centers array
      */
-	virtual void operator()(int k, int* indices, int indices_length, int* centers, int& centers_length) = 0;
+    virtual void operator()(int k, int* indices, int indices_length, int* centers, int& centers_length) = 0;
 
 protected:
-	const Distance distance_;
+    const Distance distance_;
     const std::vector<ElementType*>& points_;
     size_t cols_;
 };
@@ -112,7 +112,7 @@ public:
     using CenterChooser<Distance>::cols_;
 
     RandomCenterChooser(const Distance& distance, const std::vector<ElementType*>& points) :
-    	CenterChooser<Distance>(distance, points) {}
+        CenterChooser<Distance>(distance, points) {}
 
     void operator()(int k, int* indices, int indices_length, int* centers, int& centers_length)
     {
@@ -179,7 +179,7 @@ public:
             int best_index = -1;
             DistanceType best_val = 0;
             for (int j=0; j<n; ++j) {
-            	DistanceType dist = distance_(points_[centers[0]],points_[indices[j]],cols_);
+                DistanceType dist = distance_(points_[centers[0]],points_[indices[j]],cols_);
                 for (int i=1; i<index; ++i) {
                     DistanceType tmp_dist = distance_(points_[centers[i]],points_[indices[j]],cols_);
                     if (tmp_dist<dist) {

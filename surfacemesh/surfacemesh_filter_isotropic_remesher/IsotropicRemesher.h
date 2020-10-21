@@ -23,7 +23,7 @@ private:
     void splitLongEdges(double maxEdgeLength);
     void collapseShortEdges(const double _minEdgeLength, const double _maxEdgeLength, bool isKeepShortEdges);
     void equalizeValences();
-	void tangentialRelaxation();
+    void tangentialRelaxation();
     int targetValence(const SurfaceMeshModel::Vertex &_vh);
     bool isBoundary(const SurfaceMeshModel::Vertex &_vh);
     bool isFeature(const SurfaceMeshModel::Vertex &_vh);

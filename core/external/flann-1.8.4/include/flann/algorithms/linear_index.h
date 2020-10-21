@@ -56,12 +56,12 @@ public:
     typedef NNIndex<Distance> BaseClass;
 
     LinearIndex(const IndexParams& params = LinearIndexParams(), Distance d = Distance()) :
-    	BaseClass(params, d)
+        BaseClass(params, d)
     {
     }
 
     LinearIndex(const Matrix<ElementType>& input_data, const IndexParams& params = LinearIndexParams(), Distance d = Distance()) :
-    	BaseClass(params, d)
+        BaseClass(params, d)
     {
         setDataset(input_data);
     }
@@ -72,8 +72,8 @@ public:
 
     LinearIndex& operator=(LinearIndex other)
     {
-    	this->swap(other);
-    	return *this;
+        this->swap(other);
+        return *this;
     }
 
     virtual ~LinearIndex()
@@ -82,7 +82,7 @@ public:
 
     BaseClass* clone() const
     {
-    	return new LinearIndex(*this);
+        return new LinearIndex(*this);
     }
 
     void addPoints(const Matrix<ElementType>& points, float rebuild_threshold = 2)
@@ -105,42 +105,42 @@ public:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	ar.setObject(this);
+        ar.setObject(this);
 
-    	ar & *static_cast<NNIndex<Distance>*>(this);
+        ar & *static_cast<NNIndex<Distance>*>(this);
 
-    	if (Archive::is_loading::value) {
+        if (Archive::is_loading::value) {
             index_params_["algorithm"] = getType();
-    	}
+        }
     }
 
     void saveIndex(FILE* stream)
     {
-    	serialization::SaveArchive sa(stream);
-    	sa & *this;
+        serialization::SaveArchive sa(stream);
+        sa & *this;
     }
 
     void loadIndex(FILE* stream)
     {
-    	serialization::LoadArchive la(stream);
-    	la & *this;
+        serialization::LoadArchive la(stream);
+        la & *this;
     }
 
     void findNeighbors(ResultSet<DistanceType>& resultSet, const ElementType* vec, const SearchParams& /*searchParams*/) const
     {
-    	if (removed_) {
-    		for (size_t i = 0; i < points_.size(); ++i) {
-    			if (removed_points_.test(i)) continue;
-    			DistanceType dist = distance_(points_[i], vec, veclen_);
-    			resultSet.addPoint(dist, i);
-    		}
-    	}
-    	else {
-    		for (size_t i = 0; i < points_.size(); ++i) {
-    			DistanceType dist = distance_(points_[i], vec, veclen_);
-    			resultSet.addPoint(dist, i);
-    		}
-    	}
+        if (removed_) {
+            for (size_t i = 0; i < points_.size(); ++i) {
+                if (removed_points_.test(i)) continue;
+                DistanceType dist = distance_(points_[i], vec, veclen_);
+                resultSet.addPoint(dist, i);
+            }
+        }
+        else {
+            for (size_t i = 0; i < points_.size(); ++i) {
+                DistanceType dist = distance_(points_[i], vec, veclen_);
+                resultSet.addPoint(dist, i);
+            }
+        }
     }
 protected:
     void buildIndexImpl()

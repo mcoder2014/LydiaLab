@@ -145,8 +145,8 @@ private:
     template <typename Archive>
     void serialize(Archive& ar)
     {
-    	ar & size_;
-    	ar & bitset_;
+        ar & size_;
+        ar & bitset_;
     }
     friend struct serialization::access;
 

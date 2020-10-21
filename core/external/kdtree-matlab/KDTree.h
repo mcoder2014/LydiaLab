@@ -22,10 +22,10 @@ namespace kdtree{
     typedef vector<double> Point;
 
     struct Node{
-        double key;	///< the key (value along k-th dimension) of the split
-        int LIdx;	///< the index to the left sub-tree (-1 if none)
-        int	RIdx;	///< the index to the right sub-tree (-1 if none)
-        int	pIdx;   ///< index of stored data-point (NOTE: only if isLeaf)
+        double key;    ///< the key (value along k-th dimension) of the split
+        int LIdx;    ///< the index to the left sub-tree (-1 if none)
+        int    RIdx;    ///< the index to the right sub-tree (-1 if none)
+        int    pIdx;   ///< index of stored data-point (NOTE: only if isLeaf)
 
         Node(){ LIdx=RIdx=key=pIdx=-1; }
         inline bool isLeaf() const{ return pIdx>=0; }
@@ -101,10 +101,10 @@ namespace kdtree{
             bool ball_within_bounds(const Point& Xq);
             double bounds_overlap_ball(const Point& Xq);
         private:
-            int k;					  ///< number of records to search for
-            Point Bmin;  		 	  ///< bounding box lower bound
-            Point Bmax;  		      ///< bounding box upper bound
-            MaxHeap<double> pq;  	  ///< <key,idx> = <distance, node idx>
+            int k;                      ///< number of records to search for
+            Point Bmin;                 ///< bounding box lower bound
+            Point Bmax;                ///< bounding box upper bound
+            MaxHeap<double> pq;        ///< <key,idx> = <distance, node idx>
             bool terminate_search;    ///< true if k points have been found
         /// @}
 
@@ -133,7 +133,7 @@ namespace kdtree{
      * Creates a KDtree filled with the provided data.
      *
      * @param points   a vector< vector<double> > containing the point data
-     * 				   the number of points and the dimensionality is inferred
+     *                    the number of points and the dimensionality is inferred
      *                 by the data
      */
     KDTree::KDTree(const vector<Point>& points){
@@ -191,14 +191,14 @@ namespace kdtree{
 
         // Stop condition
         if(numel == 1) {
-            Node *node = new Node();		// create a new node
+            Node *node = new Node();        // create a new node
             int nodeIdx = nodesPtrs.size(); // its address is
-            nodesPtrs.push_back( node ); 	// important to push back here
-            node->LIdx = -1;				// no child
-            node->RIdx = -1;    			// no child
+            nodesPtrs.push_back( node );     // important to push back here
+            node->LIdx = -1;                // no child
+            node->RIdx = -1;                // no child
             /// @todo take it from sorter
             node->pIdx = sorter[dim][0];    // the only index available
-            node->key = 0;					// key is useless here
+            node->key = 0;                    // key is useless here
             return nodeIdx;
         }
 
@@ -243,10 +243,10 @@ namespace kdtree{
         Node* node = new Node();
         int nodeIdx = nodesPtrs.size(); //size() is the index of last element+1!!
         nodesPtrs.push_back( node ); //important to push back here
-        node->pIdx  	= -1; //not a leaf
-        node->key  		= points[ pidxMedian ][ dim ];
-        node->LIdx 		= build_recursively( Lsorter, sidehelper, (dim+1)%ndim );
-        node->RIdx 		= build_recursively( Rsorter, sidehelper, (dim+1)%ndim );
+        node->pIdx      = -1; //not a leaf
+        node->key          = points[ pidxMedian ][ dim ];
+        node->LIdx         = build_recursively( Lsorter, sidehelper, (dim+1)%ndim );
+        node->RIdx         = build_recursively( Rsorter, sidehelper, (dim+1)%ndim );
         return nodeIdx;
     }
 

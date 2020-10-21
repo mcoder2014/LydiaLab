@@ -172,7 +172,7 @@ private:
         // Get face points
         Surface_mesh::Vertex_around_face_circulator fvit, fvend;
         fvit = fvend = mesh->vertices(f);
-        do{ v.push_back(points[fvit]);	} while (++fvit != fvend);
+        do{ v.push_back(points[fvit]);    } while (++fvit != fvend);
 
         // Compute plane coefficient for face
         a = (v[1].y()-v[0].y())*(v[2].z()-v[0].z()) - (v[1].z()-v[0].z())*(v[2].y()-v[0].y());   /* a1*b2 - a2*b1; */
@@ -180,7 +180,7 @@ private:
         c = (v[1].x()-v[0].x())*(v[2].y()-v[0].y()) - (v[1].y()-v[0].y())*(v[2].x()-v[0].x());   /* a0*b1 - a1*b0; */
         M = sqrt(a*a + b*b + c*c);
         a = a/M; b = b/M; c = c/M;
-        f_plane[0] = a;	f_plane[1] = b;	f_plane[2] = c;
+        f_plane[0] = a;    f_plane[1] = b;    f_plane[2] = c;
         f_plane[3] = -1*(a*v[0].x() + b*v[0].y() + c*v[0].z());
 
         return f_plane;

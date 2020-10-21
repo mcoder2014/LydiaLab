@@ -917,15 +917,15 @@ inline __host__ __device__ float4 operator/(float b, float4 a){
 
 inline  __host__ __device__ float2 fminf(float2 a, float2 b)
 {
-	return make_float2(fminf(a.x,b.x), fminf(a.y,b.y));
+    return make_float2(fminf(a.x,b.x), fminf(a.y,b.y));
 }
 inline __host__ __device__ float3 fminf(float3 a, float3 b)
 {
-	return make_float3(fminf(a.x,b.x), fminf(a.y,b.y), fminf(a.z,b.z));
+    return make_float3(fminf(a.x,b.x), fminf(a.y,b.y), fminf(a.z,b.z));
 }
 inline  __host__ __device__ float4 fminf(float4 a, float4 b)
 {
-	return make_float4(fminf(a.x,b.x), fminf(a.y,b.y), fminf(a.z,b.z), fminf(a.w,b.w));
+    return make_float4(fminf(a.x,b.x), fminf(a.y,b.y), fminf(a.z,b.z), fminf(a.w,b.w));
 }
 
 inline __host__ __device__ int2 min(int2 a, int2 b)
@@ -960,15 +960,15 @@ inline __host__ __device__ uint4 min(uint4 a, uint4 b)
 
 inline __host__ __device__ float2 fmaxf(float2 a, float2 b)
 {
-	return make_float2(fmaxf(a.x,b.x), fmaxf(a.y,b.y));
+    return make_float2(fmaxf(a.x,b.x), fmaxf(a.y,b.y));
 }
 inline __host__ __device__ float3 fmaxf(float3 a, float3 b)
 {
-	return make_float3(fmaxf(a.x,b.x), fmaxf(a.y,b.y), fmaxf(a.z,b.z));
+    return make_float3(fmaxf(a.x,b.x), fmaxf(a.y,b.y), fmaxf(a.z,b.z));
 }
 inline __host__ __device__ float4 fmaxf(float4 a, float4 b)
 {
-	return make_float4(fmaxf(a.x,b.x), fmaxf(a.y,b.y), fmaxf(a.z,b.z), fmaxf(a.w,b.w));
+    return make_float4(fmaxf(a.x,b.x), fmaxf(a.y,b.y), fmaxf(a.z,b.z), fmaxf(a.w,b.w));
 }
 
 inline __host__ __device__ int2 max(int2 a, int2 b)
@@ -1253,28 +1253,28 @@ inline __host__ __device__ float4 fmodf(float4 a, float4 b)
 
 inline __host__ __device__ float2 fabs(float2 v)
 {
-	return make_float2(fabs(v.x), fabs(v.y));
+    return make_float2(fabs(v.x), fabs(v.y));
 }
 inline __host__ __device__ float3 fabs(float3 v)
 {
-	return make_float3(fabs(v.x), fabs(v.y), fabs(v.z));
+    return make_float3(fabs(v.x), fabs(v.y), fabs(v.z));
 }
 inline __host__ __device__ float4 fabs(float4 v)
 {
-	return make_float4(fabs(v.x), fabs(v.y), fabs(v.z), fabs(v.w));
+    return make_float4(fabs(v.x), fabs(v.y), fabs(v.z), fabs(v.w));
 }
 
 inline __host__ __device__ int2 abs(int2 v)
 {
-	return make_int2(abs(v.x), abs(v.y));
+    return make_int2(abs(v.x), abs(v.y));
 }
 inline __host__ __device__ int3 abs(int3 v)
 {
-	return make_int3(abs(v.x), abs(v.y), abs(v.z));
+    return make_int3(abs(v.x), abs(v.y), abs(v.z));
 }
 inline __host__ __device__ int4 abs(int4 v)
 {
-	return make_int4(abs(v.x), abs(v.y), abs(v.z), abs(v.w));
+    return make_int4(abs(v.x), abs(v.y), abs(v.z), abs(v.w));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1285,7 +1285,7 @@ inline __host__ __device__ int4 abs(int4 v)
 
 inline __host__ __device__ float3 reflect(float3 i, float3 n)
 {
-	return i - 2.0f * n * dot(n,i);
+    return i - 2.0f * n * dot(n,i);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1306,23 +1306,23 @@ inline __host__ __device__ float3 cross(float3 a, float3 b)
 
 inline __device__ __host__ float smoothstep(float a, float b, float x)
 {
-	float y = clamp((x - a) / (b - a), 0.0f, 1.0f);
-	return (y*y*(3.0f - (2.0f*y)));
+    float y = clamp((x - a) / (b - a), 0.0f, 1.0f);
+    return (y*y*(3.0f - (2.0f*y)));
 }
 inline __device__ __host__ float2 smoothstep(float2 a, float2 b, float2 x)
 {
-	float2 y = clamp((x - a) / (b - a), 0.0f, 1.0f);
-	return (y*y*(make_float2(3.0f) - (make_float2(2.0f)*y)));
+    float2 y = clamp((x - a) / (b - a), 0.0f, 1.0f);
+    return (y*y*(make_float2(3.0f) - (make_float2(2.0f)*y)));
 }
 inline __device__ __host__ float3 smoothstep(float3 a, float3 b, float3 x)
 {
-	float3 y = clamp((x - a) / (b - a), 0.0f, 1.0f);
-	return (y*y*(make_float3(3.0f) - (make_float3(2.0f)*y)));
+    float3 y = clamp((x - a) / (b - a), 0.0f, 1.0f);
+    return (y*y*(make_float3(3.0f) - (make_float3(2.0f)*y)));
 }
 inline __device__ __host__ float4 smoothstep(float4 a, float4 b, float4 x)
 {
-	float4 y = clamp((x - a) / (b - a), 0.0f, 1.0f);
-	return (y*y*(make_float4(3.0f) - (make_float4(2.0f)*y)));
+    float4 y = clamp((x - a) / (b - a), 0.0f, 1.0f);
+    return (y*y*(make_float4(3.0f) - (make_float4(2.0f)*y)));
 }
 
 #endif

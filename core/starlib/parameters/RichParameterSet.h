@@ -49,7 +49,7 @@ public:
     bool getBool(QString name) const;
     void setValue(QString name, bool newval);
     
-    int	getInt(QString name) const;
+    int    getInt(QString name) const;
     void setValue(QString name, int newval);
     
     float getFloat(QString name) const;
@@ -64,7 +64,7 @@ public:
 /// Reimplement these if needed
 #ifdef OLDMESHLAB    
     float getAbsPerc(QString name) const;
-    int	getEnum(QString name) const;
+    int    getEnum(QString name) const;
     QList<float> getFloatList(QString name) const;
     float getDynamicFloat(QString name) const;
     QString getOpenFileName(QString name) const;

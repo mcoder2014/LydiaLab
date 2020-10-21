@@ -11,8 +11,8 @@ public:
     StarlabApplicationGUI(int& argc, char* argv[]) : QApplication(argc,argv){
         QLocale::setDefault(QLocale::C); // Use "C"urrent locale
         setOrganizationName("Free Software Foundation");
-        setApplicationName("Starlab");
-        setApplicationVersion("1.0.1");
+        setApplicationName("Lydialab");
+        setApplicationVersion("1.1.1");
         setQuitOnLastWindowClosed(true);
     }
 

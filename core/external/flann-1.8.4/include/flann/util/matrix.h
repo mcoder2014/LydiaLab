@@ -44,16 +44,16 @@ class Matrix_
 {
 public:
 
-	Matrix_() : rows(0), cols(0), stride(0), type(FLANN_NONE), data(NULL)
-	{
-	};
+    Matrix_() : rows(0), cols(0), stride(0), type(FLANN_NONE), data(NULL)
+    {
+    };
 
     Matrix_(void* data_, size_t rows_, size_t cols_, flann_datatype_t type_, size_t stride_ = 0) :
         rows(rows_), cols(cols_), stride(stride_), type(type_)
     {
-    	data = static_cast<uchar*>(data_);
+        data = static_cast<uchar*>(data_);
 
-    	if (stride==0) stride = flann_datatype_size(type)*cols;
+        if (stride==0) stride = flann_datatype_size(type)*cols;
     }
 
     /**
@@ -79,14 +79,14 @@ protected:
     template<typename Archive>
     void serialize(Archive& ar)
     {
-    	ar & rows;
-    	ar & cols;
-    	ar & stride;
-    	ar & type;
-    	if (Archive::is_loading::value) {
-    		data = new uchar[rows*stride];
-    	}
-    	ar & serialization::make_binary_object(data, rows*stride);
+        ar & rows;
+        ar & cols;
+        ar & stride;
+        ar & type;
+        if (Archive::is_loading::value) {
+            data = new uchar[rows*stride];
+        }
+        ar & serialization::make_binary_object(data, rows*stride);
     }
     friend struct serialization::access;
 };
@@ -110,9 +110,9 @@ public:
     }
 
     Matrix(T* data_, size_t rows_, size_t cols_, size_t stride_ = 0) :
-    	Matrix_(data_, rows_, cols_, flann_datatype_value<T>::value, stride_)
+        Matrix_(data_, rows_, cols_, flann_datatype_value<T>::value, stride_)
     {
-    	if (stride==0) stride = sizeof(T)*cols;
+        if (stride==0) stride = sizeof(T)*cols;
     }
 
     /**
@@ -120,13 +120,13 @@ public:
      */
     inline T* operator[](size_t index) const
     {
-    	return reinterpret_cast<T*>(data+index*stride);
+        return reinterpret_cast<T*>(data+index*stride);
     }
 
 
     T* ptr() const
     {
-    	return reinterpret_cast<T*>(data);
+        return reinterpret_cast<T*>(data);
     }
 };
 

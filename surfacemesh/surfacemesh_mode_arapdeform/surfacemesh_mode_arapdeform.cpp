@@ -14,12 +14,12 @@ surfacemesh_mode_arapdeform::surfacemesh_mode_arapdeform()
     this->deformer = NULL;
     this->deform_handle = NULL;
 
-	if(!QApplication::topLevelWidgets().isEmpty())
-	{
-		paint_cursor = QCursor(QPixmap(":/images/paint.png"), 0, 32);
-		erase_cursor = QCursor(QPixmap(":/images/erase.png"), 0, 32);
-		deform_cursor = QCursor(QPixmap(":/images/deform_cursor.png"), 0, 0);
-	}
+    if(!QApplication::topLevelWidgets().isEmpty())
+    {
+        paint_cursor = QCursor(QPixmap(":/images/paint.png"), 0, 32);
+        erase_cursor = QCursor(QPixmap(":/images/erase.png"), 0, 32);
+        deform_cursor = QCursor(QPixmap(":/images/deform_cursor.png"), 0, 0);
+    }
 
     brushSize = 10;
     isDrawBrushSize = false;

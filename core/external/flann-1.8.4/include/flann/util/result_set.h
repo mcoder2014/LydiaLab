@@ -101,14 +101,14 @@ template <typename DistanceType>
 class KNNSimpleResultSet : public ResultSet<DistanceType>
 {
 public:
-	typedef DistanceIndex<DistanceType> DistIndex;
+    typedef DistanceIndex<DistanceType> DistIndex;
 
-	KNNSimpleResultSet(size_t capacity_) :
+    KNNSimpleResultSet(size_t capacity_) :
         capacity_(capacity_)
     {
-		// reserving capacity to prevent memory re-allocations
-		dist_index_.resize(capacity_, DistIndex(std::numeric_limits<DistanceType>::max(),-1));
-    	clear();
+        // reserving capacity to prevent memory re-allocations
+        dist_index_.resize(capacity_, DistIndex(std::numeric_limits<DistanceType>::max(),-1));
+        clear();
     }
 
     ~KNNSimpleResultSet()
@@ -150,7 +150,7 @@ public:
      */
     void addPoint(DistanceType dist, size_t index)
     {
-    	if (dist>=worst_distance_) return;
+        if (dist>=worst_distance_) return;
 
         if (count_ < capacity_) ++count_;
         size_t i;
@@ -161,7 +161,7 @@ public:
             if (dist_index_[i-1].dist_>dist)
 #endif
             {
-            	dist_index_[i] = dist_index_[i-1];
+                dist_index_[i] = dist_index_[i-1];
             }
             else break;
         }
@@ -179,16 +179,16 @@ public:
      */
     void copy(size_t* indices, DistanceType* dists, size_t num_elements, bool sorted = true)
     {
-    	size_t n = std::min(count_, num_elements);
-    	for (size_t i=0; i<n; ++i) {
-    		*indices++ = dist_index_[i].index_;
-    		*dists++ = dist_index_[i].dist_;
-    	}
+        size_t n = std::min(count_, num_elements);
+        for (size_t i=0; i<n; ++i) {
+            *indices++ = dist_index_[i].index_;
+            *dists++ = dist_index_[i].dist_;
+        }
     }
 
     DistanceType worstDist() const
     {
-    	return worst_distance_;
+        return worst_distance_;
     }
 
 private:
@@ -205,13 +205,13 @@ template <typename DistanceType>
 class KNNResultSet : public ResultSet<DistanceType>
 {
 public:
-	typedef DistanceIndex<DistanceType> DistIndex;
+    typedef DistanceIndex<DistanceType> DistIndex;
 
     KNNResultSet(int capacity) : capacity_(capacity)
     {
-		// reserving capacity to prevent memory re-allocations
-		dist_index_.resize(capacity_, DistIndex(std::numeric_limits<DistanceType>::max(),-1));
-    	clear();
+        // reserving capacity to prevent memory re-allocations
+        dist_index_.resize(capacity_, DistIndex(std::numeric_limits<DistanceType>::max(),-1));
+        clear();
     }
 
     ~KNNResultSet()
@@ -280,11 +280,11 @@ public:
      */
     void copy(size_t* indices, DistanceType* dists, size_t num_elements, bool sorted = true)
     {
-    	size_t n = std::min(count_, num_elements);
-    	for (size_t i=0; i<n; ++i) {
-    		*indices++ = dist_index_[i].index_;
-    		*dists++ = dist_index_[i].dist_;
-    	}
+        size_t n = std::min(count_, num_elements);
+        for (size_t i=0; i<n; ++i) {
+            *indices++ = dist_index_[i].index_;
+            *dists++ = dist_index_[i].dist_;
+        }
     }
 
     DistanceType worstDist() const
@@ -306,14 +306,14 @@ template <typename DistanceType>
 class KNNResultSet2 : public ResultSet<DistanceType>
 {
 public:
-	typedef DistanceIndex<DistanceType> DistIndex;
+    typedef DistanceIndex<DistanceType> DistIndex;
 
-	KNNResultSet2(size_t capacity_) :
+    KNNResultSet2(size_t capacity_) :
         capacity_(capacity_)
     {
-		// reserving capacity to prevent memory re-allocations
-		dist_index_.reserve(capacity_);
-    	clear();
+        // reserving capacity to prevent memory re-allocations
+        dist_index_.reserve(capacity_);
+        clear();
     }
 
     ~KNNResultSet2()
@@ -356,27 +356,27 @@ public:
      */
     void addPoint(DistanceType dist, size_t index)
     {
-    	if (dist>=worst_dist_) return;
+        if (dist>=worst_dist_) return;
 
-    	if (dist_index_.size()==capacity_) {
-    		// if result set if filled to capacity, remove farthest element
-    		std::pop_heap(dist_index_.begin(), dist_index_.end());
-        	dist_index_.pop_back();
-    	}
+        if (dist_index_.size()==capacity_) {
+            // if result set if filled to capacity, remove farthest element
+            std::pop_heap(dist_index_.begin(), dist_index_.end());
+            dist_index_.pop_back();
+        }
 
-    	// add new element
-    	dist_index_.push_back(DistIndex(dist,index));
-    	if (is_full_) { // when is_full_==true, we have a heap
-    		std::push_heap(dist_index_.begin(), dist_index_.end());
-    	}
+        // add new element
+        dist_index_.push_back(DistIndex(dist,index));
+        if (is_full_) { // when is_full_==true, we have a heap
+            std::push_heap(dist_index_.begin(), dist_index_.end());
+        }
 
-    	if (dist_index_.size()==capacity_) {
-    		if (!is_full_) {
-    			std::make_heap(dist_index_.begin(), dist_index_.end());
-            	is_full_ = true;
-    		}
-    		// we replaced the farthest element, update worst distance
-        	worst_dist_ = dist_index_[0].dist_;
+        if (dist_index_.size()==capacity_) {
+            if (!is_full_) {
+                std::make_heap(dist_index_.begin(), dist_index_.end());
+                is_full_ = true;
+            }
+            // we replaced the farthest element, update worst distance
+            worst_dist_ = dist_index_[0].dist_;
         }
     }
 
@@ -389,27 +389,27 @@ public:
      */
     void copy(size_t* indices, DistanceType* dists, size_t num_elements, bool sorted = true)
     {
-    	if (sorted) {
-    		// std::sort_heap(dist_index_.begin(), dist_index_.end());
-    		// sort seems faster here, even though dist_index_ is a heap
-    		std::sort(dist_index_.begin(), dist_index_.end());
-    	}
-    	else {
-    		if (num_elements<size()) {
-    			std::nth_element(dist_index_.begin(), dist_index_.begin()+num_elements, dist_index_.end());
-    		}
-    	}
+        if (sorted) {
+            // std::sort_heap(dist_index_.begin(), dist_index_.end());
+            // sort seems faster here, even though dist_index_ is a heap
+            std::sort(dist_index_.begin(), dist_index_.end());
+        }
+        else {
+            if (num_elements<size()) {
+                std::nth_element(dist_index_.begin(), dist_index_.begin()+num_elements, dist_index_.end());
+            }
+        }
 
-    	size_t n = std::min(dist_index_.size(), num_elements);
-    	for (size_t i=0; i<n; ++i) {
-    		*indices++ = dist_index_[i].index_;
-    		*dists++ = dist_index_[i].dist_;
-    	}
+        size_t n = std::min(dist_index_.size(), num_elements);
+        for (size_t i=0; i<n; ++i) {
+            *indices++ = dist_index_[i].index_;
+            *dists++ = dist_index_[i].dist_;
+        }
     }
 
     DistanceType worstDist() const
     {
-    	return worst_dist_;
+        return worst_dist_;
     }
 
 private:
@@ -428,14 +428,14 @@ template <typename DistanceType>
 class RadiusResultSet : public ResultSet<DistanceType>
 {
 public:
-	typedef DistanceIndex<DistanceType> DistIndex;
+    typedef DistanceIndex<DistanceType> DistIndex;
 
-	RadiusResultSet(DistanceType radius_) :
+    RadiusResultSet(DistanceType radius_) :
         radius_(radius_)
     {
-		// reserving some memory to limit number of re-allocations
-		dist_index_.reserve(1024);
-    	clear();
+        // reserving some memory to limit number of re-allocations
+        dist_index_.reserve(1024);
+        clear();
     }
 
     ~RadiusResultSet()
@@ -476,10 +476,10 @@ public:
      */
     void addPoint(DistanceType dist, size_t index)
     {
-    	if (dist<radius_) {
-    		// add new element
-    		dist_index_.push_back(DistIndex(dist,index));
-    	}
+        if (dist<radius_) {
+            // add new element
+            dist_index_.push_back(DistIndex(dist,index));
+        }
     }
 
     /**
@@ -491,27 +491,27 @@ public:
      */
     void copy(size_t* indices, DistanceType* dists, size_t num_elements, bool sorted = true)
     {
-    	if (sorted) {
-    		// std::sort_heap(dist_index_.begin(), dist_index_.end());
-    		// sort seems faster here, even though dist_index_ is a heap
-    		std::sort(dist_index_.begin(), dist_index_.end());
-    	}
-    	else {
-    		if (num_elements<size()) {
-    			std::nth_element(dist_index_.begin(), dist_index_.begin()+num_elements, dist_index_.end());
-    		}
-    	}
+        if (sorted) {
+            // std::sort_heap(dist_index_.begin(), dist_index_.end());
+            // sort seems faster here, even though dist_index_ is a heap
+            std::sort(dist_index_.begin(), dist_index_.end());
+        }
+        else {
+            if (num_elements<size()) {
+                std::nth_element(dist_index_.begin(), dist_index_.begin()+num_elements, dist_index_.end());
+            }
+        }
 
-    	size_t n = std::min(dist_index_.size(), num_elements);
-    	for (size_t i=0; i<n; ++i) {
-    		*indices++ = dist_index_[i].index_;
-    		*dists++ = dist_index_[i].dist_;
-    	}
+        size_t n = std::min(dist_index_.size(), num_elements);
+        for (size_t i=0; i<n; ++i) {
+            *indices++ = dist_index_[i].index_;
+            *dists++ = dist_index_[i].dist_;
+        }
     }
 
     DistanceType worstDist() const
     {
-    	return radius_;
+        return radius_;
     }
 
 private:
@@ -529,14 +529,14 @@ template <typename DistanceType>
 class KNNRadiusResultSet : public ResultSet<DistanceType>
 {
 public:
-	typedef DistanceIndex<DistanceType> DistIndex;
+    typedef DistanceIndex<DistanceType> DistIndex;
 
-	KNNRadiusResultSet(DistanceType radius_, size_t capacity_) :
+    KNNRadiusResultSet(DistanceType radius_, size_t capacity_) :
         radius_(radius_), capacity_(capacity_)
     {
-		// reserving capacity to prevent memory re-allocations
-		dist_index_.reserve(capacity_);
-    	clear();
+        // reserving capacity to prevent memory re-allocations
+        dist_index_.reserve(capacity_);
+        clear();
     }
 
     ~KNNRadiusResultSet()
@@ -579,28 +579,28 @@ public:
      */
     void addPoint(DistanceType dist, size_t index)
     {
-    	if (dist>=worst_dist_) return;
+        if (dist>=worst_dist_) return;
 
-    	if (dist_index_.size()==capacity_) {
-    		// if result set is filled to capacity, remove farthest element
-    		std::pop_heap(dist_index_.begin(), dist_index_.end());
-        	dist_index_.pop_back();
-    	}
+        if (dist_index_.size()==capacity_) {
+            // if result set is filled to capacity, remove farthest element
+            std::pop_heap(dist_index_.begin(), dist_index_.end());
+            dist_index_.pop_back();
+        }
 
-    	// add new element
-    	dist_index_.push_back(DistIndex(dist,index));
-    	if (is_heap_) {
-    		std::push_heap(dist_index_.begin(), dist_index_.end());
-    	}
+        // add new element
+        dist_index_.push_back(DistIndex(dist,index));
+        if (is_heap_) {
+            std::push_heap(dist_index_.begin(), dist_index_.end());
+        }
 
-    	if (dist_index_.size()==capacity_) {
-    		// when got to full capacity, make it a heap
-    		if (!is_heap_) {
-    			std::make_heap(dist_index_.begin(), dist_index_.end());
-    			is_heap_ = true;
-    		}
-    		// we replaced the farthest element, update worst distance
-        	worst_dist_ = dist_index_[0].dist_;
+        if (dist_index_.size()==capacity_) {
+            // when got to full capacity, make it a heap
+            if (!is_heap_) {
+                std::make_heap(dist_index_.begin(), dist_index_.end());
+                is_heap_ = true;
+            }
+            // we replaced the farthest element, update worst distance
+            worst_dist_ = dist_index_[0].dist_;
         }
     }
 
@@ -613,27 +613,27 @@ public:
      */
     void copy(size_t* indices, DistanceType* dists, size_t num_elements, bool sorted = true)
     {
-    	if (sorted) {
-    		// std::sort_heap(dist_index_.begin(), dist_index_.end());
-    		// sort seems faster here, even though dist_index_ is a heap
-    		std::sort(dist_index_.begin(), dist_index_.end());
-    	}
-    	else {
-    		if (num_elements<size()) {
-    			std::nth_element(dist_index_.begin(), dist_index_.begin()+num_elements, dist_index_.end());
-    		}
-    	}
+        if (sorted) {
+            // std::sort_heap(dist_index_.begin(), dist_index_.end());
+            // sort seems faster here, even though dist_index_ is a heap
+            std::sort(dist_index_.begin(), dist_index_.end());
+        }
+        else {
+            if (num_elements<size()) {
+                std::nth_element(dist_index_.begin(), dist_index_.begin()+num_elements, dist_index_.end());
+            }
+        }
 
-    	size_t n = std::min(dist_index_.size(), num_elements);
-    	for (size_t i=0; i<n; ++i) {
-    		*indices++ = dist_index_[i].index_;
-    		*dists++ = dist_index_[i].dist_;
-    	}
+        size_t n = std::min(dist_index_.size(), num_elements);
+        for (size_t i=0; i<n; ++i) {
+            *indices++ = dist_index_[i].index_;
+            *dists++ = dist_index_[i].dist_;
+        }
     }
 
     DistanceType worstDist() const
     {
-    	return worst_dist_;
+        return worst_dist_;
     }
 
 private:
@@ -741,14 +741,14 @@ public:
      */
     void copy(size_t* indices, DistanceType* dist, int n_neighbors, bool sorted = true)
     {
-    	if (n_neighbors<0) n_neighbors = dist_indices_.size();
-    	int i = 0;
-    	typedef typename std::set<DistIndex>::const_iterator Iterator;
-    	for (Iterator dist_index = dist_indices_.begin(), dist_index_end =
-    			dist_indices_.end(); (dist_index != dist_index_end) && (i < n_neighbors); ++dist_index, ++indices, ++dist, ++i) {
-    		*indices = dist_index->index_;
-    		*dist = dist_index->dist_;
-    	}
+        if (n_neighbors<0) n_neighbors = dist_indices_.size();
+        int i = 0;
+        typedef typename std::set<DistIndex>::const_iterator Iterator;
+        for (Iterator dist_index = dist_indices_.begin(), dist_index_end =
+                dist_indices_.end(); (dist_index != dist_index_end) && (i < n_neighbors); ++dist_index, ++indices, ++dist, ++i) {
+            *indices = dist_index->index_;
+            *dist = dist_index->dist_;
+        }
     }
 
     /** The number of neighbors in the set

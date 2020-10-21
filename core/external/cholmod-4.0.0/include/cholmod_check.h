@@ -16,42 +16,42 @@
  * of integer vectors (subset, perm, and parent), and read in matrices from a
  * file:
  *
- * cholmod_check_common	    check/print the Common object
+ * cholmod_check_common        check/print the Common object
  * cholmod_print_common
  *
- * cholmod_check_sparse	    check/print a sparse matrix in column-oriented form
+ * cholmod_check_sparse        check/print a sparse matrix in column-oriented form
  * cholmod_print_sparse
  *
- * cholmod_check_dense	    check/print a dense matrix
+ * cholmod_check_dense        check/print a dense matrix
  * cholmod_print_dense
  *
- * cholmod_check_factor	    check/print a Cholesky factorization
+ * cholmod_check_factor        check/print a Cholesky factorization
  * cholmod_print_factor
  *
  * cholmod_check_triplet    check/print a sparse matrix in triplet form
  * cholmod_print_triplet
  *
- * cholmod_check_subset	    check/print a subset (integer vector in given range)
+ * cholmod_check_subset        check/print a subset (integer vector in given range)
  * cholmod_print_subset
  *
- * cholmod_check_perm	    check/print a permutation (an integer vector)
+ * cholmod_check_perm        check/print a permutation (an integer vector)
  * cholmod_print_perm
  *
- * cholmod_check_parent	    check/print an elimination tree (an integer vector)
+ * cholmod_check_parent        check/print an elimination tree (an integer vector)
  * cholmod_print_parent
  *
- * cholmod_read_triplet	    read a matrix in triplet form (any Matrix Market
- *			    "coordinate" format, or a generic triplet format).
+ * cholmod_read_triplet        read a matrix in triplet form (any Matrix Market
+ *                "coordinate" format, or a generic triplet format).
  *
- * cholmod_read_sparse	    read a matrix in sparse form (same file format as
- *			    cholmod_read_triplet).
+ * cholmod_read_sparse        read a matrix in sparse form (same file format as
+ *                cholmod_read_triplet).
  *
- * cholmod_read_dense	    read a dense matrix (any Matrix Market "array"
- *			    format, or a generic dense format).
+ * cholmod_read_dense        read a dense matrix (any Matrix Market "array"
+ *                format, or a generic dense format).
  *
- * cholmod_write_sparse	    write a sparse matrix to a Matrix Market file.
+ * cholmod_write_sparse        write a sparse matrix to a Matrix Market file.
  *
- * cholmod_write_dense	    write a dense matrix to a Matrix Market file.
+ * cholmod_write_dense        write a dense matrix to a Matrix Market file.
  *
  * cholmod_print_common and cholmod_check_common are the only two routines that
  * you may call after calling cholmod_finish.
@@ -87,7 +87,7 @@ int cholmod_l_check_common (cholmod_common *) ;
 int cholmod_print_common
 (
     /* ---- input ---- */
-    char *name,		/* printed name of Common object */
+    char *name,        /* printed name of Common object */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -101,7 +101,7 @@ int cholmod_l_print_common (char *, cholmod_common *) ;
 int cholmod_check_sparse
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* sparse matrix to check */
+    cholmod_sparse *A,    /* sparse matrix to check */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -115,8 +115,8 @@ int cholmod_l_check_sparse (cholmod_sparse *, cholmod_common *) ;
 int cholmod_print_sparse
 (
     /* ---- input ---- */
-    cholmod_sparse *A,	/* sparse matrix to print */
-    char *name,		/* printed name of sparse matrix */
+    cholmod_sparse *A,    /* sparse matrix to print */
+    char *name,        /* printed name of sparse matrix */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -130,7 +130,7 @@ int cholmod_l_print_sparse (cholmod_sparse *, char *, cholmod_common *) ;
 int cholmod_check_dense
 (
     /* ---- input ---- */
-    cholmod_dense *X,	/* dense matrix to check */
+    cholmod_dense *X,    /* dense matrix to check */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -144,8 +144,8 @@ int cholmod_l_check_dense (cholmod_dense *, cholmod_common *) ;
 int cholmod_print_dense
 (
     /* ---- input ---- */
-    cholmod_dense *X,	/* dense matrix to print */
-    char *name,		/* printed name of dense matrix */
+    cholmod_dense *X,    /* dense matrix to print */
+    char *name,        /* printed name of dense matrix */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -159,7 +159,7 @@ int cholmod_l_print_dense (cholmod_dense *, char *, cholmod_common *) ;
 int cholmod_check_factor
 (
     /* ---- input ---- */
-    cholmod_factor *L,	/* factor to check */
+    cholmod_factor *L,    /* factor to check */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -173,8 +173,8 @@ int cholmod_l_check_factor (cholmod_factor *, cholmod_common *) ;
 int cholmod_print_factor
 (
     /* ---- input ---- */
-    cholmod_factor *L,	/* factor to print */
-    char *name,		/* printed name of factor */
+    cholmod_factor *L,    /* factor to print */
+    char *name,        /* printed name of factor */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -188,7 +188,7 @@ int cholmod_l_print_factor (cholmod_factor *, char *, cholmod_common *) ;
 int cholmod_check_triplet
 (
     /* ---- input ---- */
-    cholmod_triplet *T,	/* triplet matrix to check */
+    cholmod_triplet *T,    /* triplet matrix to check */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -202,8 +202,8 @@ int cholmod_l_check_triplet (cholmod_triplet *, cholmod_common *) ;
 int cholmod_print_triplet
 (
     /* ---- input ---- */
-    cholmod_triplet *T,	/* triplet matrix to print */
-    char *name,		/* printed name of triplet matrix */
+    cholmod_triplet *T,    /* triplet matrix to print */
+    char *name,        /* printed name of triplet matrix */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -217,9 +217,9 @@ int cholmod_l_print_triplet (cholmod_triplet *, char *, cholmod_common *) ;
 int cholmod_check_subset
 (
     /* ---- input ---- */
-    int *Set,		/* Set [0:len-1] is a subset of 0:n-1.  Duplicates OK */
-    UF_long len,	/* size of Set (an integer array) */
-    size_t n,		/* 0:n-1 is valid range */
+    int *Set,        /* Set [0:len-1] is a subset of 0:n-1.  Duplicates OK */
+    UF_long len,    /* size of Set (an integer array) */
+    size_t n,        /* 0:n-1 is valid range */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -233,10 +233,10 @@ int cholmod_l_check_subset (UF_long *, UF_long, size_t, cholmod_common *) ;
 int cholmod_print_subset
 (
     /* ---- input ---- */
-    int *Set,		/* Set [0:len-1] is a subset of 0:n-1.  Duplicates OK */
-    UF_long len,	/* size of Set (an integer array) */
-    size_t n,		/* 0:n-1 is valid range */
-    char *name,		/* printed name of Set */
+    int *Set,        /* Set [0:len-1] is a subset of 0:n-1.  Duplicates OK */
+    UF_long len,    /* size of Set (an integer array) */
+    size_t n,        /* 0:n-1 is valid range */
+    char *name,        /* printed name of Set */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -251,9 +251,9 @@ int cholmod_l_print_subset (UF_long *, UF_long, size_t, char *,
 int cholmod_check_perm
 (
     /* ---- input ---- */
-    int *Perm,		/* Perm [0:len-1] is a permutation of subset of 0:n-1 */
-    size_t len,		/* size of Perm (an integer array) */
-    size_t n,		/* 0:n-1 is valid range */
+    int *Perm,        /* Perm [0:len-1] is a permutation of subset of 0:n-1 */
+    size_t len,        /* size of Perm (an integer array) */
+    size_t n,        /* 0:n-1 is valid range */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -267,10 +267,10 @@ int cholmod_l_check_perm (UF_long *, size_t, size_t, cholmod_common *) ;
 int cholmod_print_perm
 (
     /* ---- input ---- */
-    int *Perm,		/* Perm [0:len-1] is a permutation of subset of 0:n-1 */
-    size_t len,		/* size of Perm (an integer array) */
-    size_t n,		/* 0:n-1 is valid range */
-    char *name,		/* printed name of Perm */
+    int *Perm,        /* Perm [0:len-1] is a permutation of subset of 0:n-1 */
+    size_t len,        /* size of Perm (an integer array) */
+    size_t n,        /* 0:n-1 is valid range */
+    char *name,        /* printed name of Perm */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -284,8 +284,8 @@ int cholmod_l_print_perm (UF_long *, size_t, size_t, char *, cholmod_common *) ;
 int cholmod_check_parent
 (
     /* ---- input ---- */
-    int *Parent,	/* Parent [0:n-1] is an elimination tree */
-    size_t n,		/* size of Parent */
+    int *Parent,    /* Parent [0:n-1] is an elimination tree */
+    size_t n,        /* size of Parent */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -299,9 +299,9 @@ int cholmod_l_check_parent (UF_long *, size_t, cholmod_common *) ;
 int cholmod_print_parent
 (
     /* ---- input ---- */
-    int *Parent,	/* Parent [0:n-1] is an elimination tree */
-    size_t n,		/* size of Parent */
-    char *name,		/* printed name of Parent */
+    int *Parent,    /* Parent [0:n-1] is an elimination tree */
+    size_t n,        /* size of Parent */
+    char *name,        /* printed name of Parent */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -315,7 +315,7 @@ int cholmod_l_print_parent (UF_long *, size_t, char *, cholmod_common *) ;
 cholmod_sparse *cholmod_read_sparse
 (
     /* ---- input ---- */
-    FILE *f,		/* file to read from, must already be open */
+    FILE *f,        /* file to read from, must already be open */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -329,7 +329,7 @@ cholmod_sparse *cholmod_l_read_sparse (FILE *, cholmod_common *) ;
 cholmod_triplet *cholmod_read_triplet
 (
     /* ---- input ---- */
-    FILE *f,		/* file to read from, must already be open */
+    FILE *f,        /* file to read from, must already be open */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -343,7 +343,7 @@ cholmod_triplet *cholmod_l_read_triplet (FILE *, cholmod_common *) ;
 cholmod_dense *cholmod_read_dense
 (
     /* ---- input ---- */
-    FILE *f,		/* file to read from, must already be open */
+    FILE *f,        /* file to read from, must already be open */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -357,23 +357,23 @@ cholmod_dense *cholmod_l_read_dense (FILE *, cholmod_common *) ;
 void *cholmod_read_matrix
 (
     /* ---- input ---- */
-    FILE *f,		/* file to read from, must already be open */
-    int prefer,		/* If 0, a sparse matrix is always return as a
-			 *	cholmod_triplet form.  It can have any stype
-			 *	(symmetric-lower, unsymmetric, or
-			 *	symmetric-upper).
-			 * If 1, a sparse matrix is returned as an unsymmetric
-			 *	cholmod_sparse form (A->stype == 0), with both
-			 *	upper and lower triangular parts present.
-			 *	This is what the MATLAB mread mexFunction does,
-			 *	since MATLAB does not have an stype.
-			 * If 2, a sparse matrix is returned with an stype of 0
-			 *	or 1 (unsymmetric, or symmetric with upper part
-			 *	stored).
-			 * This argument has no effect for dense matrices.
-			 */
+    FILE *f,        /* file to read from, must already be open */
+    int prefer,        /* If 0, a sparse matrix is always return as a
+             *    cholmod_triplet form.  It can have any stype
+             *    (symmetric-lower, unsymmetric, or
+             *    symmetric-upper).
+             * If 1, a sparse matrix is returned as an unsymmetric
+             *    cholmod_sparse form (A->stype == 0), with both
+             *    upper and lower triangular parts present.
+             *    This is what the MATLAB mread mexFunction does,
+             *    since MATLAB does not have an stype.
+             * If 2, a sparse matrix is returned with an stype of 0
+             *    or 1 (unsymmetric, or symmetric with upper part
+             *    stored).
+             * This argument has no effect for dense matrices.
+             */
     /* ---- output---- */
-    int *mtype,		/* CHOLMOD_TRIPLET, CHOLMOD_SPARSE or CHOLMOD_DENSE */
+    int *mtype,        /* CHOLMOD_TRIPLET, CHOLMOD_SPARSE or CHOLMOD_DENSE */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -387,10 +387,10 @@ void *cholmod_l_read_matrix (FILE *, int, int *, cholmod_common *) ;
 int cholmod_write_sparse
 (
     /* ---- input ---- */
-    FILE *f,		    /* file to write to, must already be open */
-    cholmod_sparse *A,	    /* matrix to print */
-    cholmod_sparse *Z,	    /* optional matrix with pattern of explicit zeros */
-    char *comments,	    /* optional filename of comments to include */
+    FILE *f,            /* file to write to, must already be open */
+    cholmod_sparse *A,        /* matrix to print */
+    cholmod_sparse *Z,        /* optional matrix with pattern of explicit zeros */
+    char *comments,        /* optional filename of comments to include */
     /* --------------- */
     cholmod_common *Common
 ) ;
@@ -405,9 +405,9 @@ int cholmod_l_write_sparse (FILE *, cholmod_sparse *, cholmod_sparse *,
 int cholmod_write_dense
 (
     /* ---- input ---- */
-    FILE *f,		    /* file to write to, must already be open */
-    cholmod_dense *X,	    /* matrix to print */
-    char *comments,	    /* optional filename of comments to include */
+    FILE *f,            /* file to write to, must already be open */
+    cholmod_dense *X,        /* matrix to print */
+    char *comments,        /* optional filename of comments to include */
     /* --------------- */
     cholmod_common *Common
 ) ;

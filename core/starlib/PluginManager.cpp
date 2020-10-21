@@ -83,8 +83,12 @@ FilterPlugin *PluginManager::getFilter(QString name){
     return filter;
 }
 
+/**
+ * @brief PluginManager::loadPlugins
+ * 程序启动时会执行，加载插件
+ */
 void PluginManager::loadPlugins() {
-    // qDebug() << "PluginManager::loadPlugins(..)";
+    qDebug() << "PluginManager::loadPlugins(..)";
     
     pluginsDir=QDir(getPluginDirPath());
     // without adding the correct library path in the mac the loading of jpg (done via qt plugins) fails
@@ -92,15 +96,18 @@ void PluginManager::loadPlugins() {
     // qApp->addLibraryPath(getBaseDirPath());
     QStringList pluginfilters(LIB_EXTENSION_FILTER);
     //only the files with appropriate extensions will be listed by function entryList()
+    // 过滤出插件文件夹下拓展名是 *.dll *.so *.dylib 相关的文件，认为是插件
     pluginsDir.setNameFilters(pluginfilters);
 
     // qDebug( "Loading plugins from: %s ",qPrintable(pluginsDir.absolutePath()));
     
-    /// Load all plugins
-    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+    /// Load all plugins 对所有的插件文件，加载
+    for (QString fileName : pluginsDir.entryList(QDir::Files)) {
         
         /// Attempt to load a Qt plugin
         QString path = pluginsDir.absoluteFilePath(fileName);
+
+        // Qt 加载插件的工具
         QPluginLoader loader(path);
         QObject* plugin = loader.instance();
         if(!plugin){
@@ -138,7 +145,7 @@ QString PluginManager::getBaseDirPath(){
     // Windows:
     // during development with visual studio binary could be in the debug/release subdir.
     // once deployed plugins dir is in the application directory, so
-    if (baseDir.dirName() == "debug" || baseDir.dirName() == "release")		
+    if (baseDir.dirName() == "debug" || baseDir.dirName() == "release")        
         baseDir.cdUp();
 #endif
 

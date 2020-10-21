@@ -21,7 +21,7 @@ class SmoothRenderer : public SurfaceMeshRenderer{
     }
     
     void render(){
-		if(mesh()->n_faces() < 1) return;
+        if(mesh()->n_faces() < 1) return;
 
         Surface_mesh::Vertex_property<Point>  points = mesh()->vertex_property<Point>(VPOINT);
         Surface_mesh::Vertex_property<Point>  vnormals = mesh()->vertex_property<Point>(VNORMAL);

@@ -153,7 +153,7 @@ void Document::emit_hasChanged(){
     // qDebug() << Q_FUNC_INFO;
     // qDebug() << __FUNCTION__ << __LINE__ << __FILE__;
 
-	if (_models.isEmpty()) return; // Skip any updates if there are no models
+    if (_models.isEmpty()) return; // Skip any updates if there are no models
 
     if(!isBusy()) 
         emit hasChanged(); 
