@@ -88,7 +88,7 @@ FilterPlugin *PluginManager::getFilter(QString name){
  * 程序启动时会执行，加载插件
  */
 void PluginManager::loadPlugins() {
-    qDebug() << "PluginManager::loadPlugins(..)";
+    qDebug() << "PluginManager::loadPlugins(" << __PRETTY_FUNCTION__ << __LINE__ << ")";
     
     pluginsDir=QDir(getPluginDirPath());
     // without adding the correct library path in the mac the loading of jpg (done via qt plugins) fails
@@ -109,7 +109,9 @@ void PluginManager::loadPlugins() {
 
         // Qt 加载插件的工具
         QPluginLoader loader(path);
+
         QObject* plugin = loader.instance();
+        qDebug("Load Plugin %s %s\n", qPrintable(fileName), loader.load()?"true":"false");
         if(!plugin){
             qDebug("Plugin '%s' is not a proper *Qt* plugin!! %s", qPrintable(fileName), qPrintable(failurecauses_qtplugin));
             continue;

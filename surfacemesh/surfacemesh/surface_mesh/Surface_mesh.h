@@ -779,7 +779,9 @@ public: //---------------------------------------------------- circulator types
 
 
 
-public: //-------------------------------------------- constructor / destructor
+public:
+    //-------------------------------------------- constructor / destructor
+    /// 构造函数、析构函数
 
     /// \name Construct, destruct, assignment
     //@{
@@ -806,7 +808,9 @@ public: //-------------------------------------------- constructor / destructor
     void shallow_copy(const Surface_mesh& rhs);
     //@}
 
-public: //------------------------------------------------------------- file IO
+public:
+    //------------------------------------------------------------- file IO
+    /// 文件读写相关函数
 
     /// \name File IO
     //@{
@@ -824,7 +828,9 @@ public: //------------------------------------------------------------- file IO
 
 
 
-public: //----------------------------------------------- add new vertex / face
+public:
+    //----------------------------------------------- add new vertex / face
+    /// 添加顶点 面片
 
     /// \name Add new elements by hand
     //@{
@@ -849,7 +855,9 @@ public: //----------------------------------------------- add new vertex / face
 
 
 
-public: //--------------------------------------------------- memory management
+public:
+    //--------------------------------------------------- memory management
+    /// 内存管理相关的
 
     /// \name Memory Management
     //@{
@@ -896,57 +904,34 @@ public: //--------------------------------------------------- memory management
 
     /// returns whether vertex \c v is deleted
     /// \sa garbage_collection()
-    bool is_deleted(Vertex v) const
-    {
-        return vdeleted_[v];
-    }
+    bool is_deleted(Vertex v) const { return vdeleted_[v]; }
     /// returns whether halfedge \c h is deleted
     /// \sa garbage_collection()
-    bool is_deleted(Halfedge h) const
-    {
-        return edeleted_[edge(h)];
-    }
+    bool is_deleted(Halfedge h) const { return edeleted_[edge(h)]; }
     /// returns whether edge \c e is deleted
     /// \sa garbage_collection()
-    bool is_deleted(Edge e) const
-    {
-        return edeleted_[e];
-    }
+    bool is_deleted(Edge e) const { return edeleted_[e]; }
     /// returns whether face \c f is deleted
     /// \sa garbage_collection()
-    bool is_deleted(Face f) const
-    {
-        return fdeleted_[f];
-    }
-
+    bool is_deleted(Face f) const { return fdeleted_[f]; }
 
     /// return whether vertex \c v is valid, i.e. the index is stores it within the array bounds.
-    bool is_valid(Vertex v) const
-    {
-        return (0 <= v.idx()) && (v.idx() < (int)vertices_size());
-    }
+    bool is_valid(Vertex v) const { return (0 <= v.idx()) && (v.idx() < (int)vertices_size()); }
     /// return whether halfedge \c h is valid, i.e. the index is stores it within the array bounds.
-    bool is_valid(Halfedge h) const
-    {
-        return (0 <= h.idx()) && (h.idx() < (int)halfedges_size());
-    }
+    bool is_valid(Halfedge h) const { return (0 <= h.idx()) && (h.idx() < (int)halfedges_size()); }
     /// return whether edge \c e is valid, i.e. the index is stores it within the array bounds.
-    bool is_valid(Edge e) const
-    {
-        return (0 <= e.idx()) && (e.idx() < (int)edges_size());
-    }
+    bool is_valid(Edge e) const { return (0 <= e.idx()) && (e.idx() < (int)edges_size()); }
     /// return whether face \c f is valid, i.e. the index is stores it within the array bounds.
-    bool is_valid(Face f) const
-    {
-        return (0 <= f.idx()) && (f.idx() < (int)faces_size());
-    }
+    bool is_valid(Face f) const {  return (0 <= f.idx()) && (f.idx() < (int)faces_size()); }
 
     //@}
 
 
 
 
-public: //---------------------------------------------- low-level connectivity
+public:
+    //---------------------------------------------- low-level connectivity
+    /// 底层连通性
 
     /// \name Low-level connectivity
     //@{
@@ -1113,7 +1098,9 @@ public: //---------------------------------------------- low-level connectivity
 
 
 
-public: //--------------------------------------------------- property handling
+public:
+    //--------------------------------------------------- property handling
+    // 属性相关
 
     /// \name Property handling
     //@{
@@ -1534,11 +1521,13 @@ public:
 
 protected: //------------------------------------------------------- private data
 
+    /// 网格模型的数据存储部分
     Property_container vprops_;
     Property_container hprops_;
     Property_container eprops_;
     Property_container fprops_;
 
+    /// 各种 property
     Vertex_property<Vertex_connectivity>      vconn_;
     Halfedge_property<Halfedge_connectivity>  hconn_;
     Face_property<Face_connectivity>          fconn_;
