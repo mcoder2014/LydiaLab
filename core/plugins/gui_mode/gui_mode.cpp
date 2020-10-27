@@ -96,6 +96,11 @@ void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
     this->state = state;
 }
 
+/**
+ * @brief gui_mode::actionClicked
+ * 这个函数有点儿丑呀……
+ * @param action
+ */
 void gui_mode::actionClicked(QAction *action){
     // qDebug() << QString("gui_mode::actionClicked(%1)").arg(action->text());
     
@@ -131,6 +136,7 @@ void gui_mode::actionClicked(QAction *action){
         break;
     case MODE: 
         /// ---------------- TERMINATION --------------------
+        /// 终止，进入状态 DEFAULT
         if(action==lastActiveModeAction){
             Q_ASSERT(mainWindow()->getModePlugin()!=NULL);
             mainWindow()->getModePlugin()->__internal_destroy();
@@ -141,6 +147,7 @@ void gui_mode::actionClicked(QAction *action){
             break;            
         }
         /// ---------------- SUSPENSION --------------------
+        /// 暂停，进入状态 SUSPENDED
         if(action==defaultModeAction){
             QAction* actionToSuspend = lastActiveModeAction;
             ModePlugin* pluginToSuspend = (ModePlugin*) lastActiveModeAction->parent();
@@ -153,6 +160,7 @@ void gui_mode::actionClicked(QAction *action){
         break;
     case SUSPENDED: 
         /// ---------------- RESUMING --------------------
+        /// 继续，进入状态 MODE
         Q_ASSERT(action==defaultModeAction);
         mainWindow()->resumeModePlugin();
         ((ModePlugin*) lastActiveModeAction->parent())->resume();
@@ -165,6 +173,11 @@ void gui_mode::actionClicked(QAction *action){
     drawArea()->updateGL();
 }
 
+/**
+ * @brief gui_mode::documentChanged
+ * 订阅 Document 的 hasChanged 事件，
+ * 交给当前的 Mode Plugin 进行处理
+ */
 void gui_mode::documentChanged(){  
     // qDebug("gui_mode::documentChanged()");
     if(!mainWindow()->hasModePlugin()) return;

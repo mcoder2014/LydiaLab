@@ -44,20 +44,28 @@ bool Application::saveModel(Model* model, QString path){
     return true;
 }
 
+/**
+ * @brief Application::loadModel
+ * 调用 IO 插件来加载模型
+ * @param path
+ * @param plugin
+ * @return
+ */
 bool Application::loadModel(QString path, InputOutputPlugin* plugin){
     // qDebug("StarlabApplication::loadModel(\"%s\")", qPrintable(path));    
     QFileInfo fileInfo(path);
     QString extension = fileInfo.suffix().toLower();
     QString basename = fileInfo.completeBaseName();
     
-    if(plugin==NULL){
+    if(plugin==nullptr){
         plugin = pluginManager()->modelExtensionToPlugin[extension];
-        if(plugin==NULL) return false;
+        if(plugin==nullptr) return false;
     }
     
     /// Checks a suitable plugin exists
     InputOutputPlugin* iIO = pluginManager()->modelExtensionToPlugin[extension];
-    if(iIO == NULL) throw StarlabException("File '%s' has not been opened becase format '%s' not supported", qPrintable(basename), qPrintable(extension));
+    if(iIO == nullptr) throw StarlabException("File '%s' has not been opened becase format '%s' not supported",
+                                              qPrintable(basename), qPrintable(extension));
     
     /// Checks file existence
     iIO->checkReadable(path);
@@ -65,7 +73,7 @@ bool Application::loadModel(QString path, InputOutputPlugin* plugin){
     /// Calls the plugin for open operation
     document()->pushBusy();
         Model* newModel = iIO->open(path);
-        if(newModel==NULL) throw StarlabException("Attempted to create a NULL model");
+        if(newModel==nullptr) throw StarlabException("Attempted to create a nullptr model");
         /// Update the bounding box (for rendering reasons)
         /// @todo Would it be possible to Qt-Connect iIO->open to updateBoundingBox()?
         newModel->updateBoundingBox();
@@ -85,9 +93,9 @@ bool Application::loadProject(QString path, ProjectInputOutputPlugin* plugin){
     QString extension = fileInfo.suffix().toLower();
     QString basename = fileInfo.completeBaseName();    
 
-    if(plugin==NULL){
+    if(plugin==nullptr){
         plugin = pluginManager()->projectExtensionToPlugin[extension];
-        if(plugin==NULL) 
+        if(plugin==nullptr)
             return false;
     }
     
@@ -95,7 +103,7 @@ bool Application::loadProject(QString path, ProjectInputOutputPlugin* plugin){
     ProjectInputOutputPlugin* iIO = pluginManager()->projectExtensionToPlugin[extension];
     
     /// Checks file existence
-    if(iIO == NULL)            throw StarlabException("Project file '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
+    if(iIO == nullptr)            throw StarlabException("Project file '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
     if(!fileInfo.exists())     throw StarlabException("Project file '%s' does not exist", qPrintable(path));
     if(!fileInfo.isReadable()) throw StarlabException("Project file '%s' is not readable", qPrintable(path));
     
@@ -118,10 +126,10 @@ bool Application::loadByDrop(QString path, ModePlugin *plugin)
     QString extension = fileInfo.suffix().toLower();
     QString basename = fileInfo.completeBaseName();
 
-    if (plugin == NULL)
+    if (plugin == nullptr)
     {
         plugin = pluginManager()->modeExtensionToPlugin[extension];
-        if (plugin == NULL)
+        if (plugin == nullptr)
             return false;
     }
 
@@ -129,7 +137,7 @@ bool Application::loadByDrop(QString path, ModePlugin *plugin)
     ModePlugin* mIO = pluginManager()->modeExtensionToPlugin[extension];
 
     /// Checks file existence
-    if(mIO == NULL)            throw StarlabException("File '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
+    if(mIO == nullptr)            throw StarlabException("File '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
     if(!fileInfo.exists())     throw StarlabException("File '%s' does not exist", qPrintable(path));
     if(!fileInfo.isReadable()) throw StarlabException("File '%s' is not readable", qPrintable(path));
 
@@ -152,7 +160,7 @@ QList<FilterPlugin*> Application::applicableFilters(){
 
 QList<FilterPlugin *> Application::applicableFilters(Model *model){
     QList<FilterPlugin*> retval;    
-    foreach(FilterPlugin* plugin, pluginManager()->filterPlugins())
+    for(FilterPlugin* plugin:pluginManager()->filterPlugins())
         if(plugin->isApplicable(model))
             retval.append(plugin);
     return retval;
@@ -161,9 +169,9 @@ QList<FilterPlugin *> Application::applicableFilters(Model *model){
 void Application::load(QString path){
     // qDebug("StarlabApplication::load(\"%s\")", qPrintable(path));
     bool retstatus = false;
-    if(!retstatus) retstatus = loadModel(path,NULL);
-    if(!retstatus) retstatus = loadProject(path,NULL);
-    if(!retstatus) retstatus = loadByDrop(path, NULL);
+    if(!retstatus) retstatus = loadModel(path,nullptr);
+    if(!retstatus) retstatus = loadProject(path,nullptr);
+    if(!retstatus) retstatus = loadByDrop(path, nullptr);
     
     /// Nothing was able to open
     if(!retstatus)

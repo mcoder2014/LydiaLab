@@ -21,19 +21,22 @@
 
 using namespace Starlab;
     
-/// Input: a string like "[SurfaceMesh] Object File Format (*.off,*.off2)"
-/// Returns a lowercase stringlist: {"off","off2"}
-QStringList extractExtensions(QString iopluginname){
+/**
+ * @brief extractExtensions
+ * 从插件名字中提取出插件支持的文件后缀名格式，使用 空格作为文件类型的间隔
+ * @param a string like "[SurfaceMesh] Object File Format (*.off *.off2)"
+ * @return a lowercase stringlist: {"off","off2"}
+ */
+QStringList extractExtensions(QString ioPluginName){
     QStringList retval;
-    
     // qDebug() << "Parsing string: " << iopluginname;
-    int i_open  = iopluginname.indexOf("(");
-    int i_close = iopluginname.indexOf(")");
+    int openIndex  = ioPluginName.indexOf("(");
+    int closeIndex = ioPluginName.indexOf(")");
     
     // Chunk of string between parenthesis, then split by comma
-    iopluginname = iopluginname.mid(i_open+1,i_close-i_open-1);
-    QStringList extensions = iopluginname.split(QRegExp(","));
-    foreach(QString extension, extensions){
+    ioPluginName = ioPluginName.mid(openIndex+1,closeIndex-openIndex-1);
+    QStringList extensions = ioPluginName.split(QRegExp(" "));
+    for(QString extension : extensions){
         int i_dot = extension.indexOf(".");
         extension = extension.mid(i_dot+1);
         // qDebug() << "extracted extension: " << extension;
@@ -88,47 +91,50 @@ FilterPlugin *PluginManager::getFilter(QString name){
  * 程序启动时会执行，加载插件
  */
 void PluginManager::loadPlugins() {
-    qDebug() << "PluginManager::loadPlugins(" << __PRETTY_FUNCTION__ << __LINE__ << ")";
+    qDebug() << "PluginManager::loadPlugins("
+             << __FILE__ <<__PRETTY_FUNCTION__ << __LINE__ << ")";
     
     pluginsDir=QDir(getPluginDirPath());
-    // without adding the correct library path in the mac the loading of jpg (done via qt plugins) fails
-    // qApp->addLibraryPath(getPluginDirPath());
-    // qApp->addLibraryPath(getBaseDirPath());
-    QStringList pluginfilters(LIB_EXTENSION_FILTER);
     //only the files with appropriate extensions will be listed by function entryList()
     // 过滤出插件文件夹下拓展名是 *.dll *.so *.dylib 相关的文件，认为是插件
-    pluginsDir.setNameFilters(pluginfilters);
-
-    // qDebug( "Loading plugins from: %s ",qPrintable(pluginsDir.absolutePath()));
+    pluginsDir.setNameFilters(QStringList(LIB_EXTENSION_FILTER));
     
     /// Load all plugins 对所有的插件文件，加载
     for (QString fileName : pluginsDir.entryList(QDir::Files)) {
-        
+
         /// Attempt to load a Qt plugin
-        QString path = pluginsDir.absoluteFilePath(fileName);
-
-        // Qt 加载插件的工具
-        QPluginLoader loader(path);
-
-        QObject* plugin = loader.instance();
+        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
         qDebug("Load Plugin %s %s\n", qPrintable(fileName), loader.load()?"true":"false");
+        QObject* plugin = loader.instance();
+
         if(!plugin){
+            // 如果插件加载失败，打印报错信息
             qDebug("Plugin '%s' is not a proper *Qt* plugin!! %s", qPrintable(fileName), qPrintable(failurecauses_qtplugin));
             continue;
         }
             
         /// Attempt to load one of the starlab plugins
         bool loadok = false;
+
+        // 1. 模型的输入输出插件
         loadok |= load_InputOutputPlugin(plugin);
+        // 2. 工程的输入输出插件
         loadok |= load_ProjectInputOutputPlugin(plugin);
+        // 3. Filter 插件
         loadok |= load_FilterPlugin(plugin);       
+        // 4. 装饰器插件
         loadok |= load_DecoratePlugin(plugin);
+        // 5. Gui 插件
         loadok |= load_GuiPlugin(plugin);        
-        loadok |= load_EditPlugin(plugin);
+        // 6. Mode 插件
+        loadok |= load_ModePlugin(plugin);
+        // 7. 渲染插件
         loadok |= load_RenderPlugin(plugin);
+
         if( !loadok ) 
-            throw StarlabException("plugin "+fileName+" was not recognized as one of the declared Starlab plugin!!"); // +failurecauses_starlabplugin));
+            throw StarlabException("plugin " + fileName + " was not recognized as one of the declared Starlab plugin!!");
         
+        // 所有插件都在 StarlabPlugin 中存储一份
         StarlabPlugin* splugin = dynamic_cast<StarlabPlugin*>(plugin);
         if(!splugin) continue;
             
@@ -184,11 +190,12 @@ bool PluginManager::load_ProjectInputOutputPlugin(QObject *plugin){
 bool PluginManager::load_InputOutputPlugin(QObject *plugin){
     InputOutputPlugin* iIO = qobject_cast<InputOutputPlugin*>(plugin);
     if(!iIO) return false;
+
     modelIOPlugins.insert(iIO->name(), iIO);
 
     /// Parse the extension filter into extensions
     QStringList exts = extractExtensions( iIO->name() );
-    foreach(QString ext, exts)
+    for(QString ext : exts)
         modelExtensionToPlugin.insert(ext,iIO);
     
     return true;
@@ -214,7 +221,7 @@ bool PluginManager::load_GuiPlugin(QObject* _plugin){
     return true;
 }
 
-bool PluginManager::load_EditPlugin(QObject* _plugin){
+bool PluginManager::load_ModePlugin(QObject* _plugin){
     ModePlugin* plugin = qobject_cast<ModePlugin*>(_plugin);
     if(!plugin) return false;
     _modePlugins.insert(plugin->name(), plugin);

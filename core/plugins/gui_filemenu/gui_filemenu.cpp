@@ -9,7 +9,7 @@ const static QString all_files = "All Files (*.*)";
 using namespace Starlab;
 
 void gui_filemenu::delete_selected_model(){
-    if(selectedModel()==NULL)
+    if(selectedModel()==nullptr)
         return;
     document()->deleteModel( selectedModel() );
 }
@@ -22,19 +22,26 @@ void gui_filemenu::open(){
     QString filters = all_files;
     {
         QTextStream sout(&filters);
-        foreach(InputOutputPlugin* plugin, pluginManager()->modelIOPlugins)
+        for(InputOutputPlugin* plugin : pluginManager()->modelIOPlugins) {
             sout << ";;" << plugin->name();
-        foreach(ProjectInputOutputPlugin* plugin, pluginManager()->projectIOPlugins)
+        }
+        for(ProjectInputOutputPlugin* plugin : pluginManager()->projectIOPlugins) {
             sout << ";;" << plugin->name();
+        }
     }
     
     /// Prompt user for file to open
     QString selectedFilter;
-    QString fileName = QFileDialog::getOpenFileName(mainWindow(),tr("Open Project File"), lastUsedDirectory.path(),filters,&selectedFilter);
+    QString fileName = QFileDialog::getOpenFileName(
+                mainWindow(), tr("Open Project/Model File"),
+                lastUsedDirectory.path(), filters, &selectedFilter);
+
     // QString extension = QFileInfo(fileName).suffix().toLower();
     
     /// "Cancel" button was pressed
-    if(fileName.isNull()) return;
+    if(fileName.isNull()) {
+        return;
+    }
     
     /// Cache the opened directory for future use
     /// do it early so if operation fail it's still cached
@@ -47,12 +54,12 @@ void gui_filemenu::open(){
     
     /// But if he preferred something else
     else{
-        InputOutputPlugin* model_plugin = pluginManager()->modelIOPlugins.value(selectedFilter,NULL);
-        ProjectInputOutputPlugin* project_plugin = pluginManager()->projectExtensionToPlugin.value(selectedFilter,NULL);
-        Q_ASSERT(model_plugin==NULL || project_plugin==NULL);
+        InputOutputPlugin* model_plugin = pluginManager()->modelIOPlugins.value(selectedFilter,nullptr);
+        ProjectInputOutputPlugin* project_plugin = pluginManager()->projectExtensionToPlugin.value(selectedFilter,nullptr);
+        Q_ASSERT(model_plugin==nullptr || project_plugin==nullptr);
     
-        if(project_plugin != NULL) application()->loadProject(fileName,project_plugin);
-        if(model_plugin != NULL) application()->loadModel(fileName,model_plugin);
+        if(project_plugin != nullptr) application()->loadProject(fileName,project_plugin);
+        if(model_plugin != nullptr) application()->loadModel(fileName,model_plugin);
     }
 }
 
@@ -103,7 +110,7 @@ void gui_filemenu::reload_selection(){
     // qDebug() << "gui_filemenu::reload_selection()";
     mainWindow()->document()->pushBusy();
         Model* selection = mainWindow()->document()->selectedModel();
-        if(selection==NULL) return;
+        if(selection==nullptr) return;
         QFileInfo fi(selection->path);
         if(!fi.exists())
             throw StarlabException("Cannot reload mode, file %s cannot be found.",selection->path.toStdString().c_str());
@@ -113,12 +120,12 @@ void gui_filemenu::reload_selection(){
         QList<InputOutputPlugin*> plugins = pluginManager()->modelExtensionToPlugin.values(extension);
         
         /// Check which of these have generated the model, then use it to re-open
-        Model* newmodel = NULL;
+        Model* newmodel = nullptr;
         foreach(InputOutputPlugin* plugin, plugins)
             if(plugin->isApplicable(selection))
                 newmodel = plugin->open(selection->path);       
     
-        if(newmodel==NULL)
+        if(newmodel==nullptr)
             throw StarlabException("Impossible ot reload model");
         
         /// Compute its BBOX, otherwise rendering will not work
@@ -411,7 +418,7 @@ bool MainWindow::exportMesh(QString /*fileName*/, Model* /*mod*/, bool /*saveAll
     QString defaultExt = "*." + fi.suffix().toLower();
     if(defaultExt == "*.")
         defaultExt = "*.ply";
-    if (mod == NULL)
+    if (mod == nullptr)
         return false;
     mod->meshModified() = false;
     QString ff = mod->fullName();

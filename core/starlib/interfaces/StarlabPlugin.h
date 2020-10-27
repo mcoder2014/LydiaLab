@@ -60,6 +60,7 @@ protected:
 /// @}
         
 /// @{ Quick access to the Starlab resources
+/// 插件中访问 Starlab 数据的方法
 public:
     Starlab::Document*          document();
     Starlab::Application*       application();

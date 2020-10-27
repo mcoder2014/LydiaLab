@@ -103,6 +103,7 @@ public:
     
 private:
     /// Searches pluginsDir for plugins
+    /// 程序启动时执行，从 pluginsDir 路径中加载插件
     void loadPlugins();
 
 /// Set of helper functions
@@ -110,7 +111,7 @@ private:
     bool load_InputOutputPlugin(QObject* plugin);
     bool load_ProjectInputOutputPlugin(QObject* plugin);
     bool load_FilterPlugin(QObject* plugin);
-    bool load_EditPlugin(QObject* plugin);
+    bool load_ModePlugin(QObject* plugin);
     bool load_DecoratePlugin(QObject* plugin);    
     bool load_GuiPlugin(QObject* _plugin);
     bool load_DrawAreaPlugin(QObject* _plugin);

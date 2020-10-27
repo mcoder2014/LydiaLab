@@ -51,22 +51,22 @@ MainWindow::MainWindow(Application* _application) :
         // QIcon icon;
         // icon.addPixmap(QPixmap(":images/___.png"));
         // setWindowIcon(icon);
-        setWindowTitle("LydiaLab");
+        setWindowTitle(tr("LydiaLab"));
     }
        
     /// Instantiate Menus (plugins will fill them in)
     /// Do not use the silly "&" symbols for windows notation for alt navigation
     {
-        menus << (fileMenu      = menuBar()->addMenu("File"));
-        menus << (modeMenu      = menuBar()->addMenu("Mode"));
-        menus << (filterMenu    = menuBar()->addMenu("Filters"));
-        menus << (renderMenu    = menuBar()->addMenu("Render"));
+        menus << (fileMenu      = menuBar()->addMenu(tr("File")));
+        menus << (modeMenu      = menuBar()->addMenu(tr("Mode")));
+        menus << (filterMenu    = menuBar()->addMenu(tr("Filters")));
+        menus << (renderMenu    = menuBar()->addMenu(tr("Render")));
 #ifdef ENABLE_DECORATION
-        menus << (decorateMenu  = menuBar()->addMenu("Decorate"));
+        menus << (decorateMenu  = menuBar()->addMenu(tr("Decorate")));
 #endif
-        menus << (viewMenu      = menuBar()->addMenu("View"));
-        menus << (windowsMenu   = menuBar()->addMenu("Windows"));
-        menus << (helpMenu      = menuBar()->addMenu("Help"));
+        menus << (viewMenu      = menuBar()->addMenu(tr("View")));
+        menus << (windowsMenu   = menuBar()->addMenu(tr("Windows")));
+        menus << (helpMenu      = menuBar()->addMenu(tr("Help")));
        
 /// @todo this was annoying and caused bugs, temporarily disabled
 #ifdef TODO_SHOW_ACTION_TOOLTIP
@@ -128,8 +128,9 @@ MainWindow::MainWindow(Application* _application) :
     }
     
     /// Installs all the GUI plugins
+    /// 加载全部的 GUI Plugin
     {
-        foreach(GuiPlugin* plugin, pluginManager()->guiPlugins()){
+        for(GuiPlugin* plugin : pluginManager()->guiPlugins()){
             // qDebug() << "GuiPlugin::load " << plugin->name();
             plugin->_mainWindow=this;
             plugin->load();
