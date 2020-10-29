@@ -74,6 +74,19 @@ shallow_copy(const Surface_mesh &rhs)
         edeleted_ = edge_property<bool>("e:deleted");
         fdeleted_ = face_property<bool>("f:deleted");
         vpoint_   = vertex_property<Point>("v:point");
+
+        // 点法线、面法线
+        if(has_face_property<Normal>("f:normal")) {
+            fnormal_ = face_property<Normal>("f:normal");
+        } else {
+            fnormal_ = Face_property<Normal>();
+        }
+
+        if(has_vertex_property<Normal>("v:normal")) {
+            vnormal_ = vertex_property<Normal>("v:normal");
+        } else {
+            vnormal_ = Vertex_property<Normal>();
+        }
                 
         // how many elements are deleted?
         deleted_vertices_ = rhs.deleted_vertices_;
@@ -111,6 +124,19 @@ operator=(const Surface_mesh& rhs)
         edeleted_ = edge_property<bool>("e:deleted");
         fdeleted_ = face_property<bool>("f:deleted");
         vpoint_   = vertex_property<Point>("v:point");
+
+        // 点法线、面法线
+        if(has_face_property<Normal>("f:normal")) {
+            fnormal_ = face_property<Normal>("f:normal");
+        } else {
+            fnormal_ = Face_property<Normal>();
+        }
+
+        if(has_vertex_property<Normal>("v:normal")) {
+            vnormal_ = vertex_property<Normal>("v:normal");
+        } else {
+            vnormal_ = Vertex_property<Normal>();
+        }
 
         // how many elements are deleted?
         deleted_vertices_ = rhs.deleted_vertices_;
@@ -161,6 +187,19 @@ assign(const Surface_mesh& rhs)
         hprops_.resize(rhs.halfedges_size());
         eprops_.resize(rhs.edges_size());
         fprops_.resize(rhs.faces_size());
+
+        // 点法线、面法线
+        if(has_face_property<Normal>("f:normal")) {
+            fnormal_ = face_property<Normal>("f:normal");
+        } else {
+            fnormal_ = Face_property<Normal>();
+        }
+
+        if(has_vertex_property<Normal>("v:normal")) {
+            vnormal_ = vertex_property<Normal>("v:normal");
+        } else {
+            vnormal_ = Vertex_property<Normal>();
+        }
 
         // how many elements are deleted?
         deleted_vertices_ = rhs.deleted_vertices_;

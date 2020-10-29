@@ -116,9 +116,9 @@ public:
     inline Eigen::Vector3d getScale(){return scale;}
     Matrix4d getTransformationMatrix();
 
-    inline Eigen::Vector3d setPosition(const Vector3d& position){this->position = position;}
-    inline Eigen::Vector3d setRotation(const Vector3d& rotation){this->rotation = rotation;}
-    inline Eigen::Vector3d setScale(const Vector3d& scale){this->scale = scale;}
+    inline void setPosition(const Vector3d& position){this->position = position;}
+    inline void setRotation(const Vector3d& rotation){this->rotation = rotation;}
+    inline void setScale(const Vector3d& scale){this->scale = scale;}
 
 /// @}
 };
