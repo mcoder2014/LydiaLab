@@ -46,10 +46,14 @@ class RenderPlugin : public StarlabPlugin{
 public:
     /// @brief Can this plugin generate a renderer for the the given model?
     virtual bool isApplicable(StarlabModel* model) = 0;
+
     /// @brief Generate an instance of the rendering class
+    /// 获得一个 new 出来的渲染器实例
     virtual Renderer* instance() = 0;
+
     /// @brief Overload and return true if you would like this plugin to be a default
     virtual bool isDefault() { return false; }   
+
     /// @brief Gives access to the StarlabDrawArea
     using StarlabPlugin::drawArea;
 };

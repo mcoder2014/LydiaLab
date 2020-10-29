@@ -1463,7 +1463,12 @@ public: //------------------------------------------ geometry-related functions
 
 private: //---------------------------------------------- allocate new elements
 
-    /// allocate a new vertex, resize vertex properties accordingly.
+    /**
+     * @brief new_vertex
+     * allocate a new vertex, resize vertex properties accordingly.
+     * 新加一个顶点，所有的 property 都追加一个数据
+     * @return
+     */
     Vertex new_vertex()
     {
         vprops_.push_back();
@@ -1519,7 +1524,8 @@ public:
 
 
 
-protected: //------------------------------------------------------- private data
+protected:
+    //------------------------------------------------------- private data
 
     /// 网格模型的数据存储部分
     Property_container vprops_;

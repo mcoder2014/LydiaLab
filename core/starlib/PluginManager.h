@@ -34,20 +34,37 @@ private:
 /// @{ 
 private:
     /// @brief Stores all (loaded) plugins
+    /// 通过 map 存储不同类型的插件
+    /// 其中所有派生类型的插件都会在 _plugins 中备份一次
     QMap<QString,StarlabPlugin*>    _plugins;
+
+    // GUI 插件
     QMap<QString,GuiPlugin*>        _guiPlugins;
+
+    // Filter 插件
     QMap<QString,FilterPlugin*>     _filterPlugins;
+
+    // Mode 插件
     QMap<QString,ModePlugin*>       _modePlugins;
+
+    // 装饰器插件
     QMap<QString,DecoratePlugin*>   _decoratePlugins;
+
+    // 渲染器插件
     QMap<QString,RenderPlugin*>     _renderPlugins;    
 public:
     /// @brief pointers to all the loaded plugins
     QList<StarlabPlugin*> plugins(){ return _plugins.values(); }
+
     /// @brief pointers to plugins subset
     QList<FilterPlugin*> filterPlugins(){ return _filterPlugins.values(); }
+
     QList<DecoratePlugin*> decoratePlugins(){ return _decoratePlugins.values(); }
+
     QList<ModePlugin*> modePlugins(){ return _modePlugins.values(); }
+
     QList<GuiPlugin*> guiPlugins(){ return _guiPlugins.values(); }
+
 public:
     /// @brief pointer to specific plugin
     FilterPlugin* getFilter(QString name);
@@ -56,28 +73,29 @@ public:
 public:  
     /// Stores the loaded IO model plugins
     /// @todo necessary? just use the values of the hash map 
-    QMap<QString,InputOutputPlugin*> modelIOPlugins;
+    QMap<QString, InputOutputPlugin*> modelIOPlugins;
+
     /// Extension (lowercase) => IO model plugin
-    QHash<QString,InputOutputPlugin*> modelExtensionToPlugin;
+    QHash<QString, InputOutputPlugin*> modelExtensionToPlugin;
     
     /// Stores the loaded IO project plugins
     /// @todo necessary? just use the values of the hash map 
-    QVector<ProjectInputOutputPlugin*> projectIOPlugins;   
+    QVector<ProjectInputOutputPlugin*> projectIOPlugins;
+
     /// Extension (lowercase) => IO project plugin
     QHash<QString,ProjectInputOutputPlugin*> projectExtensionToPlugin;
 
     /// Stores the loaded IO files by drop
     QHash<QString, ModePlugin*> modeExtensionToPlugin;
 
-
-
-
 /// @{ Render Plugins Control
 public:
     /// Creates a new instance of a render plugin
     /// @exception if plugin with that name cannot be found
     RenderPlugin* getRenderPlugin(QString pluginName);
+
     QString getPreferredRenderer(Model* model);
+
     void setPreferredRenderer(Model* model, RenderPlugin* pluginName);
     
     /// Get the list of actions corresponding to render plugin that apply to this type of model
@@ -91,6 +109,7 @@ public:
 public:
     /// Directory where plugins are found
     QDir pluginsDir;    
+
     static QString getPluginDirPath();
     
     /// Gives path to the root of the applicative
@@ -108,14 +127,22 @@ private:
 
 /// Set of helper functions
 private:
-    bool load_InputOutputPlugin(QObject* plugin);
-    bool load_ProjectInputOutputPlugin(QObject* plugin);
-    bool load_FilterPlugin(QObject* plugin);
-    bool load_ModePlugin(QObject* plugin);
-    bool load_DecoratePlugin(QObject* plugin);    
-    bool load_GuiPlugin(QObject* _plugin);
-    bool load_DrawAreaPlugin(QObject* _plugin);
-    bool load_RenderPlugin(QObject* _plugin);
+    /// 加载插件的具体实现函数
+    bool loadInputOutputPlugin(QObject* plugin);
+
+    bool loadProjectInputOutputPlugin(QObject* plugin);
+
+    bool loadFilterPlugin(QObject* plugin);
+
+    bool loadModePlugin(QObject* plugin);
+
+    bool loadDecoratePlugin(QObject* plugin);
+
+    bool loadGuiPlugin(QObject* _plugin);
+
+    bool loadDrawAreaPlugin(QObject* _plugin);
+
+    bool loadRenderPlugin(QObject* _plugin);
 };
 
 } // namespace

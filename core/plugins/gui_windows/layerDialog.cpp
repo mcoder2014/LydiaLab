@@ -99,7 +99,7 @@ void LayerDialog::updateTable(){
     
     //TODO:Check if the current viewer is a GLArea
     if(!isVisible()) return;
-    Document* md = mainWindow->document();
+    Document* document = mainWindow->document();
     
     /// Setup the layer table
     ui->modelTreeWidget->clear();
@@ -107,27 +107,28 @@ void LayerDialog::updateTable(){
     // stretches indefinitively... how to avoid?    
     ui->modelTreeWidget->setColumnCount(3);
     ui->modelTreeWidget->setColumnWidth(0,40);
-    ui->modelTreeWidget->setColumnWidth(1,20);
+    ui->modelTreeWidget->setColumnWidth(1,40);
     // don't show the table header cells
-    ui->modelTreeWidget->header()->hide(); 
+    ui->modelTreeWidget->header()->setVisible(true);
     
     // Delegate the particular Model the 
     // task to specify a layer widget item
-    foreach(Model* mi, md->models()){
+    for(Model* model : document->models()){
         // Ask model to generate an item
-        QTreeWidgetItem* item = mi->getLayersWidgetItem();
-        if(item==NULL) item = new LayersWidgetModelItem(*mi);
-        mi->decorateLayersWidgedItem(item);
+        QTreeWidgetItem* item = model->getLayersWidgetItem();
+        if(item==nullptr)
+            item = new LayersWidgetModelItem(*model);
+        model->decorateLayersWidgedItem(item);
                 
         // Change color if currently selected
-        if(mi == mainWindow->document()->selectedModel()){
+        if(model == mainWindow->document()->selectedModel()){
             item->setBackground(1,QBrush(Qt::yellow));
             item->setForeground(1,QBrush(Qt::blue));
         }
         // Add it to the tree
         ui->modelTreeWidget->addTopLevelItem(item);
     }
-    adaptLayout(NULL);
+    adaptLayout(nullptr);
 }
 
 void LayerDialog::adaptLayout(QTreeWidgetItem* /*item*/){

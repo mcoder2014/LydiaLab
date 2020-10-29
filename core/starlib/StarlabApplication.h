@@ -10,36 +10,36 @@ namespace Starlab{
 class STARLIB_EXPORT Application{
     
     /// @{ core resources and accessors
-    public:
-        PluginManager* pluginManager(){ return _pluginManager; }
-        Document* document(){ return _document; }
-        Settings* settings(){ return _settings; }
-    private:
-        PluginManager*   _pluginManager; /// The plugins system
-        Document*        _document;      /// The set of loaded models
-        Settings* _settings;      /// The application settings
-    /// @}
-        
 public:
-    Application();   
+    PluginManager* pluginManager(){ return _pluginManager; }
+    Document* document(){ return _document; }
+    Settings* settings(){ return _settings; }
+private:
+    PluginManager*   _pluginManager; /// The plugins system
+    Document*        _document;      /// The set of loaded models
+    Settings* _settings;      /// The application settings
+    /// @}
+
+public:
+    Application();
     ~Application();
     
 public:
     /// @{ I/O: return false if don't know how to load
-        void load(QString path);
-        bool loadModel(QString path, InputOutputPlugin* plugin=NULL);
-        bool saveModel(Model* model, QString path="");
-        bool loadProject(QString path, ProjectInputOutputPlugin* plugin=NULL);
-        bool loadByDrop(QString path, ModePlugin* plugin = NULL);
+    void load(QString path);
+    bool loadModel(QString path, InputOutputPlugin* plugin=nullptr);
+    bool saveModel(Model* model, QString path="");
+    bool loadProject(QString path, ProjectInputOutputPlugin* plugin=nullptr);
+    bool loadByDrop(QString path, ModePlugin* plugin = nullptr);
     /// @}
 
     /// @{ filters frontend
-        /// Provides the names of all filters
-        QList<FilterPlugin*> applicableFilters();
-        /// Provides the names of all filters suitable for given model
-        QList<FilterPlugin*> applicableFilters(Model* model);
-        /// Executes a filter by name
-        void executeFilter(Model *model, QString filterName);
+    /// Provides the names of all filters
+    QList<FilterPlugin*> applicableFilters();
+    /// Provides the names of all filters suitable for given model
+    QList<FilterPlugin*> applicableFilters(Model* model);
+    /// Executes a filter by name
+    void executeFilter(Model *model, QString filterName);
     /// @}
     
     /// Where is Starlab located?
@@ -52,6 +52,11 @@ public:
     QDir executionDirectory();
     
     static QString version(){ return "1.1.0"; }
+
+private:
+    // 使用插件加载模型，认为插件有效
+    bool loadModelUsingPlugin(QString path, InputOutputPlugin* plugin);
+
 };
 
 } // Namespace

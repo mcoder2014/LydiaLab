@@ -7,7 +7,7 @@ using namespace Starlab;
 
 Document::Document(){
     /// @todo does EIGEN offer a way of doing this?
-    _selectedModel = NULL;
+    _selectedModel = nullptr;
     name = "Unsaved Project";
     _isBusy = 0;
 }
@@ -24,14 +24,18 @@ void Document::pushBusy(){
     _isBusy++;
 }
 
+/**
+ * @brief Document::popBusy
+ * 解除 busy 模型，可能发送 hasChanged 信号
+ */
 void Document::popBusy(){
-    if(_isBusy>=1) _isBusy--;
-    if(!isBusy()) emit_hasChanged();
+    if(_isBusy>=1)
+        _isBusy--;
+    if(!isBusy())
+        emit_hasChanged();
 }
 
-bool Document::isBusy(){
-    return _isBusy>0;
-}
+
 
 
 Eigen::AlignedBox3d Document::bbox() {
@@ -45,28 +49,34 @@ Eigen::AlignedBox3d Document::bbox() {
     return box;
 }
 
-void Document::addModel(Model* m){
+/**
+ * @brief Document::addModel
+ * @param model
+ */
+void Document::addModel(Model *model){
     pushBusy();
-        if(m==NULL) throw StarlabException("Attempted to add a NULL model to the document");
-        _models.append(m);
+    if(model==nullptr) {
+        throw StarlabException("Attempted to add a NULL model to the document");
+    }
+    _models.append(model);
     
-        /// First model added is selection
-        if(_models.size()==1)
-            setSelectedModel(m); 
+    /// First model added is selection
+    if(_models.size()==1)
+        setSelectedModel(model);
     popBusy();
 }
 
 Model *Document::getModel(QString name)
 {
-    Model * found = NULL;
+    Model * found = nullptr;
 
     pushBusy();
-        foreach(Model* m, _models){
-            if(m->name == name){
-                found = m;
-                break;
-            }
+    foreach(Model* m, _models){
+        if(m->name == name){
+            found = m;
+            break;
         }
+    }
     popBusy();
 
     return found;
@@ -81,26 +91,26 @@ void Document::deleteModel(Model *model){
     }
 
     pushBusy();
-        /// Delete object & remove from list
-        _models[midx]->deleteLater();
-        _models.removeAt(midx);
-        
-        /// Update selection (if necessary)
-        if(_selectedModel == model)
-            _selectedModel = (_models.size()>0)?_models[0] : NULL;
+    /// Delete object & remove from list
+    _models[midx]->deleteLater();
+    _models.removeAt(midx);
+
+    /// Update selection (if necessary)
+    if(_selectedModel == model)
+        _selectedModel = (_models.size()>0)?_models[0] : NULL;
     popBusy();
 }
 
 void Document::clear(){
     pushBusy();
-        /// Delete models individually
-        foreach(Model* model, _models){
-            model->deleteLater();
-        }
-        /// Clear the list
-        _models.clear();
-        /// Clear the selection
-        _selectedModel = NULL;
+    /// Delete models individually
+    foreach(Model* model, _models){
+        model->deleteLater();
+    }
+    /// Clear the list
+    _models.clear();
+    /// Clear the selection
+    _selectedModel = nullptr;
     popBusy();
 }
 
@@ -114,10 +124,10 @@ void Document::setSelectedModel(Model* model){
         return;
 
     if(_models.size()==0)
-        assert(model==NULL);
+        assert(model==nullptr);
 
     if(_models.size()>0){
-        assert(model!=NULL); // no null selection
+        assert(model!=nullptr); // no null selection
         assert(_models.contains(model)); // no meaningless selection
     }
 
@@ -131,8 +141,8 @@ void Document::raise_layer(Model *model){
     if(idx==-1 || _models.size()<=1 ) return;
     if(idx<=0) return; ///< cannot raise more
     pushBusy();
-        _models[idx  ] = _models[idx-1];
-        _models[idx-1] = model;
+    _models[idx  ] = _models[idx-1];
+    _models[idx-1] = model;
     popBusy();
 }
 
@@ -141,13 +151,13 @@ void Document::lower_layer(Model *model){
     if(idx==-1 || _models.size()<=1 ) return;
     if(idx>=(_models.size()-1)) return; ///< cannot lower more
     pushBusy();
-        _models[idx] = _models[idx+1];
-        _models[idx+1] = model;
+    _models[idx] = _models[idx+1];
+    _models[idx+1] = model;
     popBusy();
 }
 
 void Document::emit_resetViewport(){ 
-    emit resetViewport(); 
+    emit resetViewport();
 }
 void Document::emit_hasChanged(){
     // qDebug() << Q_FUNC_INFO;
@@ -155,8 +165,8 @@ void Document::emit_hasChanged(){
 
     if (_models.isEmpty()) return; // Skip any updates if there are no models
 
-    if(!isBusy()) 
-        emit hasChanged(); 
+    if(!isBusy())
+        emit hasChanged();
     else
         qWarning("WARNING: attempted to Document::emit_hasChanged() on busy document");
 }

@@ -13,11 +13,17 @@ class STARLIB_EXPORT Document : public QObject{
     
 /// @{ Busy system management
 private:
-    int _isBusy;     /// defaults 0
+    /// defaults 0
+    int _isBusy;
 public:
-    void pushBusy(); ///< Increases the busy level of the document 
-    void popBusy();  ///< Decreases the busy status, emits hasChanged() if !isBusy
-    bool isBusy();   /// Is the document busy? (i.e. busy during I/O)   
+    ///< Increases the busy level of the document
+    void pushBusy();
+
+    ///< Decreases the busy status, emits hasChanged() if !isBusy
+    void popBusy();
+
+    /// Is the document busy? (i.e. busy during I/O)
+    inline bool isBusy(){return _isBusy>0;}
 /// @}
 
 /// @{ access to models
@@ -32,13 +38,12 @@ public:
 public:
     /// The name of the document, used as label
     QString name;
+
     /// Filepath where the document is saved (or will be...)
-    QString path;    
+    QString path;
+
     /// Has document been modified? (i.e. added/removed a model)
     bool isModified;
-    /// Viewpoint transformation (identifies trackball)
-    /// @todo use the QGLViewer transformation datatype
-    // QMatrix4x4 transform;
 
 /// @{ Selection management
 private:
@@ -65,7 +70,7 @@ public:
     /// Compute bounding box of all the elements in the scene
     BBox3 bbox();
     /// Add a model (if it's only one becomes selection)
-    void addModel(Model* m);
+    void addModel(Model* model);
     /// Remove a model, updates selection if necessary
     void deleteModel(Model* m);
     /// Return a model by name

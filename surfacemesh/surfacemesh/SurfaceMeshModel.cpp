@@ -24,6 +24,11 @@ SurfaceMeshModel::SurfaceMeshModel(QString path, QString name) : Model(path, nam
     this->color = Qt::darkGray;
 }
 
+/**
+ * @brief SurfaceMeshModel::decorateLayersWidgedItem
+ * 装饰 Layer 窗口
+ * @param parent
+ */
 void SurfaceMeshModel::decorateLayersWidgedItem(QTreeWidgetItem* parent){
     /// Show face count on layer
     {
@@ -108,8 +113,10 @@ SurfaceMeshModel *SurfaceMeshModel::clone(std::vector<Surface_mesh::Face> subset
 void SurfaceMeshModel::updateBoundingBox(){
     Vector3VertexProperty points = vertex_coordinates();
     _bbox.setNull();
-    foreach(Vertex vit, this->vertices())
+    for(Vertex vit : this->vertices()) {
         _bbox.extend( points[vit] );
+    }
+    this->position = _bbox.center();
 }
 
 void SurfaceMeshModel::remove_vertex(Vertex v){

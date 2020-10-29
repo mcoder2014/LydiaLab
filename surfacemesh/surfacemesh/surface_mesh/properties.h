@@ -408,7 +408,10 @@ public:
 
 
 private:
+    // property 的数组
     std::vector<Base_property_array*>  parrays_;
+
+    // 默认的属性的数组的大小
     size_t  size_;
 };
 

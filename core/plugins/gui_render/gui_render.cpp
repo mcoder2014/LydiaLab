@@ -12,7 +12,7 @@ void gui_render::load(){
     renderModeGroup = new QActionGroup(this);
     renderModeGroup->setExclusive(true);
     currentAsDefault = new QAction("Set current as default...",this);
-    qColorDialog = NULL;    
+    qColorDialog = nullptr;
 
     editRenderSettings = new QAction("Edit renderer settings...",this);
     editModelColor = new QAction("Change model color...",this);
@@ -27,6 +27,12 @@ void gui_render::load(){
     connect(document(), SIGNAL(hasChanged()), this, SLOT(update()));
 }
 
+/**
+ * @brief gui_render::update
+ * 1. 清理掉 toolbar 和 renderer
+ * 2. 根据当前的 model，将可用的 Render Plugin 全部加入 toolbar
+ * 3. 点亮当前选择的 renderer
+ */
 void gui_render::update(){
     // qDebug() << "gui_render::update()";
     toolbar()->clear();
@@ -34,7 +40,8 @@ void gui_render::update(){
 
     /// Fetch current renderer
     Model* selectedModel = document()->selectedModel();
-    if(selectedModel==NULL){
+    if(selectedModel == nullptr){
+        // 如果当前没有选中的模型，隐藏 ToolBar
         toolbar()->setVisible(false);
         return;
     }
@@ -42,14 +49,15 @@ void gui_render::update(){
     Renderer* currentRenderer = selectedModel->renderer();
     
     /// Add render modes menu/toolbar entries
-    foreach(RenderPlugin* plugin, pluginManager()->getApplicableRenderPlugins(selectedModel)){
+    /// 更新 ToolBar 上当前选中的渲染 UI Button
+    for(RenderPlugin* plugin : pluginManager()->getApplicableRenderPlugins(selectedModel)){
         QAction* action = plugin->action();
         action->setCheckable(true);
         
         /// "Check" an icon
-        if(currentRenderer!=NULL)
-            if(currentRenderer->plugin() == plugin)
-                action->setChecked("true");
+        if(currentRenderer!=nullptr && currentRenderer->plugin() == plugin){
+            action->setChecked(true);
+        }
         
         renderModeGroup->addAction(action);
         /// If it has icon.. add it to toolbar
@@ -58,7 +66,7 @@ void gui_render::update(){
     }
 
     /// Make toolbar visible if there is something to show
-    toolbar()->setVisible(toolbar()->actions().size()>0);
+    toolbar()->setVisible(toolbar()->actions().size() > 0);
     
     /// @internal menu can be added only after it has been filled :(
     menu()->addAction(clearRenderObjects);
@@ -74,13 +82,20 @@ void gui_render::update(){
     editRenderSettings->setDisabled(currentRenderer->parameters()->isEmpty());
     
     /// Connect click events to change in renderer system
-    connect(renderModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(triggerRenderModeAction(QAction*)), Qt::UniqueConnection);
-    connect(currentAsDefault, SIGNAL(triggered()), this, SLOT(triggerSetDefaultRenderer()), Qt::UniqueConnection);
-    connect(editRenderSettings, SIGNAL(triggered()), this, SLOT(trigger_editSettings()),Qt::UniqueConnection);
-    connect(editModelColor, SIGNAL(triggered()), this, SLOT(trigger_editSelectedModelColor()), Qt::UniqueConnection);
-    connect(editBackgroundColor, SIGNAL(triggered()), this, SLOT(trigger_editBackgroundColor()), Qt::UniqueConnection);
-    connect(clearRenderObjects, SIGNAL(triggered()), drawArea(), SLOT(clear()), Qt::UniqueConnection);
-    connect(toggleBackgroundEffect, &QAction::triggered, [&](){ drawArea()->toggleBackgroundEffect(); drawArea()->updateGL(); });
+    connect(renderModeGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(triggerRenderModeAction(QAction*)), Qt::UniqueConnection);
+    connect(currentAsDefault, SIGNAL(triggered()),
+            this, SLOT(triggerSetDefaultRenderer()), Qt::UniqueConnection);
+    connect(editRenderSettings, SIGNAL(triggered()),
+            this, SLOT(trigger_editSettings()),Qt::UniqueConnection);
+    connect(editModelColor, SIGNAL(triggered()),
+            this, SLOT(trigger_editSelectedModelColor()), Qt::UniqueConnection);
+    connect(editBackgroundColor, SIGNAL(triggered()),
+            this, SLOT(trigger_editBackgroundColor()), Qt::UniqueConnection);
+    connect(clearRenderObjects, SIGNAL(triggered()),
+            drawArea(), SLOT(clear()), Qt::UniqueConnection);
+    connect(toggleBackgroundEffect, &QAction::triggered,
+            [&](){ drawArea()->toggleBackgroundEffect(); drawArea()->updateGL(); });
 }
 
 void gui_render::triggerSetDefaultRenderer(){
@@ -97,7 +112,7 @@ void gui_render::triggerSetDefaultRenderer(){
 void gui_render::trigger_editSettings(){
     Renderer* renderer = document()->selectedModel()->renderer();
     /// No renderer set (btw... weird) skip
-    if(renderer==NULL) return;
+    if(renderer==nullptr) return;
     /// No parameters.. avoid useless empty widget
     if(renderer->parameters()->isEmpty()) return;
     
@@ -126,7 +141,7 @@ void gui_render::instantiate_color_dialog(){
     /// @internal on mac the (pretty) native dialog is buggy... randomly the native one opens
     /// https://bugreports.qt-project.org/browse/QTBUG-11188  
     /// Disconnect object from previous connections
-    if(qColorDialog != NULL){
+    if(qColorDialog != nullptr){
         qColorDialog->disconnect();
         return;
     }
@@ -173,7 +188,7 @@ void gui_render::liveupdate_backgroundColor(QColor color){
 
 void gui_render::liveupdate_selectedModelColor(QColor color){
     Model* model = document()->selectedModel();
-    if(model==NULL) return;
+    if(model==nullptr) return;
     model->color = color;
     drawArea()->updateGL();        
 }

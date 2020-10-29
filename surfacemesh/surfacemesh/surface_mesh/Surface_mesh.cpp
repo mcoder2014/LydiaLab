@@ -31,11 +31,13 @@ Surface_mesh()
     // allocate standard properties
     // same list is used in operator=() and assign()
     vconn_    = add_vertex_property<Vertex_connectivity>("v:connectivity");
-    hconn_    = add_halfedge_property<Halfedge_connectivity>("h:connectivity");
-    fconn_    = add_face_property<Face_connectivity>("f:connectivity");
     vpoint_   = add_vertex_property<Point>("v:point", Point(0,0,0));
     vdeleted_ = add_vertex_property<bool>("v:deleted", false);
+
+    hconn_    = add_halfedge_property<Halfedge_connectivity>("h:connectivity");
     edeleted_ = add_edge_property<bool>("e:deleted", false);
+
+    fconn_    = add_face_property<Face_connectivity>("f:connectivity");
     fdeleted_ = add_face_property<bool>("f:deleted", false);
 
     deleted_vertices_ = deleted_edges_ = deleted_faces_ = 0;
@@ -281,10 +283,14 @@ property_stats() const
 
 //-----------------------------------------------------------------------------
 
-
-Surface_mesh::Vertex
-Surface_mesh::
-add_vertex(const Point& p)
+/**
+ * @brief Surface_mesh::add_vertex
+ * 添加一个顶点
+ * Q1：为啥 vpoint_[v] = p; 怎么判断需要扩容
+ * @param p
+ * @return
+ */
+Surface_mesh::Vertex Surface_mesh::add_vertex(const Point& p)
 {
     Vertex v = new_vertex();
     vpoint_[v] = p;

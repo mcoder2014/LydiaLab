@@ -117,19 +117,19 @@ void PluginManager::loadPlugins() {
         bool loadok = false;
 
         // 1. 模型的输入输出插件
-        loadok |= load_InputOutputPlugin(plugin);
+        loadok |= loadInputOutputPlugin(plugin);
         // 2. 工程的输入输出插件
-        loadok |= load_ProjectInputOutputPlugin(plugin);
+        loadok |= loadProjectInputOutputPlugin(plugin);
         // 3. Filter 插件
-        loadok |= load_FilterPlugin(plugin);       
+        loadok |= loadFilterPlugin(plugin);
         // 4. 装饰器插件
-        loadok |= load_DecoratePlugin(plugin);
+        loadok |= loadDecoratePlugin(plugin);
         // 5. Gui 插件
-        loadok |= load_GuiPlugin(plugin);        
+        loadok |= loadGuiPlugin(plugin);
         // 6. Mode 插件
-        loadok |= load_ModePlugin(plugin);
+        loadok |= loadModePlugin(plugin);
         // 7. 渲染插件
-        loadok |= load_RenderPlugin(plugin);
+        loadok |= loadRenderPlugin(plugin);
 
         if( !loadok ) 
             throw StarlabException("plugin " + fileName + " was not recognized as one of the declared Starlab plugin!!");
@@ -175,7 +175,7 @@ QString PluginManager::getPluginDirPath() {
     return pluginsDir.absolutePath();
 }
 
-bool PluginManager::load_ProjectInputOutputPlugin(QObject *plugin){
+bool PluginManager::loadProjectInputOutputPlugin(QObject *plugin){
     ProjectInputOutputPlugin* iIO = qobject_cast<ProjectInputOutputPlugin*>(plugin);
     if(!iIO) return false;
     projectIOPlugins.push_back(iIO);
@@ -187,74 +187,116 @@ bool PluginManager::load_ProjectInputOutputPlugin(QObject *plugin){
     return true;
 }
 
-bool PluginManager::load_InputOutputPlugin(QObject *plugin){
-    InputOutputPlugin* iIO = qobject_cast<InputOutputPlugin*>(plugin);
-    if(!iIO) return false;
+/**
+ * @brief PluginManager::loadInputOutputPlugin
+ * 1. 按插件名称插入 map modelIOPlugins
+ * 2. 提取插件支持的文件格式后缀名，插入 map modelExtensionToPlugin(Unique Map)
+ *    所以最后加载的插件会覆盖之间插件的数据
+ * @param plugin
+ * @return
+ */
+bool PluginManager::loadInputOutputPlugin(QObject *plugin){
+    InputOutputPlugin* ioPlugin = qobject_cast<InputOutputPlugin*>(plugin);
+    if(!ioPlugin)
+        return false;
 
-    modelIOPlugins.insert(iIO->name(), iIO);
+    modelIOPlugins.insert(ioPlugin->name(), ioPlugin);
 
     /// Parse the extension filter into extensions
-    QStringList exts = extractExtensions( iIO->name() );
-    for(QString ext : exts)
-        modelExtensionToPlugin.insert(ext,iIO);
-    
+    QStringList exts = extractExtensions( ioPlugin->name() );
+    for(QString ext : exts) {
+        modelExtensionToPlugin[ext] = ioPlugin;
+    }
     return true;
 }
 
-bool PluginManager::load_FilterPlugin(QObject *plugin){
+/**
+ * @brief PluginManager::loadFilterPlugin
+ * @param plugin
+ * @return
+ */
+bool PluginManager::loadFilterPlugin(QObject *plugin){
     FilterPlugin* iFilter = qobject_cast<FilterPlugin*>(plugin);
-    if(!iFilter) return false;
+    if(!iFilter) {
+        return false;
+    }
+
     _filterPlugins.insert(iFilter->name(), iFilter);
     return true;
 }
 
-bool PluginManager::load_DecoratePlugin(QObject *plugin){
+bool PluginManager::loadDecoratePlugin(QObject *plugin){
     DecoratePlugin* iDecorate = qobject_cast<DecoratePlugin*>(plugin);
-    if(!iDecorate) return false;
+    if(!iDecorate) {
+        return false;
+    }
     _decoratePlugins.insert(iDecorate->name(), iDecorate);
     return true;
 }
-bool PluginManager::load_GuiPlugin(QObject* _plugin){
+bool PluginManager::loadGuiPlugin(QObject* _plugin){
     GuiPlugin* plugin = qobject_cast<GuiPlugin*>(_plugin);
-    if(!plugin) return false;
+    if(!plugin) {
+        return false;
+    }
     _guiPlugins.insert(plugin->name(), plugin);
     return true;
 }
 
-bool PluginManager::load_ModePlugin(QObject* _plugin){
+/**
+ * @brief PluginManager::loadModePlugin
+ * 1. 加载 Mode Plugin
+ * 2. 记录 Mode Plugin 的 Filter 支持的拓展名到
+ *    modeExtensionToPlugin，因为是单例所以仅支持最后一个加载的插件
+ * @param _plugin
+ * @return
+ */
+bool PluginManager::loadModePlugin(QObject* _plugin){
     ModePlugin* plugin = qobject_cast<ModePlugin*>(_plugin);
-    if(!plugin) return false;
+    if(!plugin) {
+        return false;
+    }
     _modePlugins.insert(plugin->name(), plugin);
 
     /// Parse the extension filter into extensions
     QString filter = plugin->filter();
-    if (!filter.isEmpty())
-    {
+    if (!filter.isEmpty()) {
         QStringList exts = extractExtensions(filter);
-        foreach(QString ext, exts)
-        {
-            modeExtensionToPlugin.insert(ext, plugin);
+        for(QString ext : exts) {
+            modeExtensionToPlugin[ext] = plugin;
         }
     }
 
     return true;
 }
  
-bool PluginManager::load_RenderPlugin(QObject *_plugin){
+/**
+ * @brief PluginManager::loadRenderPlugin
+ * 加载渲染插件
+ * @param _plugin
+ * @return
+ */
+bool PluginManager::loadRenderPlugin(QObject *_plugin){
     RenderPlugin* plugin = qobject_cast<RenderPlugin*>(_plugin);
-    if(!plugin) return false;
+    if(!plugin) {
+        return false;
+    }
     _renderPlugins.insert(plugin->name(), plugin);
     return true;
 } 
 
+/**
+ * @brief PluginManager::getFilterStrings
+ * 获得 Filter 字符串
+ * @return
+ */
 QString PluginManager::getFilterStrings(){
     QStringList filters;
     
     /// Fill in filters for Model files
-    /// @todo add the readable format name
     QStringList extensions= modelExtensionToPlugin.keys();
-    foreach(QString extension, extensions)
+    for(QString extension : extensions) {
         filters.append("*."+extension);
+    }
     
     /// Fill in filters for Document files
     filters.prepend("Starlab Project (*.starlab)");
@@ -264,10 +306,17 @@ QString PluginManager::getFilterStrings(){
     return filters.join(";;");
 }
 
+/**
+ * @brief PluginManager::getRenderPlugin
+ * 获得 Renderer 插件
+ * @param pluginName
+ * @return
+ */
 RenderPlugin *PluginManager::getRenderPlugin(QString pluginName){
-    RenderPlugin *plugin = _renderPlugins.value(pluginName,NULL);
-    if(plugin==NULL) throw StarlabException("Renderer %s could not be found",qPrintable(pluginName));
-    return plugin;
+    if(_renderPlugins.find(pluginName) == _renderPlugins.end()) {
+        throw StarlabException("Renderer %s could not be found", qPrintable(pluginName));
+    }
+    return _renderPlugins[pluginName];;
 }
 
 /// @todo rename getDecoratePlugin(QString name)
@@ -287,15 +336,29 @@ DecoratePlugin* PluginManager::newDecoratePlugin(QString /*pluginName*/, Model* 
 #endif
 }
 
-QString PluginManager::getPreferredRenderer(Model *model){
-    QString key = "DefaultRenderer/"+QString(model->metaObject()->className());
+/**
+ * @brief PluginManager::getPreferredRenderer
+ * 查找推荐的渲染器，查询顺序：
+ *
+ * 1. 查找 Setting 中的推荐
+ * 2. 在支持当前 model 的 renderer 中选一个默认 renderer
+ * 3. 选择第一个支持当前 model 的 renderer
+ * @param model
+ * @return
+ */
+QString PluginManager::getPreferredRenderer(Model *model) {
+    QString key = "DefaultRenderer/" + QString(model->metaObject()->className());
     QString rendererName;
-    if(settings()->contains(key)) 
-        rendererName=settings()->getString(key);
+
+    if(settings()->contains(key)) {
+        rendererName = settings()->getString(key);
+    }
 
     /// Preferred plugins could not be found
+    /// 如果 Setting 里没有默认的渲染器设置，
+    /// 则遍历寻找一个 标有 Default 属性的插件
     if(!_renderPlugins.contains(rendererName)){
-        foreach(RenderPlugin* plugin, _renderPlugins){
+        for(RenderPlugin* plugin : _renderPlugins){
             if(plugin->isApplicable(model) && plugin->isDefault()){
                 rendererName = plugin->name();
                 break;
@@ -306,8 +369,9 @@ QString PluginManager::getPreferredRenderer(Model *model){
     /// Couldn't find one that was marked as isDefault()
     /// just take the first that is applicable. 
     /// BBOX renderer should be found here!
+    /// 如果没有 Default 渲染插件，则用 BBOX 渲染器
     if(!_renderPlugins.contains(rendererName)){
-        foreach(RenderPlugin* plugin, _renderPlugins){
+        for(RenderPlugin* plugin : _renderPlugins){
             if(plugin->isApplicable(model)){
                 rendererName = plugin->name();
                 break;
@@ -318,6 +382,8 @@ QString PluginManager::getPreferredRenderer(Model *model){
     /// Everything failed..  let's give up
     if(!_renderPlugins.contains(rendererName))
         throw StarlabException("No suitable render plugin found\nIs it possible you didn't compile the BBOX renderer?");
+
+    qDebug() << "The Prefered renderer plugin: " << rendererName;
 
     return rendererName;
 }

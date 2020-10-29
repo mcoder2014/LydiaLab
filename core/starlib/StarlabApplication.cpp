@@ -34,12 +34,12 @@ bool Application::saveModel(Model* model, QString path){
     /// Extract or set default extension
     QString extension = fileInfo.suffix().toLower();
     // qDebug() << "requested extension: " << extension;
-    if( extension.isEmpty() ) extension = "off";        
+    if( extension.isEmpty() ) extension = "off";
     
     /// Checks a suitable plugin exists
     InputOutputPlugin* iIO = pluginManager()->modelExtensionToPlugin[extension];
     if( !iIO ) throw StarlabException("Cannot find plugin suitable for the provided extension %s", qPrintable(extension));
-    iIO->save(model,path);            
+    iIO->save(model,path);
     
     return true;
 }
@@ -52,65 +52,56 @@ bool Application::saveModel(Model* model, QString path){
  * @return
  */
 bool Application::loadModel(QString path, InputOutputPlugin* plugin){
-    // qDebug("StarlabApplication::loadModel(\"%s\")", qPrintable(path));    
+    // qDebug("StarlabApplication::loadModel(\"%s\")", qPrintable(path));
     QFileInfo fileInfo(path);
     QString extension = fileInfo.suffix().toLower();
     QString basename = fileInfo.completeBaseName();
     
-    if(plugin==nullptr){
+    if(plugin == nullptr){
+        // 如果输入的 plugin 无效，根据后缀名选一个合适的插件
         plugin = pluginManager()->modelExtensionToPlugin[extension];
-        if(plugin==nullptr) return false;
     }
-    
-    /// Checks a suitable plugin exists
-    InputOutputPlugin* iIO = pluginManager()->modelExtensionToPlugin[extension];
-    if(iIO == nullptr) throw StarlabException("File '%s' has not been opened becase format '%s' not supported",
-                                              qPrintable(basename), qPrintable(extension));
-    
-    /// Checks file existence
-    iIO->checkReadable(path);
-    
-    /// Calls the plugin for open operation
-    document()->pushBusy();
-        Model* newModel = iIO->open(path);
-        if(newModel==nullptr) throw StarlabException("Attempted to create a nullptr model");
-        /// Update the bounding box (for rendering reasons)
-        /// @todo Would it be possible to Qt-Connect iIO->open to updateBoundingBox()?
-        newModel->updateBoundingBox();
-        document()->addModel( newModel ); 
-    document()->popBusy();
-
-    /// Set as selected model
-    document()->setSelectedModel( newModel );
-
-    document()->emit_resetViewport();
-    
+    if(plugin == nullptr){
+        throw StarlabException("File '%s' has not been opened becase format '%s' not supported",
+                                                 qPrintable(basename), qPrintable(extension));
+    }
+    // 加载
+    loadModelUsingPlugin(path, plugin);
     return true;
 }
+
+/**
+ * @brief Application::loadProject
+ * 加载一个项目
+ * @param path
+ * @param plugin
+ * @return
+ */
 bool Application::loadProject(QString path, ProjectInputOutputPlugin* plugin){   
     // qDebug("StarlabApplication::loadProject(\"%s\")", qPrintable(path));
     QFileInfo fileInfo(path);
     QString extension = fileInfo.suffix().toLower();
-    QString basename = fileInfo.completeBaseName();    
+    QString basename = fileInfo.completeBaseName();
 
     if(plugin==nullptr){
         plugin = pluginManager()->projectExtensionToPlugin[extension];
-        if(plugin==nullptr)
-            return false;
     }
     
-    /// Checks a suitable plugin exists   
-    ProjectInputOutputPlugin* iIO = pluginManager()->projectExtensionToPlugin[extension];
-    
     /// Checks file existence
-    if(iIO == nullptr)            throw StarlabException("Project file '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
-    if(!fileInfo.exists())     throw StarlabException("Project file '%s' does not exist", qPrintable(path));
-    if(!fileInfo.isReadable()) throw StarlabException("Project file '%s' is not readable", qPrintable(path));
+    if(plugin == nullptr){
+        throw StarlabException("Project file '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
+    }
+    if(!fileInfo.exists()){
+        throw StarlabException("Project file '%s' does not exist", qPrintable(path));
+    }
+    if(!fileInfo.isReadable()){
+        throw StarlabException("Project file '%s' is not readable", qPrintable(path));
+    }
     
     /// Clear the doc and use plugin to fill in
     document()->pushBusy();
-        document()->clear();
-        iIO->open(path, *this);
+    document()->clear();
+    plugin->open(path, *this);
     document()->popBusy();
     
     /// Refresh visualization
@@ -120,37 +111,40 @@ bool Application::loadProject(QString path, ProjectInputOutputPlugin* plugin){
     return true;
 }
 
+/**
+ * @brief Application::loadByDrop
+ * 通过拖拽的方式加载模型
+ * @param path
+ * @param plugin
+ * @return
+ */
 bool Application::loadByDrop(QString path, ModePlugin *plugin)
 {
     QFileInfo fileInfo(path);
     QString extension = fileInfo.suffix().toLower();
     QString basename = fileInfo.completeBaseName();
 
-    if (plugin == nullptr)
-    {
+    if (plugin == nullptr){
         plugin = pluginManager()->modeExtensionToPlugin[extension];
-        if (plugin == nullptr)
-            return false;
     }
-
-    /// Checks a suitable plugin exists
-    ModePlugin* mIO = pluginManager()->modeExtensionToPlugin[extension];
-
     /// Checks file existence
-    if(mIO == nullptr)            throw StarlabException("File '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
-    if(!fileInfo.exists())     throw StarlabException("File '%s' does not exist", qPrintable(path));
-    if(!fileInfo.isReadable()) throw StarlabException("File '%s' is not readable", qPrintable(path));
+    if(plugin == nullptr){
+        throw StarlabException("File '%s' has not been opened, format %s not supported", qPrintable(basename), qPrintable(extension));
+    }
+    if(!fileInfo.exists()){
+        throw StarlabException("File '%s' does not exist", qPrintable(path));
+    }
+    if(!fileInfo.isReadable()){
+        throw StarlabException("File '%s' is not readable", qPrintable(path));
+    }
 
     /// Clear the doc and use plugin to fill in
     document()->pushBusy();
-        /// load by drop here
-        bool isLoaded = mIO->loadByDrop(path);
-        if (!isLoaded) throw StarlabException("Loading by drop fails, unsupported file format");
+    /// load by drop here
+    bool isLoaded = plugin->loadByDrop(path);
+    if (!isLoaded)
+        throw StarlabException("Loading by drop fails, unsupported file format");
     document()->popBusy();
-
-    /// Refresh visualization
-    // document()->emit_resetViewport();
-
     return true;
 }
 
@@ -159,7 +153,7 @@ QList<FilterPlugin*> Application::applicableFilters(){
 }
 
 QList<FilterPlugin *> Application::applicableFilters(Model *model){
-    QList<FilterPlugin*> retval;    
+    QList<FilterPlugin*> retval;
     for(FilterPlugin* plugin:pluginManager()->filterPlugins())
         if(plugin->isApplicable(model))
             retval.append(plugin);
@@ -181,7 +175,7 @@ void Application::load(QString path){
 void Application::executeFilter(Model* model, QString filterName){
     // qDebug() << "StarlabApplication::executeFilter()";
     FilterPlugin* filter = pluginManager()->getFilter(filterName);
-    if(!filter->isApplicable(model)) 
+    if(!filter->isApplicable(model))
         throw StarlabException("Filter not applicable");
     
     /// Filter is applied on the *selected* model
@@ -194,7 +188,7 @@ void Application::executeFilter(Model* model, QString filterName){
 
 QDir Application::starlabDirectory(){
     QDir baseDir(QApplication::applicationDirPath());
-    if( OSQuery::isMac() ){            
+    if( OSQuery::isMac() ){
         baseDir.cdUp();
         baseDir.cdUp();
         return baseDir.absolutePath();
@@ -211,5 +205,35 @@ QDir Application::starlabDirectory(){
 
 QDir Application::executionDirectory(){
     return QFileInfo("./").absoluteDir();
+}
+
+/**
+ * @brief Application::loadModelUsingPlugin
+ * @param path
+ * @param plugin
+ * @return
+ */
+bool Application::loadModelUsingPlugin(QString path, InputOutputPlugin *plugin)
+{
+    /// Checks file existence
+    plugin->checkReadable(path);
+
+    // 加锁
+    document()->pushBusy();
+
+    Model* newModel = plugin->open(path);
+    if(newModel==nullptr) {
+        throw StarlabException("Attempted to create a nullptr model");
+    }
+    /// Update the bounding box (for rendering reasons)
+    newModel->updateBoundingBox();
+    document()->addModel( newModel );
+
+    // 释放锁
+    document()->popBusy();
+
+    // 选择新载入的模型，并渲染
+    document()->setSelectedModel( newModel );
+    document()->emit_resetViewport();
 }
 
