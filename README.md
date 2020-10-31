@@ -1,8 +1,8 @@
 # **LydiaLab**starlab
 
-A lightweight, modular, and cross-platform (Windows, OSX, Linux) 3D geometry processing environment.
+A lightweight, modular, and cross-platform (Windows, OSX, Linux) 3D geometry processing environment.This project is based on StarLab for a little further development.
 
-![Running on Windows 8](/media/coverimageWin8.png)" alt="Running on Windows 8" style="width:30%"/>
+![Running on Windows 8](/media/coverimageWin8.png)
 
 ![Running ICP plugin on OSX](/media/coverimageOSX.png)
 
@@ -17,15 +17,17 @@ A lightweight, modular, and cross-platform (Windows, OSX, Linux) 3D geometry pro
 
 * Lightweight, minimal external dependency
 * Uses a state of the art mesh data-structure and linear algebra library (Surface_mesh + Eigen)
+* You can write graphical algorithms in plugin form so that you can easily see the implementation of the algorithm in a graphical interface.
 
 ## Developing a Starlab Plugin
 
-There are two types of plugins you can easily write:
+There are several types of plugins you can easily write:
 
-* **Filter** plugin
-* **Mode** plugin
+* **Filter** plugin :Suitable for simple graphics algorithms
+* **InputOutput** plugin
+* **Mode** plugin :Suitable for graphics algorithms that require a lot of interaction
 
-Simply copy any of the provided example plugins and rename them as your own.
+Simply copy any of the provided example plugins and rename them as your own. You will find the example code in [My LydiaLab Plugins](https://github.com/mcoder2014/LydiaLabExpPlugins)
 
 ### Filter Plugin
 
@@ -68,3 +70,4 @@ The `create` function is called once the mode is selected. The `decorate` functi
 ### Reference
 
 1. [The origin starlab project](https://github.com/OpenGP/starlab)
+2. [My LydiaLab Plugins](https://github.com/mcoder2014/LydiaLabExpPlugins)
