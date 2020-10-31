@@ -3,6 +3,8 @@
 #include "SurfaceMeshModel.h"
 
 typedef Eigen::Matrix<double,4,4,(Eigen::DontAlign|Eigen::RowMajor)> QuadricMatrix;
+using Point = Surface_mesh::Point;
+using Normal = Surface_mesh::Normal;
 
 class Decimater{
 private:

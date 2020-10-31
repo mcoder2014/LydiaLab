@@ -5,9 +5,10 @@ using namespace SurfaceMesh;
 
 void surfacemesh_filter_simplification::initParameters(RichParameterSet *pars){
     pars->addParam(new RichFloat("Percentage", 0.9f, "Percentage"));
-
     /// We are interested in seeing the mesh edges
-    if(drawArea()) drawArea()->setRenderer(mesh(),"Flat Wire");
+    if(drawArea()) {
+        drawArea()->setRenderer(mesh(),"Flat Wire");
+    }
 }
 
 void surfacemesh_filter_simplification::applyFilter(RichParameterSet* pars){
