@@ -42,14 +42,14 @@ class FlatRenderer : public SurfaceMeshRenderer{
         if(has_face_color) fcolor_flat.resize(mesh()->n_faces()*3*3);
 
         /// Initialising valence and counter to 0
-        foreach(Vertex v, mesh()->vertices()){
+        for(Vertex v : mesh()->vertices()){
             valence[v]=0;
             counter[v]=0;
         }
 
 
         /// Calculating valence of each vertex
-        foreach(Face f, mesh()->faces()){
+        for(Face f : mesh()->faces()){
             foreach(Vertex v, mesh()->vertices(f)){
                 valence[v]++;
             }
@@ -57,14 +57,14 @@ class FlatRenderer : public SurfaceMeshRenderer{
 
         /// Calculating cumulative valence
         int val=0;
-        foreach(Vertex v, mesh()->vertices()){
+        for(Vertex v : mesh()->vertices()){
             cumulativeValence[v]=val;
             val+=valence[v];
         }
 
         /// Initialising vertex buffer
         double *vpointer, vcoord[3];
-        foreach(Vertex v, mesh()->vertices()){
+        for(Vertex v : mesh()->vertices()){
             vpointer=points[v].data();
             vcoord[0]=*vpointer; vpointer++;
             vcoord[1]=*vpointer; vpointer++;
@@ -79,7 +79,7 @@ class FlatRenderer : public SurfaceMeshRenderer{
         /// Inserting values into fnormal_flat, fcolor_flat and the triangles buffer
         int idx_new;
         double *fpointer, *colorpointer, fcoord[3], colorCoord[3];
-        foreach(Face f, mesh()->faces()){
+        for(Face f : mesh()->faces()){
             fpointer = fnormal[f].data();
             fcoord[0]=*fpointer; fpointer++;
             fcoord[1]=*fpointer; fpointer++;
@@ -92,7 +92,7 @@ class FlatRenderer : public SurfaceMeshRenderer{
                 colorCoord[2]=*colorpointer;
             }
 
-            foreach(Vertex v, mesh()->vertices(f)){
+            for(Vertex v: mesh()->vertices(f)){
                 idx_new = cumulativeValence[v]*3+counter[v]*3;
                 fnormal_flat.at(idx_new) = fcoord[0];
                 fnormal_flat.at(idx_new+1) = fcoord[1];
@@ -127,6 +127,7 @@ class FlatRenderer : public SurfaceMeshRenderer{
         if(triangles.size()) glDrawElements(GL_TRIANGLES, (GLsizei)triangles.size(), GL_UNSIGNED_INT, &triangles[0]);
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
+        glDisable(GL_LIGHTING);
 
 #if 0
         Surface_mesh::Vertex_property<Point> points   = mesh()->vertex_property<Point>("v:point");
@@ -148,11 +149,11 @@ class FlatRenderer : public SurfaceMeshRenderer{
         /// Render loop  @todo convert to buffers
         foreach(Face f, mesh()->faces()){
             glBegin(GL_POLYGON);
-                if(has_face_color)
-                    gl::glColor(fcolor[f]);
-                gl::glNormal(fnormals[f]);
-                foreach(Vertex v, mesh()->vertices(f))
-                    gl::glVertex(points[v]);
+            if(has_face_color)
+                gl::glColor(fcolor[f]);
+            gl::glNormal(fnormals[f]);
+            foreach(Vertex v, mesh()->vertices(f))
+                gl::glVertex(points[v]);
             glEnd();
         }
 #endif
@@ -169,14 +170,14 @@ class FlatRenderer : public SurfaceMeshRenderer{
             // triangles, quads, and general polygons
             // immediate mode rendering is slow anyway...
             glBegin(GL_POLYGON);
-                if(has_face_color) gl::glColor(fcolor[fit]);
-                gl::glNormal(fnormals[fit]);
-                fvit = fvend = mesh()->vertices(fit);
-                do
-                {
-                    gl::glVertex(points[fvit]);
-                }
-                while (++fvit != fvend);
+            if(has_face_color) gl::glColor(fcolor[fit]);
+            gl::glNormal(fnormals[fit]);
+            fvit = fvend = mesh()->vertices(fit);
+            do
+            {
+                gl::glVertex(points[fvit]);
+            }
+            while (++fvit != fvend);
             glEnd();
         }
         qDebug() << "TRADITIONAL" << timer.elapsed();

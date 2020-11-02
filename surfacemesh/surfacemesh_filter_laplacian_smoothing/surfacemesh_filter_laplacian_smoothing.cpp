@@ -32,7 +32,6 @@ void surfacemesh_filter_laplacian_smoothing::applyFilter(RichParameterSet* pars)
     model->update_vertex_normals();
 }
 
-
 /**
  * @brief smooth
  * @param boundaryVertex

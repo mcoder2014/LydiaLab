@@ -9,7 +9,11 @@ class ModePluginDockWidget : public QDockWidget{
 
 /// @{ constructors: similar to QDockWidget but parent forced to be starlab main window
 public:
-    explicit ModePluginDockWidget(const QString &title, StarlabMainWindow* mainWindow, QWidget* parent=0, Qt::WindowFlags flags = 0):
+    explicit ModePluginDockWidget(
+            const QString &title,
+            StarlabMainWindow* mainWindow,
+            QWidget* parent=0,
+            Qt::WindowFlags flags = 0):
         QDockWidget(title, (QWidget*) parent, flags), _mainWindow(mainWindow) { 
         setup(); 
     }

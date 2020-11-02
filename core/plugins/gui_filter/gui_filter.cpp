@@ -11,63 +11,40 @@
 #include "interfaces/FilterPlugin.h"
 #include <QElapsedTimer>
 
+/**
+ * @brief gui_filter::load
+ * 加载 filter 按钮
+ */
 void gui_filter::load(){
     /// Fill the menu with plugin names and make connections
-    foreach(FilterPlugin* plugin, pluginManager()->filterPlugins()){
+    for(FilterPlugin* plugin: pluginManager()->filterPlugins()){
+
         QAction* action = plugin->action();
-
         QString pluginName = plugin->name();
-        QMenu * assignedMenu = mainWindow()->filterMenu;
 
-        // Check for categories
-        if(pluginName.contains("|"))
-        {
-            // Split by delimiter, filter category then filter name
-            QStringList pluginNames = pluginName.split("|");
-            action->setText( pluginNames.back().trimmed() );
-            QString catName = pluginNames.front().trimmed();
-
-            // Try to locate exciting submenu
-            QMenu * m = nullptr;
-            for(QMenu * child : assignedMenu->findChildren<QMenu*>()){
-                QString menuName = child->title();
-                if(menuName == catName){
-                    m = child;
-                    break;
-                }
-            }
-            if(m == nullptr) m = mainWindow()->filterMenu->addMenu(catName);
-
-            assignedMenu = m;
-        }
-
+        QMenu * assignedMenu = getParentMenu(pluginName);
+        action->setText(getActionName(pluginName));
         assignedMenu->addAction(action);
         
-        // Action refers to this filter, so we can retrieve it later
-        // QAction* action = new QAction(plugin->name(),plugin);
-
-        /// Does the filter have an icon? Add it to the toolbar
-        /// @todo add functionality to ModelFilter
         if(!action->icon().isNull())
             mainWindow()->filterToolbar->addAction(action);
 
         /// Connect after it has been added        
-        connect(action,SIGNAL(triggered()),this,SLOT(startFilter()));
+        connect(action, SIGNAL(triggered()), this, SLOT(startFilter()));
     }
 }
 
-// It is splitted in two functions
-// - startFilter that setup the dialogs and asks for parameters
-// - executeFilter callback invoked when the params have been set up.
+/**
+ * @brief gui_filter::startFilter
+ * that setup the dialogs and asks for parameters
+ * 当点击某插件时，更新其 UI
+ */
 void gui_filter::startFilter() {
     try
     {
-        // In order to avoid that a filter changes something assumed by the current editing tool,
-        // before actually starting the filter we close the current editing tool (if any).
-        /// @todo 
-        // mainWindow()->endEdit(); 
-        // mainWindow()->updateMenus();
-    
+        /// TODO: 暂停其他插件的工作状态
+
+        // 找到触发信号的 plugin
         QAction* action = qobject_cast<QAction*>(sender());
         FilterPlugin* iFilter = qobject_cast<FilterPlugin*>(action->parent());
         if(!iFilter) return;
@@ -75,6 +52,7 @@ void gui_filter::startFilter() {
         /// Even though it's on the stack we associate it with the widget 
         /// in such a way that memory will get deleted when widget goes out 
         /// of scope
+        /// 构建富文本参数 UI
         RichParameterSet* parameters = new RichParameterSet();
         iFilter->initParameters(parameters);
         int needUserInput = !parameters->isEmpty();
@@ -82,7 +60,9 @@ void gui_filter::startFilter() {
         /// I do not need the user input, just run it
         switch(needUserInput){
             case false:
-                execute(iFilter, parameters);
+                delete parameters;
+                parameters = nullptr;
+                execute(iFilter, nullptr);
                 break;
             case true:
                 FilterDockWidget* widget = new FilterDockWidget(iFilter,parameters,mainWindow());
@@ -95,6 +75,12 @@ void gui_filter::startFilter() {
     STARLAB_CATCH_BLOCK
 }
 
+/**
+ * @brief gui_filter::execute
+ * callback invoked when the params have been set up.
+ * @param iFilter
+ * @param parameters
+ */
 void gui_filter::execute(FilterPlugin* iFilter, RichParameterSet* parameters) {
     if(!iFilter->isApplicable(document()->selectedModel())) 
         throw StarlabException("Filter is not applicable");
@@ -118,5 +104,44 @@ void gui_filter::execute(FilterPlugin* iFilter, RichParameterSet* parameters) {
     document()->popBusy();
     qApp->restoreOverrideCursor();
     mainWindow()->closeProgressBar();
+}
+
+QMenu *gui_filter::getParentMenu(QString filterName)
+{
+    // 获得 该 plugin 应该插入的 Menu 位置
+    QMenu * assignedMenu = mainWindow()->filterMenu;
+    // 根据名称分类 名称规则 "category | filter name" 仅有一个 '|'
+    if(filterName.contains("|"))
+    {
+        // Split by delimiter, filter category then filter name
+        QStringList pluginNames = filterName.split("|");
+        QString catName = pluginNames.front().trimmed();
+
+        // Try to locate exciting submenu
+        QMenu * m = nullptr;
+        for(QMenu * child : assignedMenu->findChildren<QMenu*>()){
+            QString menuName = child->title();
+            if(menuName == catName){
+                m = child;
+                break;
+            }
+        }
+        if(m == nullptr) {
+            m = mainWindow()->filterMenu->addMenu(catName);
+        }
+
+        assignedMenu = m;
+    }
+
+    return assignedMenu;
+}
+
+QString gui_filter::getActionName(QString filterName)
+{
+    if(!filterName.contains("|"))
+        return filterName.trimmed();
+
+    QStringList pluginNames = filterName.split("|");
+    return pluginNames.back().trimmed();
 }
 

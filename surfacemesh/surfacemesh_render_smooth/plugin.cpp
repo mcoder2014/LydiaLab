@@ -45,6 +45,8 @@ class SmoothRenderer : public SurfaceMeshRenderer{
         if(triangles.size()) glDrawElements(GL_TRIANGLES, (GLsizei)triangles.size(), GL_UNSIGNED_INT, &triangles[0]);
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
+
+        glDisable(GL_LIGHTING);
     }
 };
 

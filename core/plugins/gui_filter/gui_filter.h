@@ -20,4 +20,8 @@ private slots:
     /// callback function that starts the filter, it is called by the 
     /// filter popup when the user presses "ok" or by a command line instruction
     void execute(FilterPlugin* iFilter, RichParameterSet *pars);
+
+private:
+    QMenu *getParentMenu(QString filterName);
+    QString getActionName(QString filterName);
 };

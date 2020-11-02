@@ -38,8 +38,10 @@ class WireframeRenderer : public SurfaceMeshRenderer{
         glColor3f(0.0, 0.0, 0.0);
         glDepthRange(0.0, 1.0);
         glDepthFunc(GL_LEQUAL);
-        if(edges.size()) glDrawElements(GL_LINES, (GLsizei)edges.size(), GL_UNSIGNED_INT, &edges[0]);
+        if(edges.size())
+            glDrawElements(GL_LINES, (GLsizei)edges.size(), GL_UNSIGNED_INT, &edges[0]);
         glDepthFunc(GL_LESS);
+        glDisableClientState(GL_VERTEX_ARRAY);
     #else
         Surface_mesh::Vertex_property<Point> points = mesh()->vertex_property<Point>("v:point");
         Surface_mesh::Edge_property<Color> ecolor = mesh()->get_edge_property<Color>("e:color");

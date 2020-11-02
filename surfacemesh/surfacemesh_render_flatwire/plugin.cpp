@@ -8,7 +8,7 @@ using namespace SurfaceMesh;
 class FlatwireRenderer : public SurfaceMeshRenderer{
     /// index array for buffered OpenGL rendering
     std::vector<unsigned int> edges;
-    std::vector<unsigned int> triangles; 
+    std::vector<unsigned int> triangles;
     
     void init(){
         mesh()->update_face_normals();
@@ -31,7 +31,7 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
             fvit = fvend = mesh()->vertices(fit);
             v0 = fvit;
             v2 = ++fvit;
-            do 
+            do
             {
                 v1 = v2;
                 v2 = fvit;
@@ -39,30 +39,33 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
                 
                 triangles.push_back(v1.idx());
                 triangles.push_back(v2.idx());
-            } 
+            }
             while (++fvit != fvend);
         }
     }
     
     void render(){
         glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LIGHTING_BIT );
-            glEnable(GL_POLYGON_OFFSET_FILL);
-            glPolygonOffset(1.0, 1);
-            
-            render_flat(); /// DrawFill<nm,cm,tm>(); /// < in meshlab
-            
-            glDisable(GL_POLYGON_OFFSET_FILL);
-            glEnable(GL_COLOR_MATERIAL);
-            glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
-            
-            render_wire(); /// DrawWire<nm,CMNone>(); /// < in meshlab
+
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(1.0, 1);
+        render_flat(); /// DrawFill<nm,cm,tm>(); /// < in meshlab
+        glDisable(GL_POLYGON_OFFSET_FILL);
+
+        glEnable(GL_COLOR_MATERIAL);
+        glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+
+        render_wire(); /// DrawWire<nm,CMNone>(); /// < in meshlab
+
+        glDisable(GL_COLOR_MATERIAL);
+
         glPopAttrib();
     }
     
     void render_flat(){
         /// Set the global color
         glColor4d(mesh()->color.redF(), mesh()->color.greenF(), mesh()->color.blueF(), mesh()->color.alphaF());
-    
+
         /// Vertex coordinates
         Surface_mesh::Vertex_property<Point> points = mesh()->vertex_property<Point>("v:point");
         
@@ -79,12 +82,12 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
             // triangles, quads, and general polygons
             // immediate mode rendering is slow anyway...
             glBegin(GL_POLYGON);
-                if(has_face_color) 
-                    gl::glColor(fcolor[fit]);
-                gl::glNormal(fnormals[fit]);
-                fvit = fvend = mesh()->vertices(fit);
-                do{ gl::glVertex(points[fvit]);
-                } while (++fvit != fvend);
+            if(has_face_color)
+                gl::glColor(fcolor[fit]);
+            gl::glNormal(fnormals[fit]);
+            fvit = fvend = mesh()->vertices(fit);
+            do{ gl::glVertex(points[fvit]);
+            } while (++fvit != fvend);
             glEnd();
         }
     }
