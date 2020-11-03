@@ -22,15 +22,15 @@ public:
         ~Widget(){ delete lab; delete cb; }
         Widget(QWidget* parent,RichBool* rBool) : RichParameterWidget(parent,rBool) {
             cb = new QCheckBox("",parent);
-            cb->setChecked(rp->val->getBool());
+            cb->setChecked(richParameter->val->getBool());
             lab = new QLabel(rBool->description, this);
-            lab->setToolTip(rp->tooltip);
+            lab->setToolTip(richParameter->tooltip);
             gridLay->addWidget(lab,row,0,Qt::AlignLeft);
             gridLay->addWidget(cb,row,1,Qt::AlignRight);
             connect(cb,SIGNAL(stateChanged(int)),parent,SIGNAL(parameterChanged()));
         }
-        void collectWidgetValue(){ rp->val->set(Value(cb->isChecked())); }
-        void resetWidgetValue(){ cb->setChecked(rp->defaultValue->getBool()); }
+        void collectWidgetValue(){ richParameter->val->set(Value(cb->isChecked())); }
+        void resetWidgetValue(){ cb->setChecked(richParameter->defaultValue->getBool()); }
         void setWidgetValue(const Value& nv){ cb->setChecked(nv.getBool()); }
     };
     

@@ -6,12 +6,11 @@ using namespace SurfaceMesh;
 namespace SurfaceMesh{
     bool isA(StarlabModel* model){
         SurfaceMeshModel* mesh = dynamic_cast<SurfaceMeshModel*>(model);
-        return (mesh!=NULL);
+        return mesh != nullptr;
     }
     SurfaceMeshModel* safe_cast(StarlabModel* model){
         SurfaceMeshModel* mesh = dynamic_cast<SurfaceMeshModel*>(model);
-        if(!mesh) 
-            throw StarlabException("Model is not a SurfaceMeshModel");
+        if(!mesh) throw StarlabException("Model is not a SurfaceMeshModel");
         return mesh;
     }
     SurfaceMeshModel* safeCast(StarlabModel* model){

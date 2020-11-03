@@ -46,7 +46,7 @@ public:
             gridLay->addWidget(combo,row,1,Qt::AlignRight);            
         }
         void collectWidgetValue(){
-            rp->val->set(RichString::Value(combo->currentText()));
+            richParameter->val->set(RichString::Value(combo->currentText()));
         }
         /// @todo
         void resetWidgetValue(){ assert(0); }

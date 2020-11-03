@@ -83,45 +83,7 @@ void RichParameterSet::setValue(QString name, const QColor& newval){
     findParameter(name)->val->set(RichColor::Value(newval));
 }
 
-#ifdef OLDMESHLAB
-float RichParameterSet::getAbsPerc(QString name)  const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getAbsPerc():0.0f;
-}
-int RichParameterSet::getEnum(QString name) const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getEnum():0;
-}
-QString RichParameterSet::getOpenFileName(QString name) const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getFileName():"";
-}
-QString RichParameterSet::getSaveFileName(QString name) const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getFileName():"";
-}
-#endif
 
-/// LEGACY
-#if 0
-/// @todo Implement (or get rid of it if unnecessary)
-RichParameterSet& RichParameterSet::operator=( const RichParameterSet& /*rps*/ ) {
-    assert(0); 
-    return *this;
-}
-
-/// @todo Implement (or get rid of it if unnecessary)
-RichParameterSet::RichParameterSet( const RichParameterSet& rps ) :
-    RichParameter(rps.name, rps.description, rps.tooltip){
-    assert(0); 
-}
-
-/// @todo Implement (or get rid of it if unnecessary)
-RichParameterSet& RichParameterSet::join( const RichParameterSet& /*rps*/ ) {
-    assert(0);
-    return *this;
-}
-#endif
 
 bool RichParameterSet::isEmpty() const {
     return paramList.isEmpty();
@@ -149,51 +111,3 @@ QString RichParameterSet::toString(QString prefix) {
     }
     return retval;
 }
-
-#ifdef OLDMESHLAB
-bool RichParameterSet::operator==( const RichParameterSet& rps ) {
-    if (rps.paramList.size() != paramList.size())
-        return false;
-
-    bool iseq = true;
-    int ii = 0;
-    while((ii < rps.paramList.size()) && iseq) {
-        if (!(*rps.paramList.at(ii) == *paramList.at(ii)))
-            iseq = false;
-        ++ii;
-    }
-
-    return iseq;
-}
-
-Matrix44f RichParameterSet::getMatrix44(QString name) const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getMatrix44f():Matrix44f();
-}
-Point3f RichParameterSet::getPoint3f(QString name)  const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getPoint3f():Point3f();
-}
-Shotf RichParameterSet::getShotf(QString name)    const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getShotf():Shotf();
-}
-QList<float> RichParameterSet::getFloatList(QString name)    const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getFloatList():QList<float>();
-}
-float RichParameterSet::getDynamicFloat(QString name) const {
-    RichParameter* par = findParameter(name);
-    return par? par->val->getDynamicFloat():0.0f;
-}
-#endif
-
-
-#if 0 /// Not working...
-#ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, RichParameterSet& pars){
-    dbg.nospace() << qPrintable( pars.toString() ); 
-    return dbg;    
-}
-#endif
-#endif 

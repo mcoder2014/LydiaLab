@@ -10,7 +10,7 @@ protected:
 public:
     ~LineEditWidget(){ delete lned; delete lab; }
     LineEditWidget(QWidget* p,RichParameter* rpar) : RichParameterWidget(p,rpar) {
-        lab = new QLabel(rp->description,this);
+        lab = new QLabel(richParameter->description,this);
         lned = new QLineEdit(this);
         lned->setMaximumWidth(3000);    
     
@@ -18,7 +18,7 @@ public:
         int width = 15*QFontMetrics(QApplication::font()).width('0');
         gridLay->setColumnMinimumWidth(1, width);
         
-        lab->setToolTip(rp->tooltip);
+        lab->setToolTip(richParameter->tooltip);
         gridLay->addWidget(lab,row,0,Qt::AlignLeft);
         gridLay->addWidget(lned,row,1,Qt::AlignRight);
         connect(lned,SIGNAL(editingFinished()),p,SIGNAL(parameterChanged()));

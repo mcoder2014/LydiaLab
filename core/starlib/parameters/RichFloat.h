@@ -31,13 +31,13 @@ public:
     public:
         Widget(QWidget* p,RichFloat* rpar) : LineEditWidget(p,rpar) {
             this->lned->setAlignment(Qt::AlignRight);
-            lned->setText(QString::number(rp->val->getFloat(),'g',3));
+            lned->setText(QString::number(richParameter->val->getFloat(),'g',3));
         }
         void collectWidgetValue(){ 
-            rp->val->set(RichFloat::Value(lned->text().toFloat())); 
+            richParameter->val->set(RichFloat::Value(lned->text().toFloat())); 
         }
         void resetWidgetValue(){
-            lned->setText(QString::number(rp->defaultValue->getFloat(),'g',3));            
+            lned->setText(QString::number(richParameter->defaultValue->getFloat(),'g',3));            
         }
         void setWidgetValue(const RichParameter::Value& nv){
             lned->setText(QString::number(nv.getFloat(),'g',3));                        

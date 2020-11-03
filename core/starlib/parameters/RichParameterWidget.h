@@ -10,37 +10,38 @@ class STARLIB_EXPORT RichParameterWidget : public QWidget {
     Q_OBJECT
 protected:
     /// Parameter we are creating a widget for
-    RichParameter* rp;
+    RichParameter* richParameter;
     /// @todo why do we need to store this?
-    QLabel* helpLab;    
+    QLabel* helpLabel;
     
 public:
-    ~RichParameterWidget(){ delete helpLab; }
-    RichParameterWidget(QWidget* p, RichParameter* rpar) : QWidget(p){
-        this->rp = rpar;
+    ~RichParameterWidget(){ delete helpLabel; }
+    RichParameterWidget(QWidget* parent, RichParameter* richParameter)
+        : QWidget(parent){
+        this->richParameter = richParameter;
         
-        assert(p!=NULL);
-        if (rp!= NULL) {
-            helpLab = new QLabel("<small>"+rpar->tooltip +"</small>",p);
-            helpLab->setTextFormat(Qt::RichText);
-            helpLab->setWordWrap(true);
-            helpLab->setVisible(false);
-            helpLab->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
-            helpLab->setMinimumWidth(250);
-            helpLab->setMaximumWidth(QWIDGETSIZE_MAX);
-            gridLay = qobject_cast<QGridLayout*>(p->layout());
-            assert(gridLay != 0);
+        assert(parent != nullptr);
+        if (richParameter!= nullptr) {
+            helpLabel = new QLabel("<small>"+richParameter->tooltip +"</small>",parent);
+            helpLabel->setTextFormat(Qt::RichText);
+            helpLabel->setWordWrap(true);
+            helpLabel->setVisible(false);
+            helpLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+            helpLabel->setMinimumWidth(250);
+            helpLabel->setMaximumWidth(QWIDGETSIZE_MAX);
+            gridLay = qobject_cast<QGridLayout*>(parent->layout());
+            assert(gridLay != nullptr);
     
             row = gridLay->rowCount();
             //WARNING!!!!!!!!!!!!!!!!!! HORRIBLE PATCH FOR THE BOOL WIDGET PROBLEM
-            if ((row == 1) && (rpar->val->isBool())) {
-                QLabel* lb = new QLabel("",p);
+            if ((row == 1) && (richParameter->val->isBool())) {
+                QLabel* lb = new QLabel("",parent);
                 gridLay->addWidget(lb);
-                gridLay->addWidget(helpLab,row+1,3,1,1,Qt::AlignTop);
+                gridLay->addWidget(helpLabel,row+1,3,1,1,Qt::AlignTop);
             }
             ///////////////////////////////////////////////////////////////////////
             else
-                gridLay->addWidget(helpLab,row,3,1,1,Qt::AlignTop);
+                gridLay->addWidget(helpLabel,row,3,1,1,Qt::AlignTop);
         }
     }
 
