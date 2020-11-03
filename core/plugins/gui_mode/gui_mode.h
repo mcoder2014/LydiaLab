@@ -31,7 +31,7 @@ private:
     /// The action that was suspended   
     QAction* lastActiveModeAction;
     /// Called when entering a state
-    void enterState(STATE state, QAction* action=NULL);
+    void enterState(STATE state, QAction* action=nullptr);
 public slots:
     /// This causes changes of states
     void actionClicked(QAction *action);

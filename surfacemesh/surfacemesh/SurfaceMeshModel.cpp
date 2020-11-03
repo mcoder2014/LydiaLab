@@ -53,13 +53,27 @@ void SurfaceMeshModel::decorateLayersWidgedItem(QTreeWidgetItem* parent){
     }
 }
 
+/**
+ * @brief SurfaceMeshModel::clone
+ * 克隆一个网格模型
+ * @return
+ */
 SurfaceMeshModel *SurfaceMeshModel::clone()
 {
     std::vector<Surface_mesh::Face> selected_faces;
-    foreach(Face f, faces()) selected_faces.push_back(f);
+    for(Face f : faces()) {
+        selected_faces.push_back(f);
+    }
     return clone(selected_faces);
 }
 
+/**
+ * @brief SurfaceMeshModel::clone
+ * 克隆一个包含指定顶点的网格模型
+ * 1. 找到点集中每个顶点含有的半边及其所能够到达的面片
+ * @param subset
+ * @return
+ */
 SurfaceMeshModel *SurfaceMeshModel::clone(std::vector<Surface_mesh::Vertex> subset)
 {
     /// Remove possible duplicates
@@ -67,47 +81,66 @@ SurfaceMeshModel *SurfaceMeshModel::clone(std::vector<Surface_mesh::Vertex> subs
     std::sort( subset.begin(), subset.end() );
     subset.erase( unique( subset.begin(), subset.end() ), subset.end() );
 
-    foreach(Vertex v, subset)
-        foreach(Halfedge h, onering_hedges(v))
+    for(Vertex v : subset) {
+        for(Halfedge h : onering_hedges(v)) {
             selected_faces.push_back(face(h));
+        }
+    }
 
     return clone(selected_faces);
 }
 
-SurfaceMeshModel *SurfaceMeshModel::clone(std::vector<Surface_mesh::Face> subset)
+/**
+ * @brief SurfaceMeshModel::clone
+ * 克隆一个包含指定面片的网格模型
+ * @param subset
+ * @return
+ */
+SurfaceMeshModel *SurfaceMeshModel::clone(std::vector<Surface_mesh::Face> faceSet)
 {
     /// Remove possible duplicates
-    std::sort( subset.begin(), subset.end() );
-    subset.erase( unique( subset.begin(), subset.end() ), subset.end() );
+    std::sort( faceSet.begin(), faceSet.end() );
+    faceSet.erase( unique( faceSet.begin(), faceSet.end() ), faceSet.end() );
 
-    SurfaceMeshModel * m = new SurfaceMeshModel("clone.obj", this->name + "_clone");
-
+    SurfaceMeshModel * destModel = new SurfaceMeshModel("clone.obj", this->name + "_clone");
     Vector3VertexProperty points = vertex_coordinates();
 
+    /// 构建顶点、面片集合
+    // 顶点集合
     QSet<int> vertSet;
+
+    // 顶点->顶点 map
     QMap<Vertex,Vertex> vmap;
-    foreach(Face f, subset){
+    for(Face f : faceSet){
         if(!is_valid(f)) continue;
         Surface_mesh::Vertex_around_face_circulator vit = vertices(f),vend=vit;
-        do{ vertSet.insert(Vertex(vit).idx()); } while(++vit != vend);
+        do{
+            vertSet.insert(Vertex(vit).idx());
+        } while(++vit != vend);
     }
-    foreach(int vidx, vertSet){
+
+    // 将顶点集合的顶点加入模型
+    for(int vidx : vertSet){
         vmap[Vertex(vidx)] = Vertex(vmap.size());
-        m->add_vertex( points[Vertex(vidx)] );
+        destModel->add_vertex( points[Vertex(vidx)] );
     }
-    foreach(Face f, subset){
+
+    // 添加面
+    for(Face f : faceSet){
         if(!is_valid(f)) continue;
         std::vector<Vertex> pnts;
         Surface_mesh::Vertex_around_face_circulator vit = vertices(f),vend=vit;
-        do{ pnts.push_back(vmap[vit]); } while(++vit != vend);
-        m->add_face(pnts);
+        do {
+            pnts.push_back(vmap[vit]);
+        } while(++vit != vend);
+        destModel->add_face(pnts);
     }
 
-    m->update_face_normals();
-    m->update_vertex_normals();
-    m->updateBoundingBox();
+    destModel->update_face_normals();
+    destModel->update_vertex_normals();
+    destModel->updateBoundingBox();
 
-    return m;
+    return destModel;
 }
 
 void SurfaceMeshModel::updateBoundingBox(){
