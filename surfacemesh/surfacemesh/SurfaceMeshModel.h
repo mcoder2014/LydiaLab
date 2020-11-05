@@ -108,6 +108,8 @@ public:
 /// @}
 
 /// @{ Cloning operations
+/// 注意：clone 函数会改变 Vertex Id 的顺序，请谨慎使用
+/// 如需保持 Vertex id 和 face id 顺序，可以使用深拷贝、assign 等函数
     SurfaceMeshModel * clone();
     SurfaceMeshModel * clone(std::vector<Surface_mesh::Vertex> subset);
     SurfaceMeshModel * clone(std::vector<Surface_mesh::Face> subset);
