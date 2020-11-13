@@ -7,7 +7,7 @@ class surfacemesh_render_wireframe : public SurfaceMeshRenderPlugin{
     Q_PLUGIN_METADATA(IID "surfacemesh_render_wireframe.plugin.starlab")
     Q_INTERFACES(RenderPlugin)
 
-    QString name() { return SHADING::FLAT; }
-    QIcon icon(){ return QIcon(":/icons/flat_shading.png"); }
-    Renderer* instance();
+    QString name() override { return SHADING::FLAT; }
+    QIcon icon() override { return QIcon(":/icons/flat_shading.png"); }
+    Renderer* instance() override;
 };

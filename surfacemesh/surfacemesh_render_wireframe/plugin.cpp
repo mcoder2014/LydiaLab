@@ -10,7 +10,7 @@ class WireframeRenderer : public SurfaceMeshRenderer{
     std::vector<unsigned int>  edges;
 #endif 
     
-    void init(){
+    void init() override {
         // qDebug() << "surfacemesh_render_wireframe::init";
         // mesh()->update_face_normals();
     
@@ -25,7 +25,7 @@ class WireframeRenderer : public SurfaceMeshRenderer{
     #endif
     }    
 
-    void render(){
+    void render() override {
         glDisable(GL_LIGHTING);
     
     /// @todo Much faster but does not support color...YET
@@ -38,8 +38,8 @@ class WireframeRenderer : public SurfaceMeshRenderer{
         glColor3f(0.0, 0.0, 0.0);
         glDepthRange(0.0, 1.0);
         glDepthFunc(GL_LEQUAL);
-        if(edges.size())
-            glDrawElements(GL_LINES, (GLsizei)edges.size(), GL_UNSIGNED_INT, &edges[0]);
+        if(!edges.empty())
+            glDrawElements(GL_LINES, static_cast<GLsizei>(edges.size()), GL_UNSIGNED_INT, &edges[0]);
         glDepthFunc(GL_LESS);
         glDisableClientState(GL_VERTEX_ARRAY);
     #else

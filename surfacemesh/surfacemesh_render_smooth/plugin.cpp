@@ -8,7 +8,7 @@ class SmoothRenderer : public SurfaceMeshRenderer{
     ///< index array for buffered OpenGL rendering
     std::vector<unsigned int> triangles; 
     
-    void init(){
+    void init() override {
         // qDebug() << "surfacemesh_render_flat::init";
         mesh()->update_face_normals();
         mesh()->update_vertex_normals();
@@ -20,7 +20,7 @@ class SmoothRenderer : public SurfaceMeshRenderer{
                 triangles.push_back(v.idx());
     }
     
-    void render(){
+    void render() override {
         if(mesh()->n_faces() < 1) return;
 
         Surface_mesh::Vertex_property<Point>  points = mesh()->vertex_property<Point>(VPOINT);
@@ -42,7 +42,8 @@ class SmoothRenderer : public SurfaceMeshRenderer{
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         if(has_vertex_color) glEnableClientState(GL_COLOR_ARRAY);
-        if(triangles.size()) glDrawElements(GL_TRIANGLES, (GLsizei)triangles.size(), GL_UNSIGNED_INT, &triangles[0]);
+        if(!triangles.empty())
+            glDrawElements(GL_TRIANGLES, (GLsizei)triangles.size(), GL_UNSIGNED_INT, &triangles[0]);
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
 

@@ -12,7 +12,7 @@ class plugin
     Q_PLUGIN_METADATA(IID "surfacemesh_render_transparent.plugin.starlab")
     Q_INTERFACES(RenderPlugin)
   
-    QString name() { return "Transparent"; }
-    QIcon icon(){ return QIcon(":/icons/transparent_mesh.png"); }
-    Renderer* instance();
+    QString name() override { return "Transparent"; }
+    QIcon icon() override { return QIcon(":/icons/transparent_mesh.png"); }
+    Renderer* instance() override;
 };

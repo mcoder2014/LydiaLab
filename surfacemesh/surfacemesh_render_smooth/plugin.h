@@ -6,9 +6,9 @@ class plugin : public SurfaceMeshRenderPlugin{
     Q_PLUGIN_METADATA(IID "surfacemesh_render_smooth.plugin.starlab")
     Q_INTERFACES(RenderPlugin)
   
-    QString name() { return "Smooth Shading"; }
-    QIcon icon(){ return QIcon(":/icons/smooth_shading.png"); }
-    Renderer* instance();
+    QString name() override { return "Smooth Shading"; }
+    QIcon icon() override { return QIcon(":/icons/smooth_shading.png"); }
+    Renderer* instance() override;
             
-    virtual bool isDefault() { return true; }
+    bool isDefault() override { return true; }
 };

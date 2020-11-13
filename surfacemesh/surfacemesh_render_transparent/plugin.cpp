@@ -18,8 +18,8 @@ private:
     std::vector<unsigned int> triangles;
     
 private:
-    typedef Surface_mesh::Face_iterator FaceItr;
-    typedef std::pair<double, FaceItr> DepthFace;
+    using FaceItr = Surface_mesh::Face_iterator ;
+    using DepthFace = std::pair<double, FaceItr> ;
     static bool depthSorter(DepthFace i, DepthFace j){ return (i.first < j.first); }
 
     std::vector< DepthFace > depthvec;
@@ -116,7 +116,7 @@ public:
                 glEnableClientState(GL_NORMAL_ARRAY);
                 if(has_vertex_color)
                     glEnableClientState(GL_COLOR_ARRAY);
-                if(triangles.size())
+                if(!triangles.empty())
                     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(triangles.size()), GL_UNSIGNED_INT, &triangles[0]);
                 glDisableClientState(GL_VERTEX_ARRAY);
                 glDisableClientState(GL_NORMAL_ARRAY);
@@ -133,7 +133,7 @@ public:
 
     // Renderer interface
 public slots:
-    virtual void init() override{
+    void init() override{
         mesh()->update_face_normals();
         mesh()->update_vertex_normals();
 

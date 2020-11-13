@@ -10,7 +10,7 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
     std::vector<unsigned int> edges;
     std::vector<unsigned int> triangles;
     
-    void init(){
+    void init() override{
         mesh()->update_face_normals();
         
         /// For wireframe
@@ -28,7 +28,8 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
         Surface_mesh::Vertex_around_face_circulator fvit, fvend;
         Surface_mesh::Vertex v0, v1, v2;
         for (fit=mesh()->faces_begin(); fit!=fend; ++fit){
-            fvit = fvend = mesh()->vertices(fit);
+            fvend = mesh()->vertices(fit);
+            fvit = fvend;
             v0 = fvit;
             v2 = ++fvit;
             do
@@ -44,7 +45,7 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
         }
     }
     
-    void render(){
+    void render() override{
         glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LIGHTING_BIT );
 
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -85,7 +86,8 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
             if(has_face_color)
                 gl::glColor(fcolor[fit]);
             gl::glNormal(fnormals[fit]);
-            fvit = fvend = mesh()->vertices(fit);
+            fvend = mesh()->vertices(fit);
+            fvit = fvend;
             do{ gl::glVertex(points[fvit]);
             } while (++fvit != fvend);
             glEnd();
@@ -103,7 +105,8 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
         glColor3f(0.0, 0.0, 0.0);
         glDepthRange(0.0, 1.0);
         glDepthFunc(GL_LEQUAL);
-        if(edges.size()) glDrawElements(GL_LINES, (GLsizei)edges.size(), GL_UNSIGNED_INT, &edges[0]);
+        if(!edges.empty())
+            glDrawElements(GL_LINES, (GLsizei)edges.size(), GL_UNSIGNED_INT, &edges[0]);
         glDepthFunc(GL_LESS);
     }
 };

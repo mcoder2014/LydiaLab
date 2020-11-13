@@ -6,7 +6,7 @@ class plugin : public SurfaceMeshRenderPlugin{
     Q_PLUGIN_METADATA(IID "surfacemesh_render_flatwire.plugin.starlab")
     Q_INTERFACES(RenderPlugin)
 
-    QString name() { return "Flat Wire"; }
-    QIcon icon(){ return QIcon(":/icons/flatwire.png"); }
-    Renderer* instance();
+    QString name() override { return "Flat Wire"; }
+    QIcon icon() override { return QIcon(":/icons/flatwire.png"); }
+    Renderer* instance() override;
 };

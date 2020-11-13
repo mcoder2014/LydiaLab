@@ -7,7 +7,7 @@ class plugin : public SurfaceMeshRenderPlugin{
     Q_INTERFACES(RenderPlugin)
    
 public: 
-    QString name() { return "Wireframe"; }
-    QIcon icon(){ return QIcon(":/icons/wireframe.png"); }
-    Renderer* instance();
+    QString name() override { return "Wireframe"; }
+    QIcon icon() override { return QIcon(":/icons/wireframe.png"); }
+    Renderer* instance() override;
 };
