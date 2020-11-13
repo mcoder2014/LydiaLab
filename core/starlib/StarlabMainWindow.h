@@ -16,7 +16,6 @@
 
 namespace Starlab{
 
-
 /** 
  * @brief The definition of the main starlab GUI
  * @ingroup starcore
@@ -24,8 +23,6 @@ namespace Starlab{
 /// The basic structure of the stalab window to which plugins (i.e. GUI plugins) interface
 class STARLIB_EXPORT MainWindow : public QMainWindow{
     Q_OBJECT
-    
-
     
 /// @{ Core
 public:
@@ -44,9 +41,6 @@ private:
     Application* const _application;
 /// @}
 
-    
-    
-    
 /// @{ Basic GUI behavior
     /// Quit whole application whenever the main window is closed
     void closeEvent(QCloseEvent *);        
@@ -58,9 +52,6 @@ private slots:
     
 /// @}
     
-    
-    
-    
 /// @{ DrawArea Management (Center of Starlab window) 
 private:
     /// Manager of main drawing area (MeshLab: GLArea)
@@ -70,31 +61,31 @@ public:
     DrawArea* drawArea(){ return _drawArea; }
 /// @}
            
-    
-    
-    
 /// @{ ModePlugin Management
 private:
+    // 当前的 mode 插件
     ModePlugin* _modePlugin;
+
+    // 当前的 mode 是否暂停中
     bool _isModePluginSuspended;
+
 signals:
+    // 设置当前 mode plugin 信号
     void modePluginSet(ModePlugin*);
+
 public:
     bool isModePluginSuspended(){ Q_ASSERT(_modePlugin); return _isModePluginSuspended; }
     void resumeModePlugin(){ Q_ASSERT(_modePlugin); _isModePluginSuspended=false; }
     void suspendModePlugin(){ Q_ASSERT(_modePlugin); _isModePluginSuspended=true; }
-    bool hasModePlugin(){ return (_modePlugin!=NULL); }
+    bool hasModePlugin(){ return (_modePlugin!=nullptr); }
     /// Sets the given mode plugin as the active 
     /// @pre mode!=NULL
     /// @post the given plugin becomes active within the system
     /// @emit modePluginSet(mode)
     void setModePlugin(ModePlugin* mode);
-    void removeModePlugin(){ Q_ASSERT(_modePlugin); _modePlugin=NULL; }
+    void removeModePlugin(){ Q_ASSERT(_modePlugin); _modePlugin = nullptr; }
     ModePlugin* getModePlugin(){ Q_ASSERT(_modePlugin); return _modePlugin; }
 /// @}
-    
-    
-    
     
 /// @{ @name Window's menus (in order)
 public:
@@ -114,9 +105,6 @@ private:
     QList<QMenu*> menus;    ///< List of pointers to all the above
 /// @}
 
-    
-    
-    
 /// @{ @name Window's toolbars (in order)
 public:
     QToolBar *mainToolbar;      ///< Core icons, always visible regardless
@@ -131,9 +119,6 @@ private:
     QList<QToolBar*> toolbars; ///< List of all available toolbars
 /// @}
     
-    
-    
-    
 /// @{ @name automatic action trigger
 /// @todo is there a way of making these global variables?
 public slots:
@@ -144,9 +129,6 @@ public slots:
     /// @brief Executes a menu command by name, achieving the same effect as clicking on an action. 
     void triggerMenuActionByName(QString name);
 /// @}
-    
-    
-    
     
 /// @{ @name status bar management
 public slots:
@@ -169,9 +151,6 @@ private:
     QList<QString> _oldMessages; ///< Saves all messages sent to statusbar
 /// @}
 
-    
-    
-    
 /// @{ @name Core Events Management
 public slots:
     /// Manages Drag & Drop events
@@ -181,9 +160,6 @@ public slots:
     /// This slot receives an action and displays a tooltip for it at the current mouse position
 /// @}
 
-      
-    
-    
 /// @{ @name GUI elements
 private:
     /// i.e. typically connected to the hovered(QAction*) signal to show tooltips

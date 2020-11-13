@@ -35,9 +35,6 @@ void Document::popBusy(){
         emit_hasChanged();
 }
 
-
-
-
 Eigen::AlignedBox3d Document::bbox() {
     Eigen::AlignedBox3d box( Eigen::Vector3d(-1,-1,-1), Eigen::Vector3d(1,1,1) );
     if(_models.size())

@@ -1,6 +1,13 @@
 #pragma once
+
+#include <map>
+
+#include <QActionGroup>
+
 #include "interfaces/GuiPlugin.h"
 #include "StarlabMainWindow.h"
+
+using std::map;
 
 /// At any point there can be a single editing plugin active.
 /// When a plugin is active (i.e. not suspended) it intercept 
@@ -14,9 +21,12 @@ public:
     /// plugin constructor
     virtual void load();
     
+    QActionGroup *filterActionGroup;
+    map<QAction*, FilterPlugin*> filterPluginMap;
+
 private slots:
-    /// Opens up the gui where the user inputs/modifies the parameters and buttons to start the filter.   
-    void startFilter();
+    // 点击 Filter
+    void startFilter(QAction* action);
     /// callback function that starts the filter, it is called by the 
     /// filter popup when the user presses "ok" or by a command line instruction
     void execute(FilterPlugin* iFilter, RichParameterSet *pars);

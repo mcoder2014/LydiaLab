@@ -65,6 +65,8 @@ public:
 
     QList<GuiPlugin*> guiPlugins(){ return _guiPlugins.values(); }
 
+    QList<RenderPlugin*> renderPlugins() {return _renderPlugins.values(); }
+
 public:
     /// @brief pointer to specific plugin
     FilterPlugin* getFilter(QString name);
@@ -124,6 +126,9 @@ private:
     /// Searches pluginsDir for plugins
     /// 程序启动时执行，从 pluginsDir 路径中加载插件
     void loadPlugins();
+
+    // 加载指定插件
+    void loadPlugin(QString filepath);
 
 /// Set of helper functions
 private:

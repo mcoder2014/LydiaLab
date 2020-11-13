@@ -13,8 +13,9 @@ Application::Application(){
     _document      = new Document();
     
     /// Register all plugins access functionality
-    foreach(StarlabPlugin* plugin, pluginManager()->plugins())
+    for(StarlabPlugin* plugin : pluginManager()->plugins()){
         plugin->_application = this;
+    }
     
     /// Register Starlab.h types
     qRegisterMetaType<BBox3>("BBox3");

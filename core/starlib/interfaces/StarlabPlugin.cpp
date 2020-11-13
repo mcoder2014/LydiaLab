@@ -61,6 +61,7 @@ void StarlabPlugin::showMessage(const char *format, ...){
     QString msg(buffer);
     /// Show on terminal
     qDebug() << msg;
+
     /// And on window
     if( mainWindow() )
         mainWindow()->setStatusBarMessage(msg,20.0);

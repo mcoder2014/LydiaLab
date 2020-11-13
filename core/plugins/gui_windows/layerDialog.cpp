@@ -57,15 +57,21 @@ LayerDialog::LayerDialog(MainWindow* mainWindow) :
     } 
 }
 
+/**
+ * @brief LayerDialog::modelItemClicked
+ * 选择模型
+ * @param item
+ * @param column_number
+ */
 void LayerDialog::modelItemClicked(QTreeWidgetItem* item , int column_number){
     LayersWidgetModelItem* mitem = dynamic_cast<LayersWidgetModelItem*>(item); 
     if(mitem){
         mainWindow->document()->pushBusy();
             /// Clicked on the eye, toggle visibility
-            if( column_number==0 )
+            if( column_number == 0 )
                 mitem->model.isVisible = !mitem->model.isVisible;
             /// A click on any column makes a selection
-            if( column_number>0  ){
+            if( column_number > 0  ) {
                 mainWindow->document()->setSelectedModel( &( mitem->model ) );
             }
             updateTable();
@@ -76,18 +82,6 @@ void LayerDialog::modelItemClicked(QTreeWidgetItem* item , int column_number){
 void LayerDialog::showEvent (QShowEvent* /* event*/){
     updateTable();
 }
-
-#if 0
-void LayerDialog::showLayerMenu(){
-    foreach (QWidget *widget, QApplication::topLevelWidgets()) {
-        MainWindow* mainwindow = dynamic_cast<MainWindow*>(widget);
-        if (mainwindow){
-            mainwindow->layerMenu()->popup(ui->menuButton->mapToGlobal(QPoint(10,10)));
-            return;
-        }
-    }
-}
-#endif
 
 void LayerDialog::showContextMenu(const QPoint& /*pos*/){
     qDebug() << "LayerDialog::showContextMenu() not implemented";
@@ -122,8 +116,8 @@ void LayerDialog::updateTable(){
                 
         // Change color if currently selected
         if(model == mainWindow->document()->selectedModel()){
-            item->setBackground(1,QBrush(Qt::yellow));
-            item->setForeground(1,QBrush(Qt::blue));
+            item->setBackground(1, QBrush(Qt::yellow));
+            item->setForeground(1, QBrush(Qt::blue));
         }
         // Add it to the tree
         ui->modelTreeWidget->addTopLevelItem(item);

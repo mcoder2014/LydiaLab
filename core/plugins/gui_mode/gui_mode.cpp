@@ -9,6 +9,7 @@
 /**
  * @brief gui_mode::load
  * 初始化 mode gui
+ * 1. 备份，减少 UI update 时耗时
  */
 void gui_mode::load(){
 
@@ -24,15 +25,56 @@ void gui_mode::load(){
     defaultModeAction->setShortcut(Qt::Key_Escape);
     
     /// Reacts to changes in mode
-    connect(modeActionGroup,SIGNAL(triggered(QAction*)),this,SLOT(actionClicked(QAction*)));
+    connect(modeActionGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(actionClicked(QAction*)), Qt::UniqueConnection);
     
     /// Reacts to changes made on the selection
-    connect(document(),SIGNAL(hasChanged()),this,SLOT(documentChanged()));
+    connect(document(), SIGNAL(hasChanged()),
+            this, SLOT(documentChanged()), Qt::UniqueConnection);
+
     /// When document changes, we make sure render menu/toolbars are up to date    
-    connect(document(), SIGNAL(hasChanged()), this, SLOT(update()));
+    connect(document(), SIGNAL(hasChanged()),
+            this, SLOT(update()), Qt::UniqueConnection);
     
-    /// Start state machine in default mode
-    enterState(DEFAULT,defaultModeAction);
+    // 状态机进入 DEFAULT 模式
+    enterState(DEFAULT, defaultModeAction);
+
+    // 加载所有插件
+    loadPlugins();
+}
+
+void gui_mode::loadPlugins()
+{
+    /// Clear the menus
+    mainWindow()->modeToolbar->clear();
+    mainWindow()->modeMenu->clear();
+
+    /// Add the "default" mode action (modes disactivated)
+    mainWindow()->modeToolbar->addAction(defaultModeAction);
+    mainWindow()->modeMenu->addAction(defaultModeAction);
+    modeActionGroup->addAction(defaultModeAction);
+
+    /// Re-fill the menu with plugin names and make connections
+    for(ModePlugin* plugin : pluginManager()->modePlugins()){
+
+        QAction* action = plugin->action();
+        modePluginMap[action] = plugin;
+        action->setCheckable(true);
+
+        /// Make GUI elements exclusive
+        modeActionGroup->addAction(action);
+
+        /// Add to menus and toolbars
+        mainWindow()->modeMenu->addAction(action);
+
+        if(!action->icon().isNull()) {
+            mainWindow()->modeToolbar->addAction(action);
+        }
+    }
+
+    /// Remember trackball is always there, thus > 1
+    bool showtoolbar = (mainWindow()->modeToolbar->children().size() > 1);
+    mainWindow()->modeToolbar->setVisible(showtoolbar);
 }
 
 /**
@@ -43,55 +85,49 @@ void gui_mode::load(){
  * 3. 如果插件数量过少，不显示 插件
  */
 void gui_mode::update(){
-    /// Clear the menus
-    mainWindow()->modeToolbar->clear();
-    mainWindow()->modeMenu->clear();
-
-    /// Add the "default" mode action (modes disactivated)
-    mainWindow()->modeToolbar->addAction(defaultModeAction);
-    mainWindow()->modeMenu->addAction(defaultModeAction);
-    modeActionGroup->addAction(defaultModeAction);
-    
-    /// Re-fill the menu with plugin names and make connections
-    for(ModePlugin* plugin : pluginManager()->modePlugins()){
-
-        if(!plugin->isApplicable()) continue;
-
-        QAction* action = plugin->action();
+    for(QAction* action : modeActionGroup->actions()) {
+        action->setEnabled(true);
         action->setCheckable(true);
-
-        /// Make GUI elements exclusive
-        modeActionGroup->addAction(action);
-
-        /// Add to menus and toolbars
-        mainWindow()->modeMenu->addAction(action);
-
-        if(!action->icon().isNull())
-            mainWindow()->modeToolbar->addAction(action);
+        action->setChecked(false);
     }
-    
-    /// Remember trackball is always there, thus > 1
-    bool showtoolbar = (mainWindow()->modeToolbar->children().size() > 1);
-    mainWindow()->modeToolbar->setVisible(showtoolbar);
 }
+
 
 /**
  * @brief gui_mode::enterState
- * 状态机状态切换
- * @param state
+ * 状态机转换
+ * DEFAULT：
+ *  1. ENABLE 其他 mode；
+ *  2. 回退到 DEFAULT MODE；
+ *  3. DEFAULT MODE UI 处理
+ *
+ * MODE:
+ *  1. disable 其他 mode；
+ *  2. 当前 MODE UI处理；
+ *  3. DEFAULT MODE ACTION 处理;
+ *
+ * SUSPENDED:
+ *  1. 暂停 当前 MODE；
+ *  2. 回退到 DEFAULT MODE
+ *  3. 修改 UI
+ *
+ * @param state DEFAULT, MODE, SUSPENDED
  * @param action
  */
 void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
+
     switch(state){
+
     case DEFAULT: 
         // qDebug() << "[DEFAULT]";
         Q_ASSERT(lastActiveModeAction==nullptr);
         Q_ASSERT(!mainWindow()->hasModePlugin());
         for(QAction* action : modeActionGroup->actions())
             action->setEnabled(true);
-        defaultModeAction->setChecked(true);
         defaultModeAction->setEnabled(false);
+        defaultModeAction->setChecked(true);
         break;
+
     case MODE: 
         // qDebug() << "[MODE]";
         Q_ASSERT(mainWindow()->hasModePlugin());
@@ -102,26 +138,27 @@ void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
         action->setEnabled(true);
         action->setChecked(true);
         break;
+
     case SUSPENDED: 
         // qDebug() << "[SUSPENDED]";
         Q_ASSERT(mainWindow()->hasModePlugin());
-        Q_ASSERT(lastActiveModeAction!=NULL);
+        Q_ASSERT(lastActiveModeAction != nullptr);
         for(QAction* action : modeActionGroup->actions())
-            action->setEnabled(false);        
-        defaultModeAction->setChecked(true);
+            action->setEnabled(false);
         defaultModeAction->setEnabled(true);
+        defaultModeAction->setChecked(true);
         lastActiveModeAction->setChecked(true);
         lastActiveModeAction->setEnabled(false);
         break;
     }    
-    
-    /// Finally update state
+
+    // 更新真实的状态
     this->state = state;
 }
 
 /**
  * @brief gui_mode::actionClicked
- * 这个函数有点儿丑呀……
+ * 如果 Action 触发，调用相应的 mode plugin
  * @param action
  */
 void gui_mode::actionClicked(QAction *action){
@@ -133,34 +170,52 @@ void gui_mode::actionClicked(QAction *action){
     switch(state){
     case DEFAULT:
         /// ---------------- IGNORING --------------------
-        if(action==defaultModeAction)
+        /// 忽视 Default mode plugin
+        if(action == defaultModeAction) {
             break;
-        /// ---------------- CREATING --------------------
-        if(action!=defaultModeAction){
-            plugin = qobject_cast<ModePlugin*>( action->parent() );
+        } else {
+            /// ---------------- CREATING --------------------
+            plugin = modePluginMap[action];
             /// We can only switch to a mode plugin
-            if(plugin == nullptr)
+            if(plugin == nullptr) {
+                showMessage("Not existing plugin <%s>", action->text().toStdString().data());
+                action->setChecked(false);
                 break;
+            }
+
+            /// check applicable
+            if(!plugin->isApplicable()) {
+                showMessage("The mode plugin <%s> is not applicable for current model",
+                            plugin->name().toStdString().data());
+
+                // 取消 action 的选中状态
+                action->setChecked(false);
+                break;
+            }
+
             try{
                 showMessage("Creating plugin: '%s'",qPrintable(action->text()));
                 plugin->__internal_create();
-                /// No exception? set it to GUI
+
                 mainWindow()->setModePlugin(plugin);
                 mainWindow()->resumeModePlugin();
                 drawArea()->updateGL();
                 lastActiveModeAction = action;
                 enterState(MODE,action);
+
             } catch(...) {
-                showMessage("Creating plugin: '%s' FAILED!",qPrintable(action->text()));
+                showMessage("Creating plugin: '%s' FAILED!", qPrintable(action->text()));
                 action->setChecked(false);
                 throw;
             } 
         }
         break;
+
     case MODE: 
         /// ---------------- TERMINATION --------------------
         /// 终止，进入状态 DEFAULT
-        if(action==lastActiveModeAction){
+        if(action == lastActiveModeAction){
+
             Q_ASSERT(mainWindow()->getModePlugin()!=nullptr);
             mainWindow()->getModePlugin()->__internal_destroy();
             mainWindow()->removeModePlugin();
@@ -169,11 +224,13 @@ void gui_mode::actionClicked(QAction *action){
             showMessage("Terminated plugin: '%s'",qPrintable(action->text()));
             break;            
         }
+
         /// ---------------- SUSPENSION --------------------
         /// 暂停，进入状态 SUSPENDED
-        if(action==defaultModeAction){
+        if(action == defaultModeAction){
+
             QAction* actionToSuspend = lastActiveModeAction;
-            ModePlugin* pluginToSuspend = (ModePlugin*) lastActiveModeAction->parent();
+            ModePlugin* pluginToSuspend = modePluginMap[lastActiveModeAction];
             mainWindow()->suspendModePlugin();
             pluginToSuspend->suspend();
             enterState(SUSPENDED,actionToSuspend);
@@ -181,13 +238,14 @@ void gui_mode::actionClicked(QAction *action){
             break;
         }
         break;
+
     case SUSPENDED: 
         /// ---------------- RESUMING --------------------
         /// 继续，进入状态 MODE
-        Q_ASSERT(action==defaultModeAction);
+        Q_ASSERT(action == defaultModeAction);
         mainWindow()->resumeModePlugin();
-        ((ModePlugin*) lastActiveModeAction->parent())->resume();
-        enterState(MODE,lastActiveModeAction);
+        modePluginMap[lastActiveModeAction]->resume();
+        enterState(MODE, lastActiveModeAction);
         showMessage("Resumed plugin: '%s'",qPrintable(lastActiveModeAction->text()));
         break;
     }
@@ -204,33 +262,31 @@ void gui_mode::actionClicked(QAction *action){
 void gui_mode::documentChanged(){  
     // qDebug("gui_mode::documentChanged()");
     if(!mainWindow()->hasModePlugin()) return;
-    ModePlugin* iMode = mainWindow()->getModePlugin();
+    ModePlugin* modePlugin = mainWindow()->getModePlugin();
 
     switch(state){
+
     /// But there was no active plugin
     case DEFAULT:
         return;
+
     /// And there was an active plugin
     case MODE:
-        /// Give the plugin a chance to react to the selection change
-        /// If plugin didn't specify how to perform the update, simply 
-        /// destroy it and re-create it from scratch.
-        if(!iMode->documentChanged()){
-            iMode->__internal_destroy();
-            iMode->__internal_create();
+        /// 更新 Mode 响应
+        if(!modePlugin->documentChanged()){
+            modePlugin->__internal_destroy();
+            modePlugin->__internal_create();
         }
         return;
+
     /// There was a suspended plugin
     case SUSPENDED:
-        /// On the other hand, when plugin is suspended, change in document just 
-        /// results in the plugin termination
-        if(!iMode->documentChanged())
-            iMode->__internal_destroy();
+        /// 当 mode 是暂停状态时，直接停掉插件
+        modePlugin->__internal_destroy();
+
         mainWindow()->removeModePlugin();
         lastActiveModeAction = nullptr;
         enterState(DEFAULT);
         return;    
     }
 }
-
-

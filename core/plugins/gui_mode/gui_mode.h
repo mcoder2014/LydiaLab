@@ -1,8 +1,12 @@
 #pragma once
+
+#include <map>
+
 #include "interfaces/GuiPlugin.h"
 #include "interfaces/ModePlugin.h"
 
 class StateMachine;
+using std::map;
 
 /// At any point there can be a single editing plugin active.
 /// When a plugin is active (i.e. not suspended) it intercept 
@@ -14,30 +18,49 @@ class gui_mode : public GuiPlugin{
 
 /// The gui entry that suspends a plugin
 public:
-    QAction* defaultModeAction;    
+    // 空 Action 默认 mode
+    QAction* defaultModeAction;
+
+    // UI
     QActionGroup* modeActionGroup;
+
+    // action -> modeplugin
+    map<QAction*, ModePlugin*> modePluginMap;
         
 /// plugin constructor
 void load();
+
+private:
+
+void loadPlugins();
+
 public slots:
     void update();
 
 /// @{ State machine to manage suspension
 private:
-    /// The possible states of the machine
-    enum STATE {DEFAULT, SUSPENDED, MODE};
+    /// 状态机的状态
+    enum STATE {
+        DEFAULT = 0,
+        SUSPENDED = 1,
+        MODE = 2};
+
     /// The current machinse state
     STATE state;
-    /// The action that was suspended   
+
+    /// The action that was suspended
     QAction* lastActiveModeAction;
+
     /// Called when entering a state
     void enterState(STATE state, QAction* action=nullptr);
+
 public slots:
     /// This causes changes of states
     void actionClicked(QAction *action);
 /// @}
-    
-public slots:   
+
+public slots:
+
     /// Responds to a changes in document. If the plugin specifies its own way 
     /// to respond to the event, this is used. This can be done by overloading 
     /// ModePlugin::documenChanged(). If no custom behavior is provided, we simply 

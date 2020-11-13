@@ -1,4 +1,7 @@
 #pragma once
+
+#include <map>
+
 #include <QToolBar>
 #include <QColorDialog>
 
@@ -6,6 +9,8 @@
 #include "interfaces/GuiPlugin.h"
 #include "interfaces/RenderPlugin.h"
 #include "ParametersFrame.h"
+
+using namespace std;
 
 class gui_render : public GuiPlugin{
     Q_OBJECT
@@ -15,7 +20,7 @@ class gui_render : public GuiPlugin{
 /// @{ updates GUI according to selection
 public slots:
     void update();
-    void load();    
+    void load();
 /// @}
     
 /// @{ access specific resources
@@ -30,9 +35,11 @@ private:
     QAction* toggleBackgroundEffect;
     QColorDialog* qColorDialog;  
     void instantiate_color_dialog();
+
 private slots:
     void trigger_editBackgroundColor();
     void trigger_editSelectedModelColor();
+
 public slots:
     /// Receives events from the color gui and changes the renderering color
     void liveupdate_selectedModelColor(QColor);
@@ -41,22 +48,25 @@ public slots:
     
 /// @{ renderer module
 public slots:
-    void triggerRenderModeAction(QAction* );
+    void triggerRendererAction(QAction* );
     void triggerSetDefaultRenderer();
     void trigger_editSettings();
+
 private:
-    QActionGroup* renderModeGroup;
+    QActionGroup* renderActionGroup;
     QAction* currentAsDefault;
     QAction* editRenderSettings;
     QAction* clearRenderObjects;
+    map<QAction*, RenderPlugin*> renderPluginMap;
 /// @}
 };
 
 /// @internal Q_OBJECT classes must be declared in an .h file for MOC'ing
 class ParametersWidget: public QWidget {
     Q_OBJECT
+
 public:
-    ParametersWidget(RichParameterSet* pars, QWidget* parent=NULL, Qt::WindowFlags flags = 0) 
+    ParametersWidget(RichParameterSet* pars, QWidget* parent = nullptr, Qt::WindowFlags flags = 0)
         : QWidget(parent, flags), _frame(this, flags)
     {
         /// Load parameters

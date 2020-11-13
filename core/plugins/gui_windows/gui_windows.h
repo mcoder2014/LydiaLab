@@ -24,12 +24,14 @@ public:
             layerDialog = new LayerDialog(mainWindow());
             layerDialog->setAllowedAreas (Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
             mainWindow()->addDockWidget(Qt::RightDockWidgetArea,layerDialog);
-            QAction* action = new QAction(QIcon(":/images/layers.png"),tr("Show Layers Dialog"), this);
+            QAction* action = new QAction(QIcon(":/images/layers.png"), tr("Show Layers Dialog"), this);
             action->setCheckable(true);
             action->setChecked(false);
             mainWindow()->mainToolbar->addAction(action);
             mainWindow()->windowsMenu->addAction(action);
-            connect(action, SIGNAL(triggered(bool)), layerDialog, SLOT(setVisible(bool)));
+
+            connect(action, SIGNAL(triggered(bool)),
+                    layerDialog, SLOT(setVisible(bool)), Qt::UniqueConnection);
         }
         
         /// Snapshot setup

@@ -16,7 +16,7 @@
 #elif defined(Q_OS_MAC)
     QString LIB_EXTENSION_FILTER("*.dylib");
 #elif defined(Q_OS_LINUX)
-    QString LIB_EXTENSION_FILTER("*.so");
+    static QString LIB_EXTENSION_FILTER("*.so");
 #endif
 
 using namespace Starlab;
@@ -46,19 +46,26 @@ QStringList extractExtensions(QString ioPluginName){
     return retval;
 }
     
-QString failurecauses_qtplugin(
+static QString failurecauses_qtplugin(
 "\nPOSSIBLE FAILURE REASONS:\n"
 "  1) plugin needs a DLL which cannot be found in the executable folder\n"
 "  2) Release / debug build mismatch\n"
 "  3) Missing Q_INTERFACE(...) or Q_EXPORT_PLUGIN(...)\n"
 "  *) any other reason?");
 
-QString failurecauses_starlabplugin(
+static QString failurecauses_starlabplugin(
 "\nPOSSIBLE FAILURE REASONS:\n"
 "  1) starlab PluginManager does not know how to load it\n"
 "  2) Release / debug build mismatch.\n"
 "  *) any other reason?");
 
+/**
+ * @brief PluginManager::PluginManager
+ * 插件管理工具构造函数
+ * 1. 读取程序配置文件
+ * 2. 加载插件
+ * @param settings
+ */
 PluginManager::PluginManager(Settings* settings) : 
     _settings(settings)
 {
@@ -81,8 +88,9 @@ PluginManager::~PluginManager()
 }
 
 FilterPlugin *PluginManager::getFilter(QString name){
-    FilterPlugin* filter = _filterPlugins.value(name,NULL);
-    if(filter==NULL) throw StarlabException("Cannot find filter '%s'", qPrintable(name));
+    FilterPlugin* filter = _filterPlugins.value(name, nullptr);
+    if(filter == nullptr)
+        throw StarlabException("Cannot find filter '%s'", qPrintable(name));
     return filter;
 }
 
@@ -91,59 +99,72 @@ FilterPlugin *PluginManager::getFilter(QString name){
  * 程序启动时会执行，加载插件
  */
 void PluginManager::loadPlugins() {
+
     qDebug() << "PluginManager::loadPlugins("
              << __FILE__ <<__PRETTY_FUNCTION__ << __LINE__ << ")";
     
     pluginsDir=QDir(getPluginDirPath());
+
     //only the files with appropriate extensions will be listed by function entryList()
     // 过滤出插件文件夹下拓展名是 *.dll *.so *.dylib 相关的文件，认为是插件
     pluginsDir.setNameFilters(QStringList(LIB_EXTENSION_FILTER));
     
     /// Load all plugins 对所有的插件文件，加载
-    for (QString fileName : pluginsDir.entryList(QDir::Files)) {
-
-        /// Attempt to load a Qt plugin
-        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-        qDebug("Load Plugin %s %s\n", qPrintable(fileName), loader.load()?"true":"false");
-        QObject* plugin = loader.instance();
-
-        if(!plugin){
-            // 如果插件加载失败，打印报错信息
-            qDebug("Plugin '%s' is not a proper *Qt* plugin!! %s", qPrintable(fileName), qPrintable(failurecauses_qtplugin));
-            continue;
-        }
-            
-        /// Attempt to load one of the starlab plugins
-        bool loadok = false;
-
-        // 1. 模型的输入输出插件
-        loadok |= loadInputOutputPlugin(plugin);
-        // 2. 工程的输入输出插件
-        loadok |= loadProjectInputOutputPlugin(plugin);
-        // 3. Filter 插件
-        loadok |= loadFilterPlugin(plugin);
-        // 4. 装饰器插件
-        loadok |= loadDecoratePlugin(plugin);
-        // 5. Gui 插件
-        loadok |= loadGuiPlugin(plugin);
-        // 6. Mode 插件
-        loadok |= loadModePlugin(plugin);
-        // 7. 渲染插件
-        loadok |= loadRenderPlugin(plugin);
-
-        if( !loadok ) 
-            throw StarlabException("plugin " + fileName + " was not recognized as one of the declared Starlab plugin!!");
-        
-        // 所有插件都在 StarlabPlugin 中存储一份
-        StarlabPlugin* splugin = dynamic_cast<StarlabPlugin*>(plugin);
-        if(!splugin) continue;
-            
-        /// Store pointers to all plugin
-        _plugins.insert(splugin->name(),splugin);
-        
-        /// If we read here loading went ok
-        // qDebug() << "Plugin: " << fileName << " loaded succesfully";
+    for (QString filepath : pluginsDir.entryList(QDir::Files)) {
+        loadPlugin(filepath);
     }
+}
+
+/**
+ * @brief PluginManager::loadPlugin
+ * 加载指定插件
+ * @param filepath
+ */
+void PluginManager::loadPlugin(QString filepath)
+{
+    /// Attempt to load a Qt plugin
+    QPluginLoader loader(pluginsDir.absoluteFilePath(filepath));
+    qDebug("Load Plugin %s %s\n", qPrintable(filepath), loader.load()?"true":"false");
+    QObject* plugin = loader.instance();
+
+    if(!plugin){
+        // 如果插件加载失败，打印报错信息
+        qDebug("Plugin '%s' is not a proper *Qt* plugin!! %s", qPrintable(filepath), qPrintable(failurecauses_qtplugin));
+        return;
+    }
+
+    /// Attempt to load one of the starlab plugins
+    bool loadok = false;
+
+    // 1. 模型的输入输出插件
+    loadok |= loadInputOutputPlugin(plugin);
+    // 2. 工程的输入输出插件
+    loadok |= loadProjectInputOutputPlugin(plugin);
+    // 3. Filter 插件
+    loadok |= loadFilterPlugin(plugin);
+    // 4. 装饰器插件
+    loadok |= loadDecoratePlugin(plugin);
+    // 5. Gui 插件
+    loadok |= loadGuiPlugin(plugin);
+    // 6. Mode 插件
+    loadok |= loadModePlugin(plugin);
+    // 7. 渲染插件
+    loadok |= loadRenderPlugin(plugin);
+
+    if( !loadok )
+        throw StarlabException("plugin " + filepath + " was not recognized as one of the declared Starlab plugin!!");
+
+    // 所有插件都在 StarlabPlugin 中存储一份
+    StarlabPlugin* splugin = dynamic_cast<StarlabPlugin*>(plugin);
+    if(!splugin) {
+        return;
+    }
+
+    /// Store pointers to all plugin
+    _plugins.insert(splugin->name(),splugin);
+
+    /// If we read here loading went ok
+    // qDebug() << "Plugin: " << fileName << " loaded succesfully";
 }
 
 QString PluginManager::getBaseDirPath(){
@@ -181,8 +202,9 @@ bool PluginManager::loadProjectInputOutputPlugin(QObject *plugin){
     projectIOPlugins.push_back(iIO);
     
     QStringList exts = extractExtensions( iIO->name() );
-    foreach(QString ext, exts)
+    for(QString ext : exts) {
         projectExtensionToPlugin.insert(ext,iIO);
+    }
 
     return true;
 }
@@ -233,6 +255,7 @@ bool PluginManager::loadDecoratePlugin(QObject *plugin){
     _decoratePlugins.insert(iDecorate->name(), iDecorate);
     return true;
 }
+
 bool PluginManager::loadGuiPlugin(QObject* _plugin){
     GuiPlugin* plugin = qobject_cast<GuiPlugin*>(_plugin);
     if(!plugin) {

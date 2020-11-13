@@ -8,9 +8,9 @@ using namespace Starlab;
 
 /// Since we depend on the selected model, the load is minimal
 void gui_render::load(){
-    // qDebug() << "gui_render::load()";
-    renderModeGroup = new QActionGroup(this);
-    renderModeGroup->setExclusive(true);
+
+    renderActionGroup = new QActionGroup(this);
+    renderActionGroup->setExclusive(true);
     currentAsDefault = new QAction("Set current as default...",this);
     qColorDialog = nullptr;
 
@@ -25,65 +25,10 @@ void gui_render::load(){
     
     /// When document changes, we make sure render menu/toolbars are up to date    
     connect(document(), SIGNAL(hasChanged()), this, SLOT(update()));
-}
 
-/**
- * @brief gui_render::update
- * 1. 清理掉 toolbar 和 renderer
- * 2. 根据当前的 model，将可用的 Render Plugin 全部加入 toolbar
- * 3. 点亮当前选择的 renderer
- */
-void gui_render::update(){
-    // qDebug() << "gui_render::update()";
-    toolbar()->clear();
-    menu()->clear();
-
-    /// Fetch current renderer
-    Model* selectedModel = document()->selectedModel();
-    if(selectedModel == nullptr){
-        // 如果当前没有选中的模型，隐藏 ToolBar
-        toolbar()->setVisible(false);
-        return;
-    }
-    
-    Renderer* currentRenderer = selectedModel->renderer();
-    
-    /// Add render modes menu/toolbar entries
-    /// 更新 ToolBar 上当前选中的渲染 UI Button
-    for(RenderPlugin* plugin : pluginManager()->getApplicableRenderPlugins(selectedModel)){
-        QAction* action = plugin->action();
-        action->setCheckable(true);
-        
-        /// "Check" an icon
-        if(currentRenderer!=nullptr && currentRenderer->plugin() == plugin){
-            action->setChecked(true);
-        }
-        
-        renderModeGroup->addAction(action);
-        /// If it has icon.. add it to toolbar
-        if(!action->icon().isNull())
-            toolbar()->addAction(action);
-    }
-
-    /// Make toolbar visible if there is something to show
-    toolbar()->setVisible(toolbar()->actions().size() > 0);
-    
-    /// @internal menu can be added only after it has been filled :(
-    menu()->addAction(clearRenderObjects);
-    menu()->addAction(editRenderSettings);
-    menu()->addAction(currentAsDefault);
-    menu()->addAction(editModelColor);
-    menu()->addAction(editBackgroundColor);
-    menu()->addAction(toggleBackgroundEffect);
-    menu()->addSeparator();
-    menu()->addActions(renderModeGroup->actions());
-        
-    /// Disable settings link when no parameters are given
-    editRenderSettings->setDisabled(currentRenderer->parameters()->isEmpty());
-    
     /// Connect click events to change in renderer system
-    connect(renderModeGroup, SIGNAL(triggered(QAction*)),
-            this, SLOT(triggerRenderModeAction(QAction*)), Qt::UniqueConnection);
+    connect(renderActionGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(triggerRendererAction(QAction*)), Qt::UniqueConnection);
     connect(currentAsDefault, SIGNAL(triggered()),
             this, SLOT(triggerSetDefaultRenderer()), Qt::UniqueConnection);
     connect(editRenderSettings, SIGNAL(triggered()),
@@ -96,23 +41,70 @@ void gui_render::update(){
             drawArea(), SLOT(clear()), Qt::UniqueConnection);
     connect(toggleBackgroundEffect, &QAction::triggered,
             [&](){ drawArea()->toggleBackgroundEffect(); drawArea()->updateGL(); });
+
+    /// 初始化 渲染器
+    for(RenderPlugin* plugin : pluginManager()->renderPlugins()){
+
+        QAction* action = plugin->action();
+        renderPluginMap[action] = plugin;
+        renderActionGroup->addAction(action);
+        action->setCheckable(true);
+
+        /// If it has icon.. add it to toolbar
+        if(!action->icon().isNull())
+            toolbar()->addAction(action);
+    }
+
+    /// @internal menu can be added only after it has been filled :(
+    menu()->addAction(clearRenderObjects);
+    menu()->addAction(editRenderSettings);
+    menu()->addAction(currentAsDefault);
+    menu()->addAction(editModelColor);
+    menu()->addAction(editBackgroundColor);
+    menu()->addAction(toggleBackgroundEffect);
+    menu()->addSeparator();
+
+    menu()->addActions(renderActionGroup->actions());
+
+    toolbar()->setVisible(toolbar()->actions().size() > 0);
+}
+
+/**
+ * @brief gui_render::update
+ */
+void gui_render::update(){
+
+    if(!document()->selectedModel()) {
+        return;
+    }
+
+    Renderer* currentRenderer = document()->selectedModel()->renderer();
+    for(QAction* action : renderActionGroup->actions()) {
+        action->setChecked(false);
+    }
+    currentRenderer->plugin()->action()->setChecked(true);
+
+    /// Disable settings link when no parameters are given
+    editRenderSettings->setDisabled(currentRenderer->parameters()->isEmpty());
+
 }
 
 void gui_render::triggerSetDefaultRenderer(){
     // qDebug() << "gui_render::triggerSetDefaultRenderer()";
     Model* model = document()->selectedModel();    
     RenderPlugin* renderer = model->renderer()->plugin();
-    pluginManager()->setPreferredRenderer(model,renderer);
+    pluginManager()->setPreferredRenderer(model, renderer);
     QString message = QString("Preferred renderer for \"%1\" set to \"%2\"")
                               .arg(model->metaObject()->className())
                               .arg(renderer->name());
-    mainWindow()->setStatusBarMessage(message);
+    showMessage(message.toStdString().data());
 }
 
 void gui_render::trigger_editSettings(){
     Renderer* renderer = document()->selectedModel()->renderer();
     /// No renderer set (btw... weird) skip
-    if(renderer==nullptr) return;
+    if(renderer == nullptr) return;
+
     /// No parameters.. avoid useless empty widget
     if(renderer->parameters()->isEmpty()) return;
     
@@ -120,7 +112,8 @@ void gui_render::trigger_editSettings(){
     ParametersWidget* widget = new ParametersWidget(renderer->parameters(), mainWindow());
     
     /// Add a simple title
-    widget->setWindowTitle(QString("Settings for '%1'").arg(renderer->plugin()->name()));
+    widget->setWindowTitle(
+                QString("Settings for '%1'").arg(renderer->plugin()->name()));
     
     /// Behave as independent window & stay on top
     widget->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
@@ -149,10 +142,9 @@ void gui_render::instantiate_color_dialog(){
     qColorDialog = new QColorDialog();
     qColorDialog->hide();
     qColorDialog->setOption(QColorDialog::ShowAlphaChannel, true);
-    qColorDialog->setOption(QColorDialog::DontUseNativeDialog,false);
-    qColorDialog->setOption(QColorDialog::NoButtons,true);
     qColorDialog->setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
-    connect(mainWindow(), SIGNAL(destroyed()), qColorDialog, SLOT(deleteLater()));    
+    connect(mainWindow(), SIGNAL(destroyed()),
+            qColorDialog, SLOT(deleteLater()));
 }
 
 void gui_render::trigger_editBackgroundColor(){
@@ -193,11 +185,22 @@ void gui_render::liveupdate_selectedModelColor(QColor color){
     drawArea()->updateGL();        
 }
 
+/**
+ * @brief gui_render::triggerRendererAction
+ * 切换渲染器
+ * @param action
+ */
+void gui_render::triggerRendererAction(QAction* action){
 
-void gui_render::triggerRenderModeAction(QAction* action){
-    // qDebug("gui_render::triggerRenderModeAction(\"%s\")",qPrintable(action->text()));
     Model* model = document()->selectedModel();
-    RenderPlugin* plugin = pluginManager()->getRenderPlugin(action->text());
+    RenderPlugin* plugin = renderPluginMap[action];
+
+    if(!model || !plugin->isApplicable(model)) {
+        showMessage("Renderer <%s> is not suitable for current model",
+                    plugin->name().toStdString().data());
+        return;
+    }
+
     model->setRenderer(plugin);
     drawArea()->updateGL();    
 }

@@ -34,19 +34,19 @@ protected:
     /// Inside your create initialize any QObject subclass with this parent for auto memory management
     /// @internal I use QWidget instead of QObject so that I can automate Widget memory management as well
     QWidget* parent;
-    ModePlugin() :parent(NULL){}
+    ModePlugin() :parent(nullptr){}
 private:
     friend class Starlab::MainWindow;
     friend class gui_mode;
     void __internal_create(){
-        Q_ASSERT(parent==NULL);
+        Q_ASSERT(parent == nullptr);
         parent = new QWidget(mainWindow());
         create();
     }
     void __internal_destroy(){ 
-        Q_ASSERT(parent!=NULL);
+        Q_ASSERT(parent != nullptr);
         delete parent;
-        parent = NULL;
+        parent = nullptr;
         destroy();
     }
 /// @} 

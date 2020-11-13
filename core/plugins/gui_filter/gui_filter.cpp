@@ -16,11 +16,17 @@
  * 加载 filter 按钮
  */
 void gui_filter::load(){
+
+    filterActionGroup = new QActionGroup(mainWindow()->filterMenu);
+    filterActionGroup->setExclusive(false);
+
     /// Fill the menu with plugin names and make connections
-    for(FilterPlugin* plugin: pluginManager()->filterPlugins()){
+    for(FilterPlugin* plugin : pluginManager()->filterPlugins()){
 
         QAction* action = plugin->action();
         QString pluginName = plugin->name();
+        filterPluginMap[action] = plugin;
+        filterActionGroup->addAction(action);
 
         QMenu * assignedMenu = getParentMenu(pluginName);
         action->setText(getActionName(pluginName));
@@ -29,49 +35,53 @@ void gui_filter::load(){
         if(!action->icon().isNull())
             mainWindow()->filterToolbar->addAction(action);
 
-        /// Connect after it has been added        
-        connect(action, SIGNAL(triggered()), this, SLOT(startFilter()));
     }
+
+    connect(filterActionGroup, SIGNAL(triggered(QAction*)),
+            this, SLOT(startFilter(QAction*)), Qt::UniqueConnection);
+
 }
 
 /**
  * @brief gui_filter::startFilter
- * that setup the dialogs and asks for parameters
- * 当点击某插件时，更新其 UI
+ * 触发指定 Filter
+ * @param action
  */
-void gui_filter::startFilter() {
+void gui_filter::startFilter(QAction *action)
+{
+    FilterPlugin* filterPlugin = filterPluginMap[action];
+    if(!filterPlugin) {
+        showMessage("Filter Plugin <%s> is not existed.",
+                    action->text().toStdString().data());
+        return;
+    }
+
+    if(!filterPlugin->isApplicable(document()->selectedModel())) {
+        showMessage("Current selectedModel is not suitable for <%s>",
+                    filterPlugin->name().toStdString().data());
+        return;
+    }
+
     try
     {
-        /// TODO: 暂停其他插件的工作状态
-
-        // 找到触发信号的 plugin
-        QAction* action = qobject_cast<QAction*>(sender());
-        FilterPlugin* iFilter = qobject_cast<FilterPlugin*>(action->parent());
-        if(!iFilter) return;
-        
-        /// Even though it's on the stack we associate it with the widget 
-        /// in such a way that memory will get deleted when widget goes out 
-        /// of scope
         /// 构建富文本参数 UI
+        /// TODO: 阻止重复构建 UI
         RichParameterSet* parameters = new RichParameterSet();
-        iFilter->initParameters(parameters);
-        int needUserInput = !parameters->isEmpty();
-        
-        /// I do not need the user input, just run it
-        switch(needUserInput){
-            case false:
-                delete parameters;
-                parameters = nullptr;
-                execute(iFilter, nullptr);
-                break;
-            case true:
-                FilterDockWidget* widget = new FilterDockWidget(iFilter,parameters,mainWindow());
-                connect(widget,SIGNAL(execute(FilterPlugin*,RichParameterSet*)), this,SLOT(execute(FilterPlugin*,RichParameterSet*)));            
-                mainWindow()->addDockWidget(Qt::RightDockWidgetArea, widget);
-                widget->show();
-                break;
+        filterPlugin->initParameters(parameters);
+
+        if(parameters->isEmpty()){
+            delete parameters;
+            parameters = nullptr;
+            execute(filterPlugin, nullptr);
+        }else {
+            // 构建自动生成 UI
+            FilterDockWidget* widget = new FilterDockWidget(filterPlugin,parameters,mainWindow());
+            connect(widget, SIGNAL(execute(FilterPlugin*,RichParameterSet*)),
+                    this, SLOT(execute(FilterPlugin*,RichParameterSet*)));
+            mainWindow()->addDockWidget(Qt::RightDockWidgetArea, widget);
+            widget->show();
         }
-    } 
+    }
     STARLAB_CATCH_BLOCK
 }
 
@@ -82,26 +92,26 @@ void gui_filter::startFilter() {
  * @param parameters
  */
 void gui_filter::execute(FilterPlugin* iFilter, RichParameterSet* parameters) {
-    if(!iFilter->isApplicable(document()->selectedModel())) 
+    if(!iFilter->isApplicable(document()->selectedModel()))
         throw StarlabException("Filter is not applicable");
 
     /// @todo save the current filter and its parameters in the history
     // meshDoc()->filterHistory.actionList.append(qMakePair(iFilter->name(),params));
     
     /// @todo re-link the progress bar
-    // qb->reset();    
+    // qb->reset();
     
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     document()->pushBusy();
-        try {
-            QElapsedTimer t;
-            t.start();
+    try {
+        QElapsedTimer t;
+        t.start();
 
-            iFilter->applyFilter(parameters);
+        iFilter->applyFilter(parameters);
 
-            mainWindow()->setStatusBarMessage("Filter '"+ iFilter->name() +"' Executed " + QString("(%1ms).").arg(t.elapsed()),5000);
-        } STARLAB_CATCH_BLOCK
-    document()->popBusy();
+        mainWindow()->setStatusBarMessage("Filter '"+ iFilter->name() +"' Executed " + QString("(%1ms).").arg(t.elapsed()),5000);
+    } STARLAB_CATCH_BLOCK
+            document()->popBusy();
     qApp->restoreOverrideCursor();
     mainWindow()->closeProgressBar();
 }

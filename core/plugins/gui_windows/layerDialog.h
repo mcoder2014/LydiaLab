@@ -23,7 +23,7 @@ private:
     StarlabDocument* document(){ return mainWindow->document(); }
 public:
     ~LayerDialog();
-    LayerDialog(Starlab::MainWindow* mainwindow = 0);
+    LayerDialog(Starlab::MainWindow* mainwindow = nullptr);
     void updateDecoratorParsView();
     
 public slots:
@@ -33,7 +33,8 @@ public slots:
     /// @todo consider removing the parameter for this reason it might end up being NULL at times.
     void adaptLayout(QTreeWidgetItem * item);
     
-    void modelItemClicked(QTreeWidgetItem * , int );
+    // 选择模型
+    void modelItemClicked(QTreeWidgetItem * , int column_number);
     void showEvent( QShowEvent * event );
     void showContextMenu(const QPoint& pos);
 
