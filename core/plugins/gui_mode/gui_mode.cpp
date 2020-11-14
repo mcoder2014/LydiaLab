@@ -32,7 +32,7 @@ void gui_mode::load(){
     connect(document(), SIGNAL(hasChanged()),
             this, SLOT(documentChanged()), Qt::UniqueConnection);
 
-    /// When document changes, we make sure render menu/toolbars are up to date    
+    /// When document changes, we make sure render menu/toolbars are up to date
     connect(document(), SIGNAL(hasChanged()),
             this, SLOT(update()), Qt::UniqueConnection);
     
@@ -54,27 +54,64 @@ void gui_mode::loadPlugins()
     mainWindow()->modeMenu->addAction(defaultModeAction);
     modeActionGroup->addAction(defaultModeAction);
 
-    /// Re-fill the menu with plugin names and make connections
+    /// Fill the menu with plugin names and make connections
+    /// 自动构建二级菜单
     for(ModePlugin* plugin : pluginManager()->modePlugins()){
 
         QAction* action = plugin->action();
-        modePluginMap[action] = plugin;
         action->setCheckable(true);
+        action->setText(getActionName(plugin->name()));
+        modePluginMap[action] = plugin;
 
-        /// Make GUI elements exclusive
         modeActionGroup->addAction(action);
 
         /// Add to menus and toolbars
-        mainWindow()->modeMenu->addAction(action);
+        QMenu* parentMenu = getParentMenu(plugin->name());
+        parentMenu->addAction(action);
 
         if(!action->icon().isNull()) {
             mainWindow()->modeToolbar->addAction(action);
         }
     }
 
+    /// 二级菜单放置在 Action 后面
+    mainWindow()->modeMenu->addSeparator();
+    for(std::pair<QString, QMenu*> pair : secondMenuMap) {
+        mainWindow()->modeMenu->addMenu(pair.second);
+    }
+
     /// Remember trackball is always there, thus > 1
     bool showtoolbar = (mainWindow()->modeToolbar->children().size() > 1);
     mainWindow()->modeToolbar->setVisible(showtoolbar);
+}
+
+QMenu *gui_mode::getParentMenu(QString pluginName)
+{
+    // 根据名称分类 名称规则 "category | filter name" 仅有一个 '|'
+    if(!pluginName.contains("|")){
+        return mainWindow()->modeMenu;
+    }
+
+    // Split by delimiter, filter category then filter name
+    QStringList pluginNames = pluginName.split("|");
+    QString catName = pluginNames.front().trimmed();
+
+    // Try to locate exciting submenu
+    if(secondMenuMap.find(catName) == secondMenuMap.end()) {
+        QMenu *menu = new QMenu(catName);
+        secondMenuMap[catName] = menu;
+    }
+
+    return secondMenuMap[catName];
+}
+
+QString gui_mode::getActionName(QString pluginName)
+{
+    if(!pluginName.contains("|"))
+        return pluginName.trimmed();
+
+    QStringList pluginNames = pluginName.split("|");
+    return pluginNames.back().trimmed();
 }
 
 /**
@@ -118,7 +155,7 @@ void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
 
     switch(state){
 
-    case DEFAULT: 
+    case DEFAULT:
         // qDebug() << "[DEFAULT]";
         Q_ASSERT(lastActiveModeAction==nullptr);
         Q_ASSERT(!mainWindow()->hasModePlugin());
@@ -128,7 +165,7 @@ void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
         defaultModeAction->setChecked(true);
         break;
 
-    case MODE: 
+    case MODE:
         // qDebug() << "[MODE]";
         Q_ASSERT(mainWindow()->hasModePlugin());
         for(QAction* action : modeActionGroup->actions())
@@ -139,7 +176,7 @@ void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
         action->setChecked(true);
         break;
 
-    case SUSPENDED: 
+    case SUSPENDED:
         // qDebug() << "[SUSPENDED]";
         Q_ASSERT(mainWindow()->hasModePlugin());
         Q_ASSERT(lastActiveModeAction != nullptr);
@@ -150,7 +187,7 @@ void gui_mode::enterState(STATE state, QAction* action /*=NULL*/){
         lastActiveModeAction->setChecked(true);
         lastActiveModeAction->setEnabled(false);
         break;
-    }    
+    }
 
     // 更新真实的状态
     this->state = state;
@@ -184,7 +221,7 @@ void gui_mode::actionClicked(QAction *action){
             }
 
             /// check applicable
-            if(!plugin->isApplicable()) {
+            if(!document()->selectedModel() && !plugin->isApplicable()) {
                 showMessage("The mode plugin <%s> is not applicable for current model",
                             plugin->name().toStdString().data());
 
@@ -207,11 +244,11 @@ void gui_mode::actionClicked(QAction *action){
                 showMessage("Creating plugin: '%s' FAILED!", qPrintable(action->text()));
                 action->setChecked(false);
                 throw;
-            } 
+            }
         }
         break;
 
-    case MODE: 
+    case MODE:
         /// ---------------- TERMINATION --------------------
         /// 终止，进入状态 DEFAULT
         if(action == lastActiveModeAction){
@@ -222,7 +259,7 @@ void gui_mode::actionClicked(QAction *action){
             lastActiveModeAction = nullptr;
             enterState(DEFAULT);
             showMessage("Terminated plugin: '%s'",qPrintable(action->text()));
-            break;            
+            break;
         }
 
         /// ---------------- SUSPENSION --------------------
@@ -239,7 +276,7 @@ void gui_mode::actionClicked(QAction *action){
         }
         break;
 
-    case SUSPENDED: 
+    case SUSPENDED:
         /// ---------------- RESUMING --------------------
         /// 继续，进入状态 MODE
         Q_ASSERT(action == defaultModeAction);
@@ -270,7 +307,7 @@ void gui_mode::documentChanged(){
     case DEFAULT:
         return;
 
-    /// And there was an active plugin
+        /// And there was an active plugin
     case MODE:
         /// 更新 Mode 响应
         if(!modePlugin->documentChanged()){
@@ -279,7 +316,7 @@ void gui_mode::documentChanged(){
         }
         return;
 
-    /// There was a suspended plugin
+        /// There was a suspended plugin
     case SUSPENDED:
         /// 当 mode 是暂停状态时，直接停掉插件
         modePlugin->__internal_destroy();
@@ -287,6 +324,6 @@ void gui_mode::documentChanged(){
         mainWindow()->removeModePlugin();
         lastActiveModeAction = nullptr;
         enterState(DEFAULT);
-        return;    
+        return;
     }
 }

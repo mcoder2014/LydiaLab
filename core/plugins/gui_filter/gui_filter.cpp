@@ -20,21 +20,26 @@ void gui_filter::load(){
     filterActionGroup = new QActionGroup(mainWindow()->filterMenu);
     filterActionGroup->setExclusive(false);
 
-    /// Fill the menu with plugin names and make connections
+    /// 加入插件到 Menu 和 图标
+    /// 自动构建二级菜单
     for(FilterPlugin* plugin : pluginManager()->filterPlugins()){
 
         QAction* action = plugin->action();
-        QString pluginName = plugin->name();
+        action->setText(getActionName(plugin->name()));
         filterPluginMap[action] = plugin;
         filterActionGroup->addAction(action);
 
-        QMenu * assignedMenu = getParentMenu(pluginName);
-        action->setText(getActionName(pluginName));
-        assignedMenu->addAction(action);
+        QMenu * parentMenu = getParentMenu(plugin->name());
+        parentMenu->addAction(action);
         
         if(!action->icon().isNull())
             mainWindow()->filterToolbar->addAction(action);
+    }
 
+    // 二级菜单放在 Action 后方
+    mainWindow()->filterMenu->addSeparator();
+    for(std::pair<QString, QMenu*> pair : secondMenuMap) {
+        mainWindow()->filterMenu->addMenu(pair.second);
     }
 
     connect(filterActionGroup, SIGNAL(triggered(QAction*)),
@@ -118,32 +123,22 @@ void gui_filter::execute(FilterPlugin* iFilter, RichParameterSet* parameters) {
 
 QMenu *gui_filter::getParentMenu(QString filterName)
 {
-    // 获得 该 plugin 应该插入的 Menu 位置
-    QMenu * assignedMenu = mainWindow()->filterMenu;
     // 根据名称分类 名称规则 "category | filter name" 仅有一个 '|'
-    if(filterName.contains("|"))
-    {
-        // Split by delimiter, filter category then filter name
-        QStringList pluginNames = filterName.split("|");
-        QString catName = pluginNames.front().trimmed();
-
-        // Try to locate exciting submenu
-        QMenu * m = nullptr;
-        for(QMenu * child : assignedMenu->findChildren<QMenu*>()){
-            QString menuName = child->title();
-            if(menuName == catName){
-                m = child;
-                break;
-            }
-        }
-        if(m == nullptr) {
-            m = mainWindow()->filterMenu->addMenu(catName);
-        }
-
-        assignedMenu = m;
+    if(!filterName.contains("|")){
+        return mainWindow()->filterMenu;
     }
 
-    return assignedMenu;
+    // Split by delimiter, filter category then filter name
+    QStringList pluginNames = filterName.split("|");
+    QString catName = pluginNames.front().trimmed();
+
+    // Try to locate exciting submenu
+    if(secondMenuMap.find(catName) == secondMenuMap.end()) {
+        QMenu *menu = new QMenu(catName);
+        secondMenuMap[catName] = menu;
+    }
+
+    return secondMenuMap[catName];
 }
 
 QString gui_filter::getActionName(QString filterName)

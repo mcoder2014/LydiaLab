@@ -16,54 +16,59 @@ class gui_mode : public GuiPlugin{
     Q_PLUGIN_METADATA(IID "gui_mode.plugin.starlab")
     Q_INTERFACES(GuiPlugin)
 
-/// The gui entry that suspends a plugin
+    /// The gui entry that suspends a plugin
 public:
-    // 空 Action 默认 mode
+    // 默认 mode
     QAction* defaultModeAction;
 
-    // UI
+    // Action Group 用作触发入口
     QActionGroup* modeActionGroup;
+
+    // 构建二级菜单 map
+    map<QString, QMenu*> secondMenuMap;
 
     // action -> modeplugin
     map<QAction*, ModePlugin*> modePluginMap;
-        
-/// plugin constructor
-void load();
+
+    // plugin constructor
+    void load();
 
 private:
 
-void loadPlugins();
+    void loadPlugins();
+    QMenu *getParentMenu(QString pluginName);
+    QString getActionName(QString pluginName);
 
 public slots:
     void update();
 
-/// @{ State machine to manage suspension
+    /// @{ State machine to manage suspension
 private:
-    /// 状态机的状态
+    // 状态机的状态
     enum STATE {
         DEFAULT = 0,
         SUSPENDED = 1,
         MODE = 2};
 
-    /// The current machinse state
+    // The current machinse state
     STATE state;
 
-    /// The action that was suspended
+    // The action that was suspended
     QAction* lastActiveModeAction;
 
-    /// Called when entering a state
+    // Called when entering a state
     void enterState(STATE state, QAction* action=nullptr);
 
 public slots:
-    /// This causes changes of states
+    // This causes changes of states
     void actionClicked(QAction *action);
-/// @}
+    /// @}
 
 public slots:
 
-    /// Responds to a changes in document. If the plugin specifies its own way 
-    /// to respond to the event, this is used. This can be done by overloading 
-    /// ModePlugin::documenChanged(). If no custom behavior is provided, we simply 
+    /// Responds to a changes in document. If the plugin specifies its own way
+    /// to respond to the event, this is used. This can be done by overloading
+    /// ModePlugin::documenChanged(). If no custom behavior is provided, we simply
     /// call ModePlugin::destroy(), ModePlugin::create() in succession.
     void documentChanged();
 };

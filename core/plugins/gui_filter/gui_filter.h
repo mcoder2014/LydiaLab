@@ -21,8 +21,12 @@ public:
     /// plugin constructor
     virtual void load();
     
+    // Action Group 用于触发
     QActionGroup *filterActionGroup;
+    // 记录寻找方法
     map<QAction*, FilterPlugin*> filterPluginMap;
+    // 构建二级菜单 map
+    map<QString, QMenu*> secondMenuMap;
 
 private slots:
     // 点击 Filter
