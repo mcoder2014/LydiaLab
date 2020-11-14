@@ -27,6 +27,7 @@ void Document::pushBusy(){
 /**
  * @brief Document::popBusy
  * 解除 busy 模型，可能发送 hasChanged 信号
+ * popBusy 是一个重量级函数，大量 slots 绑定在 hasChanged 上
  */
 void Document::popBusy(){
     if(_isBusy>=1)
@@ -94,14 +95,14 @@ void Document::deleteModel(Model *model){
 
     /// Update selection (if necessary)
     if(_selectedModel == model)
-        _selectedModel = (_models.size()>0)?_models[0] : NULL;
+        _selectedModel = (_models.size()>0)?_models[0] : nullptr;
     popBusy();
 }
 
 void Document::clear(){
     pushBusy();
     /// Delete models individually
-    foreach(Model* model, _models){
+    for(Model* model : _models){
         model->deleteLater();
     }
     /// Clear the list
@@ -115,6 +116,11 @@ Model* Document::selectedModel(){
     return _selectedModel;
 }
 
+/**
+ * @brief Document::setSelectedModel
+ * 设置模型为选中模型
+ * @param model
+ */
 void Document::setSelectedModel(Model* model){
     /// Avoid trivial updates
     if(_selectedModel == model)

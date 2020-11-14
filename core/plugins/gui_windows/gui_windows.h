@@ -18,7 +18,7 @@ private:
     LayerDialog* layerDialog;
     
 public:
-    void load(){
+    void load() override{
         /// Sets up the layer dialog, always allocated (usually is just hidden)
         {
             layerDialog = new LayerDialog(mainWindow());
@@ -42,8 +42,9 @@ public:
         }
     }
         
-    virtual void update(){
-        if(layerDialog->isVisible())
+    void update() override{
+        if(layerDialog->isVisible()) {
             layerDialog->updateTable();
+        }
     }
 };

@@ -22,26 +22,24 @@ private:
     Starlab::MainWindow* mainWindow;
     StarlabDocument* document(){ return mainWindow->document(); }
 public:
-    ~LayerDialog();
+    ~LayerDialog() override;
     LayerDialog(Starlab::MainWindow* mainwindow = nullptr);
+    LayerDialog(const LayerDialog& ) = delete ;
     void updateDecoratorParsView();
     
 public slots:
     /// Fills/Updates the layer table with content
     void updateTable();
-    /// Restores the size of columns according to their content 
-    /// @todo consider removing the parameter for this reason it might end up being NULL at times.
-    void adaptLayout(QTreeWidgetItem * item);
-    
+
     // 选择模型
-    void modelItemClicked(QTreeWidgetItem * , int column_number);
-    void showEvent( QShowEvent * event );
+    void modelItemClicked(QTreeWidgetItem * , int columnNumber);
+    void showEvent( QShowEvent * event ) override;
     void showContextMenu(const QPoint& pos);
 
 /// @{ slots for buttons at bottom of layer dialog
 private slots:
-    void on_moveModelUp_released();
-    void on_moveModelDown_released();
-    void on_deleteModel_released();
+    void onMoveModelUpReleased();
+    void onMoveModelDownReleased();
+    void onDeleteModelReleased();
 /// @}
 };
