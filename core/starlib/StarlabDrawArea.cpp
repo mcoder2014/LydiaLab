@@ -19,20 +19,24 @@ DrawArea* DrawArea::_staticInstance = nullptr;
 
 /**
  * @brief DrawArea::update
- * 最大规模的刷新
- * Updates the draw area, this is not the OpenGL update, this updates all
- * the metadata needed by all models for correct rendering!!
+ * 最大规模的刷新，与 updateGL 不同
+ * 它会将所有的 render 重新设置
+ * 1. 渲染所有模型
+ *  a. 为没有渲染器的模型创建渲染器
+ *  b. 调用渲染器工作
+ * 2. updateGL()
  */
 void DrawArea::update(){
+
+    qDebug() << __FILE__ << __PRETTY_FUNCTION__;
+
     /// Don't update on a busy document
     if(document()->isBusy()) {
         return;
     }
 
-    /// @internal Initialization can act on busy document
-    /// Update the metadata needed by the renderer
-    /// e.g. stick data in vertex buffer.. etc..
     for(Model* model : document()->models()){
+
         /// Create instance if renderer missing
         if(model->renderer() == nullptr) {
             QString name = pluginManager()->getPreferredRenderer(model);
@@ -44,7 +48,6 @@ void DrawArea::update(){
         }
     }
 
-    /// This will force a "paint" of the GL window
     updateGL();
 }
 
@@ -242,6 +245,9 @@ void DrawArea::draw_models(){
  * 绘制整个场景
  */
 void DrawArea::draw(){
+
+    qDebug() << __PRETTY_FUNCTION__;
+
     glEnable(GL_MULTISAMPLE); ///< Enables anti-aliasing
 
     /// Background effect

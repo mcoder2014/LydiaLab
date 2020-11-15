@@ -49,6 +49,9 @@ Eigen::AlignedBox3d Document::bbox() {
 
 /**
  * @brief Document::addModel
+ * 加入模型
+ * 1. 一定会产生 hasChanged 信号
+ * 2. 当加入第一个模型时，一定会产生 selectionChanged 信号
  * @param model
  */
 void Document::addModel(Model *model){
@@ -57,11 +60,11 @@ void Document::addModel(Model *model){
         throw StarlabException("Attempted to add a NULL model to the document");
     }
     _models.append(model);
-    
+    popBusy();
+
     /// First model added is selection
     if(_models.size()==1)
         setSelectedModel(model);
-    popBusy();
 }
 
 Model *Document::getModel(QString name)

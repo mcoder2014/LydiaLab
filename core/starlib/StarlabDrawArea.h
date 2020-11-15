@@ -62,18 +62,18 @@ public slots:
     void setIsoProjection();
     void toggleBackgroundEffect();
 private:
-    void init();              ///< Initializes the scene (qGLViewer)
+    void init() override;              ///< Initializes the scene (qGLViewer)
 public:
-    void draw();              ///< Draws the whole scene
+    void draw() override;              ///< Draws the whole scene
     void draw_models();       ///< Draws ONLY the models in the scene (no decorators, no plugins, etc...) 
 /// @}
 
 /// @{ Selection / Picking
 private:
-    void drawWithNames();     ///< Draws to the symbols buffer
+    void drawWithNames() override;     ///< Draws to the symbols buffer
 private:
-    void endSelection(const QPoint&);
-    void postSelection(const QPoint&);
+    void endSelection(const QPoint&) override;
+    void postSelection(const QPoint&) override;
 /// @}
     
 public:
@@ -82,12 +82,12 @@ public:
 
 /// @{ ModePlugin management
 private:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 /// @}
 
 /// @{ Default mouse & keyboard management
-    void mouseDoubleClickEvent( QMouseEvent * e );
-    void wheelEvent( QWheelEvent * e );
+    void mouseDoubleClickEvent( QMouseEvent * e ) override;
+    void wheelEvent( QWheelEvent * e ) override;
 /// @}
         
 /// @{ Scene-wide rendering elements (i.e. used for debug)

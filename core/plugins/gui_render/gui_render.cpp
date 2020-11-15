@@ -23,8 +23,9 @@ void gui_render::load(){
                        "are typically used to visually debug the algorithms. "\
                        "This function allows you to clear them from the scene.");
     
-    /// When document changes, we make sure render menu/toolbars are up to date    
-    connect(document(), SIGNAL(hasChanged()), this, SLOT(update()));
+    // 选择的模型发生变化 -> 调用 update
+    connect(document(), SIGNAL(selectionChanged(Model*)),
+            this, SLOT(update()));
 
     /// Connect click events to change in renderer system
     connect(renderActionGroup, SIGNAL(triggered(QAction*)),

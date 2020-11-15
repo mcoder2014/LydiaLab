@@ -298,7 +298,9 @@ void gui_mode::actionClicked(QAction *action){
  */
 void gui_mode::documentChanged(){  
     // qDebug("gui_mode::documentChanged()");
-    if(!mainWindow()->hasModePlugin()) return;
+    if(!mainWindow()->hasModePlugin())
+        return;
+
     ModePlugin* modePlugin = mainWindow()->getModePlugin();
 
     switch(state){

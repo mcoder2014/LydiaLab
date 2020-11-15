@@ -210,6 +210,9 @@ QDir Application::executionDirectory(){
 
 /**
  * @brief Application::loadModelUsingPlugin
+ * 使用插件加载模型
+ * 1. 会发送 selectionChanged 信号
+ * 2. 会发送 hasChanged 信号
  * @param path
  * @param plugin
  * @return
@@ -219,9 +222,6 @@ bool Application::loadModelUsingPlugin(QString path, InputOutputPlugin *plugin)
     /// Checks file existence
     plugin->checkReadable(path);
 
-    // 加锁
-    document()->pushBusy();
-
     Model* newModel = plugin->open(path);
     if(newModel==nullptr) {
         throw StarlabException("Attempted to create a nullptr model");
@@ -229,9 +229,6 @@ bool Application::loadModelUsingPlugin(QString path, InputOutputPlugin *plugin)
     /// Update the bounding box (for rendering reasons)
     newModel->updateBoundingBox();
     document()->addModel( newModel );
-
-    // 释放锁
-    document()->popBusy();
 
     // 选择新载入的模型，并渲染
     document()->setSelectedModel( newModel );

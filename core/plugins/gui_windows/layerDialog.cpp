@@ -9,16 +9,16 @@ using namespace std;
 using namespace Starlab;
 
 /// Basic widget item of the layers interface for models
-class LayersWidgetModelItem : public QTreeWidgetItem{
+class LayersWidgetModelItem
+        :public QTreeWidgetItem{
 public:
-    /// @todo change to Model const*
-    Model& model;
+    Model* model;
 public:
-    LayersWidgetModelItem(Model& _model) :model(_model){
-        if( model.isVisible) setIcon(0,QIcon(":/images/layer_eye_open.png"));
-        if(!model.isVisible) setIcon(0,QIcon(":/images/layer_eye_close.png"));
-        QString modelname = model.name;
-        if (model.isModified) modelname += " *";
+    LayersWidgetModelItem(Model* _model) :model(_model){
+        if( model->isVisible) setIcon(0,QIcon(":/images/layer_eye_open.png"));
+        if(!model->isVisible) setIcon(0,QIcon(":/images/layer_eye_close.png"));
+        QString modelname = model->name;
+        if (model->isModified) modelname += " *";
         setText(1, modelname);
     }
 };
@@ -67,11 +67,11 @@ void LayerDialog::modelItemClicked(QTreeWidgetItem* item , int columnNumber){
     if(layerItem){
         if( columnNumber == 0 ) {
             // 触发可见不可见
-            layerItem->model.isVisible = !layerItem->model.isVisible;
+            layerItem->model->isVisible = !layerItem->model->isVisible;
         }
         else if( columnNumber > 0  ) {
             // 触发选中状态
-            mainWindow->document()->setSelectedModel( &( layerItem->model ) );
+            mainWindow->document()->setSelectedModel(layerItem->model);
         }
     }
 
@@ -108,7 +108,7 @@ void LayerDialog::updateTable(){
         // Ask model to generate an item
         QTreeWidgetItem* item = model->getLayersWidgetItem();
         if(item==nullptr) {
-            item = new LayersWidgetModelItem(*model);
+            item = new LayersWidgetModelItem(model);
         }
         model->decorateLayersWidgedItem(item);
 
