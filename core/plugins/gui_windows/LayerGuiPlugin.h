@@ -9,7 +9,7 @@
     #define DEB if(false)
 #endif
 
-class gui_windows : public GuiPlugin{
+class LayerGuiPlugin : public GuiPlugin{
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "gui_windows.plugin.starlab")
     Q_INTERFACES(GuiPlugin)
@@ -44,7 +44,7 @@ public:
         
     void update() override{
         if(layerDialog->isVisible()) {
-            layerDialog->updateTable();
+            layerDialog->updateDialog();
         }
     }
 };

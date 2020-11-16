@@ -5,6 +5,8 @@
 #include "Model.h"
 #include "ui_layerDialog.h"
 
+#include "StarlabDrawArea.h"
+
 using namespace std;
 using namespace Starlab;
 
@@ -37,11 +39,23 @@ LayerDialog::LayerDialog(MainWindow* mainWindow) :
     
     // When document changes -> update layer table
     connect(mainWindow->document(), SIGNAL(hasChanged()),
-            this, SLOT(updateTable()));
+            this, SLOT(updateDialog()));
     
     // 鼠标左键点击
     connect(ui->modelTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
             this, SLOT(modelItemClicked(QTreeWidgetItem * , int )));
+
+    // 上移模型
+    connect(ui->moveModelUp, SIGNAL(clicked(bool)),
+            this, SLOT(onMoveModelUpReleased()));
+
+    // 下移模型
+    connect(ui->moveModelDown, SIGNAL(clicked(bool)),
+            this, SLOT(onMoveModelDownReleased()));
+
+    // 删除模型
+    connect(ui->deleteModel, SIGNAL(clicked(bool)),
+            this, SLOT(onDeleteModelReleased()));
 
     /// TODO： 实现鼠标右键交互
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -69,17 +83,16 @@ void LayerDialog::modelItemClicked(QTreeWidgetItem* item , int columnNumber){
             // 触发可见不可见
             layerItem->model->isVisible = !layerItem->model->isVisible;
         }
-        else if( columnNumber > 0  ) {
-            // 触发选中状态
-            mainWindow->document()->setSelectedModel(layerItem->model);
-        }
+
+        // 触发选择状态
+        mainWindow->document()->setSelectedModel(layerItem->model);
     }
 
-    updateTable();
+    updateDialog();
 }
 
 void LayerDialog::showEvent (QShowEvent* /* event*/){
-    updateTable();
+    updateDialog();
 }
 
 /**
@@ -91,10 +104,10 @@ void LayerDialog::showContextMenu(const QPoint& /*pos*/){
 }
 
 /**
- * @brief LayerDialog::updateTable
+ * @brief LayerDialog::updateDialog
  * TODO: 不需要每次都重新建立 UI
  */
-void LayerDialog::updateTable(){
+void LayerDialog::updateDialog(){
     // qDebug() << __FUNCTION__ << __LINE__ << __FILE__;
     
     //TODO:Check if the current viewer is a GLArea
@@ -120,6 +133,9 @@ void LayerDialog::updateTable(){
         // Add it to the tree
         ui->modelTreeWidget->addTopLevelItem(item);
     }
+
+    // TODO: 解决硬耦合
+    mainWindow->drawArea()->updateGL();
 }
 
 /**
@@ -146,5 +162,5 @@ void LayerDialog::onDeleteModelReleased(){
     Document* document = mainWindow->document();
     Model* model = document->selectedModel();
     document->deleteModel(model);
-    updateTable();
+    updateDialog();
 }

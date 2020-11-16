@@ -29,7 +29,7 @@ public:
     
 public slots:
     /// Fills/Updates the layer table with content
-    void updateTable();
+    void updateDialog();
 
     // 选择模型
     void modelItemClicked(QTreeWidgetItem * , int columnNumber);

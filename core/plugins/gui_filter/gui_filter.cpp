@@ -116,7 +116,8 @@ void gui_filter::execute(FilterPlugin* iFilter, RichParameterSet* parameters) {
 
         mainWindow()->setStatusBarMessage("Filter '"+ iFilter->name() +"' Executed " + QString("(%1ms).").arg(t.elapsed()),5000);
     } STARLAB_CATCH_BLOCK
-            document()->popBusy();
+
+    document()->popBusy();
     qApp->restoreOverrideCursor();
     mainWindow()->closeProgressBar();
 }

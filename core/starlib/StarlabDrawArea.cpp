@@ -246,8 +246,6 @@ void DrawArea::draw_models(){
  */
 void DrawArea::draw(){
 
-    qDebug() << __PRETTY_FUNCTION__;
-
     glEnable(GL_MULTISAMPLE); ///< Enables anti-aliasing
 
     /// Background effect

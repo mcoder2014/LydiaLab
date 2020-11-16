@@ -10,10 +10,12 @@
 #
 # @interal Meaning of $$PWD
 #   - within a function call PWD is relative to the project file
+#     在函数调用时，其中的 PWD 变量时相对于 project 文件路径的
 #   - within the body of this file it is the path of this file
+#     在文件主题里的 PWD 变量时相对与 prf/pri 文件的
 #-------------------------------------------------------------------------------
 
-# Define Output Path
+# Define Output Path 定义输出路径
 BASE_PATH = $$(BASE_PATH)
 unix: BASE_PATH = $$(HOME)/Desktop
 
@@ -21,6 +23,8 @@ unix: BASE_PATH = $$(HOME)/Desktop
 #
 # Here we make sure your system compiler/configuration is compatible with Starlab
 # If this is not the case an error will be generated.
+#
+# 即，当前仅支持 win mac linux
 #
 # @todo perfect all the rules
 # @todo add possibility to disable this check
