@@ -158,6 +158,10 @@ public:
 /// @{ Extra exposed functionality
     /// @brief Removes vertex
     void remove_vertex(Vertex v);
+    /// @brief Remove face
+    void remove_face(Face face);
+    /// @brief remove edge
+    void remove_edge(Edge edge);
 /// @}
 };
 

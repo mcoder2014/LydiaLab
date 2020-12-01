@@ -432,14 +432,12 @@ add_face(const std::vector<Vertex>& vertices)
     unsigned int             i, ii, n((int)vertices.size()), id;
     std::vector<Halfedge>    halfedges(n);
     std::vector<bool>        is_new(n), needs_adjust(n, false);
-    Halfedge                 inner_next, inner_prev,
-    outer_next, outer_prev,
-    boundary_next, boundary_prev,
-    patch_start, patch_end;
+    Halfedge    inner_next, inner_prev, outer_next, outer_prev,
+    boundary_next, boundary_prev, patch_start, patch_end;
 
     // cache for set_next_halfedge and vertex' set_halfedge
-    typedef std::pair<Halfedge, Halfedge>  NextCacheEntry;
-    typedef std::vector<NextCacheEntry>    NextCache;
+    using NextCacheEntry = std::pair<Halfedge, Halfedge> ;
+    using NextCache = std::vector<NextCacheEntry>;
 
     NextCache    next_cache;
     next_cache.reserve(3*n);
@@ -1310,21 +1308,23 @@ remove_loop(Halfedge h)
 //-----------------------------------------------------------------------------
 
 
-void
-Surface_mesh::
-garbage_collection()
+/**
+ * @brief Surface_mesh::garbage_collection
+ * 垃圾回收算法，真实的清空数据
+ */
+void Surface_mesh::garbage_collection()
 {
     if (!garbage_) return;
 
-    int  i, i0, i1,
-    nV(vertices_size()),
-    nE(edges_size()),
-    nH(halfedges_size()),
-    nF(faces_size());
+    int  i, i0, i1;
+    int numVertices(vertices_size());
+    int numEdge(edges_size());
+    int numHalfEdge(halfedges_size());
+    int numFace(faces_size());
 
-    Vertex    v;
-    Halfedge  h;
-    Face      f;
+    Vertex    vertex;
+    Halfedge  halfedge;
+    Face      face;
 
     if (!vdeleted_) vdeleted_ = vertex_property<bool>("v:deleted", false);
     if (!edeleted_) edeleted_ = edge_property<bool>("e:deleted", false);
@@ -1332,127 +1332,145 @@ garbage_collection()
 
 
     // setup handle mapping
-    Vertex_property<Vertex>      vmap = add_vertex_property<Vertex>("v:garbage-collection");
-    Halfedge_property<Halfedge>  hmap = add_halfedge_property<Halfedge>("h:garbage-collection");
-    Face_property<Face>          fmap = add_face_property<Face>("f:garbage-collection");
-    for (i=0; i<nV; ++i)
-        vmap[Vertex(i)] = Vertex(i);
-    for (i=0; i<nH; ++i)
-        hmap[Halfedge(i)] = Halfedge(i);
-    for (i=0; i<nF; ++i)
-        fmap[Face(i)] = Face(i);
+    Vertex_property<Vertex>      vertexMap = add_vertex_property<Vertex>("v:garbage-collection");
+    Halfedge_property<Halfedge>  halfedgeMap = add_halfedge_property<Halfedge>("h:garbage-collection");
+    Face_property<Face>          faceMap = add_face_property<Face>("f:garbage-collection");
 
-
+    for (i=0; i<numVertices; ++i)
+        vertexMap[Vertex(i)] = Vertex(i);
+    for (i=0; i<numHalfEdge; ++i)
+        halfedgeMap[Halfedge(i)] = Halfedge(i);
+    for (i=0; i<numFace; ++i)
+        faceMap[Face(i)] = Face(i);
 
     // remove deleted vertices
-    if (nV > 0)
+    // 将被删除的顶点挪到数组的最后边
+    if (numVertices > 0)
     {
-        i0=0;  i1=nV-1;
+        i0 = 0;
+        i1 = numVertices - 1;
 
-        while (1)
+        while (true)
         {
             // find first deleted and last un-deleted
-            while (!vdeleted_[Vertex(i0)] && i0 < i1)  ++i0;
-            while ( vdeleted_[Vertex(i1)] && i0 < i1)  --i1;
-            if (i0 >= i1) break;
+            while (!vdeleted_[Vertex(i0)] && i0 < i1)
+                ++i0;
+            while ( vdeleted_[Vertex(i1)] && i0 < i1)
+                --i1;
+            if (i0 >= i1)
+                break;
 
             // swap
             vprops_.swap(i0, i1);
         };
 
         // remember new size
-        nV = vdeleted_[Vertex(i0)] ? i0 : i0+1;
+        numVertices = vdeleted_[Vertex(i0)] ? i0 : i0+1;
     }
 
 
     // remove deleted edges
-    if (nE > 0)
+    if (numEdge > 0)
     {
-        i0=0;  i1=nE-1;
+        i0 = 0;
+        i1 = numEdge-1;
 
-        while (1)
+        while (true)
         {
             // find first deleted and last un-deleted
-            while (!edeleted_[Edge(i0)] && i0 < i1)  ++i0;
-            while ( edeleted_[Edge(i1)] && i0 < i1)  --i1;
-            if (i0 >= i1) break;
+            while (!edeleted_[Edge(i0)] && i0 < i1)
+                ++i0;
+            while ( edeleted_[Edge(i1)] && i0 < i1)
+                --i1;
+            if (i0 >= i1)
+                break;
 
             // swap
             eprops_.swap(i0, i1);
-            hprops_.swap(2*i0,   2*i1);
+            hprops_.swap(2*i0, 2*i1);
             hprops_.swap(2*i0+1, 2*i1+1);
         };
 
         // remember new size
-        nE = edeleted_[Edge(i0)] ? i0 : i0+1;
-        nH = 2*nE;
+        numEdge = edeleted_[Edge(i0)] ? i0 : i0+1;
+        numHalfEdge = 2*numEdge;
     }
 
 
     // remove deleted faces
-    if (nF > 0)
+    if (numFace > 0)
     {
-        i0=0;  i1=nF-1;
+        i0 = 0;
+        i1 = numFace-1;
 
         while (1)
         {
             // find 1st deleted and last un-deleted
-            while (!fdeleted_[Face(i0)] && i0 < i1)  ++i0;
-            while ( fdeleted_[Face(i1)] && i0 < i1)  --i1;
-            if (i0 >= i1) break;
+            while (!fdeleted_[Face(i0)] && i0 < i1)
+                ++i0;
+            while ( fdeleted_[Face(i1)] && i0 < i1)
+                --i1;
+            if (i0 >= i1)
+                break;
 
             // swap
             fprops_.swap(i0, i1);
         };
 
         // remember new size
-        nF = fdeleted_[Face(i0)] ? i0 : i0+1;
+        numFace = fdeleted_[Face(i0)] ? i0 : i0+1;
     }
 
 
     // update vertex connectivity
-    for (i=0; i<nV; ++i)
+    for (i=0; i< numVertices; ++i)
     {
-        v = Vertex(i);
-        if (!is_isolated(v))
-            set_halfedge(v, hmap[halfedge(v)]);
+        vertex = Vertex(i);
+        if (!is_isolated(vertex))
+            set_halfedge(vertex, halfedgeMap[this->halfedge(vertex)]);
     }
 
 
     // update halfedge connectivity
-    for (i=0; i<nH; ++i)
+    for (i=0; i<numHalfEdge; ++i)
     {
-        h = Halfedge(i);
-        set_vertex(h, vmap[to_vertex(h)]);
-        set_next_halfedge(h, hmap[next_halfedge(h)]);
-        if (!is_boundary(h))
-            set_face(h, fmap[face(h)]);
+        halfedge = Halfedge(i);
+        set_vertex(halfedge, vertexMap[to_vertex(halfedge)]);
+        set_next_halfedge(halfedge, halfedgeMap[next_halfedge(halfedge)]);
+        if (!is_boundary(halfedge))
+            set_face(halfedge, faceMap[this->face(halfedge)]);
     }
 
 
     // update handles of faces
-    for (i=0; i<nF; ++i)
+    for (i=0; i<numFace; ++i)
     {
-        f = Face(i);
-        set_halfedge(f, hmap[halfedge(f)]);
+        face = Face(i);
+        set_halfedge(face, halfedgeMap[this->halfedge(face)]);
     }
 
 
     // remove handle maps
-    remove_vertex_property(vmap);
-    remove_halfedge_property(hmap);
-    remove_face_property(fmap);
+    remove_vertex_property(vertexMap);
+    remove_halfedge_property(halfedgeMap);
+    remove_face_property(faceMap);
 
 
     // finally resize arrays
-    vprops_.resize(nV); vprops_.free_memory();
-    hprops_.resize(nH); hprops_.free_memory();
-    eprops_.resize(nE); eprops_.free_memory();
-    fprops_.resize(nF); fprops_.free_memory();
+    vprops_.resize(numVertices);
+    vprops_.free_memory();
+
+    hprops_.resize(numHalfEdge);
+    hprops_.free_memory();
+
+    eprops_.resize(numEdge);
+    eprops_.free_memory();
+
+    fprops_.resize(numFace);
+    fprops_.free_memory();
 
     deleted_vertices_ = deleted_edges_ = deleted_faces_ = 0;
     garbage_ = false;
 }
-
 
 //=============================================================================

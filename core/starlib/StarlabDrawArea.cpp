@@ -107,6 +107,10 @@ DrawArea::DrawArea(MainWindow* parent)
     /// Saves a static instance
     Q_ASSERT(DrawArea::_staticInstance==NULL);
     DrawArea::_staticInstance = this;
+
+    this->setAxisIsDrawn(true);
+    this->setGridIsDrawn(true);
+    this->setFPSIsDisplayed(true);
 }
 
 DrawArea::~DrawArea(){
@@ -219,6 +223,9 @@ void DrawArea::init(){
     this->isBackgroundEffects = settings()->getBool(backEffects);
 
     resetViewport();
+
+    qDebug("OpenGL Version: %s", glGetString(GL_VERSION));
+
 }
 
 /**
