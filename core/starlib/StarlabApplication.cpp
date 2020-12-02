@@ -224,7 +224,7 @@ bool Application::loadModelUsingPlugin(QString path, InputOutputPlugin *plugin)
 
     Model* newModel = plugin->open(path);
     if(newModel==nullptr) {
-        throw StarlabException("Attempted to create a nullptr model");
+        return false;
     }
     /// Update the bounding box (for rendering reasons)
     newModel->updateBoundingBox();
@@ -233,5 +233,7 @@ bool Application::loadModelUsingPlugin(QString path, InputOutputPlugin *plugin)
     // 选择新载入的模型，并渲染
     document()->setSelectedModel( newModel );
     document()->emit_resetViewport();
+
+    return true;
 }
 
