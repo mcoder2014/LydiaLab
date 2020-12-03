@@ -30,6 +30,24 @@ Model::Model(QString path, QString name){
     scale = Vector3d::Ones();
 }
 
+/**
+ * @brief Model::assign
+ * Model 部分的拷贝
+ * @param model
+ */
+void Model::assign(const Model &model)
+{
+    this->path = model.path;
+    this->name = model.name;
+    this->color = model.color;
+    this->isVisible = model.isVisible;
+    this->isModified = model.isModified;
+    this->_renderer = model._renderer;
+    this->position = model.position;
+    this->rotation = model.rotation;
+    this->scale = model.scale;
+}
+
 Model::~Model(){
     if(_renderer) 
         delete _renderer;
@@ -81,11 +99,15 @@ bool Model::hasDecoratePlugin(DecoratePlugin *plugin){
 Eigen::Matrix4d Model::getTransformationMatrix()
 {
     Eigen::Projective3d T = Eigen::Isometry3d::Identity();
-    T.translate(position - bbox().center());
+
+    T.scale(scale);
+
     T.rotate(Eigen::AngleAxisd(rotation.x(), Vector3d(1, 0, 0)));
     T.rotate(Eigen::AngleAxisd(rotation.y(), Vector3d(0, 1, 0)));
     T.rotate(Eigen::AngleAxisd(rotation.z(), Vector3d(0, 0, 1)));
-    T.scale(scale);
+
+    T.translate(position);
+
     return T.matrix();
 }
 

@@ -18,8 +18,14 @@ namespace Starlab{
 #define GL_MULTISAMPLE  0x809D
 #endif
 
-/// @ingroup starcore
-/// @brief The QGLViewer based visualization window
+/**
+ * @brief The DrawArea class
+ * The QGLViewer based visualization window
+ * 基于 QGLViewer 的会话窗口
+ *
+ * - 调用 OpenGL 刷新一帧，使用 updateGL();
+ * - 更新模型的 renderer，修改模型的顶点等行为，使用 update();
+ */
 class STARLIB_EXPORT DrawArea : public QGLViewer{
     Q_OBJECT
     

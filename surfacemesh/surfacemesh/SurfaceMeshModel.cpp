@@ -23,6 +23,22 @@ SurfaceMeshModel::SurfaceMeshModel(QString path, QString name) : Model(path, nam
     this->color = Qt::darkGray;
 }
 
+SurfaceMeshModel::SurfaceMeshModel(const SurfaceMeshModel &model):Surface_mesh(model)
+{
+    Model::assign(model);
+}
+
+/**
+ * @brief SurfaceMeshModel::operator =
+ * @param model
+ * @return
+ */
+SurfaceMeshModel SurfaceMeshModel::operator=(const SurfaceMeshModel &model)
+{
+    Surface_mesh::operator=(model);
+    Model::assign(model);
+}
+
 /**
  * @brief SurfaceMeshModel::decorateLayersWidgedItem
  * 装饰 Layer 窗口
@@ -139,7 +155,18 @@ SurfaceMeshModel *SurfaceMeshModel::clone(std::vector<Surface_mesh::Face> faceSe
     destModel->update_vertex_normals();
     destModel->updateBoundingBox();
 
+    // 拷贝 transform 数据
+    destModel->position = this->position;
+    destModel->rotation = this->rotation;
+    destModel->scale = this->scale;
+
     return destModel;
+}
+
+void SurfaceMeshModel::assign(const SurfaceMeshModel &model)
+{
+    Surface_mesh::assign(model);
+    Model::assign(model);
 }
 
 void SurfaceMeshModel::updateBoundingBox(){
@@ -148,7 +175,6 @@ void SurfaceMeshModel::updateBoundingBox(){
     for(Vertex vit : this->vertices()) {
         _bbox.extend( points[vit] );
     }
-    this->position = _bbox.center();
 }
 
 void SurfaceMeshModel::remove_vertex(Vertex v){

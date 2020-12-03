@@ -103,6 +103,9 @@ class DYNAMIC_SURFACEMESH_EXPORT SurfaceMeshModel : public StarlabModel, public 
 /// @{ Basic Model Implementation
 public:
     SurfaceMeshModel(QString path=QString(), QString name=QString());
+    SurfaceMeshModel(const SurfaceMeshModel& model);
+    SurfaceMeshModel operator=(const SurfaceMeshModel& model);
+
     void updateBoundingBox();
     void decorateLayersWidgedItem(QTreeWidgetItem* parent);
 /// @}
@@ -113,6 +116,8 @@ public:
     SurfaceMeshModel * clone();
     SurfaceMeshModel * clone(std::vector<Surface_mesh::Vertex> subset);
     SurfaceMeshModel * clone(std::vector<Surface_mesh::Face> subset);
+
+    void assign(const SurfaceMeshModel& model);
 /// @}
 
 /// @{ Qt foreach helpers

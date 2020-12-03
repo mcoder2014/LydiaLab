@@ -28,7 +28,10 @@ class STARLIB_EXPORT Model : public QObject{
     
 /// @{ Constructors
 public:
+    Model():Model(""){}
     Model(QString path, QString name=QString());
+    void assign(const Model& model);
+
 protected:
     /// @note you should never delete a model explicitly, use document()->deleteModel(..)
     virtual ~Model();
@@ -100,6 +103,9 @@ protected:
 
 /// @{ Transformation
 protected:
+
+    // 局部坐标和世界坐标的转换矩阵
+    // Matrix4d transformationMatrix;
 
     // 模型 bbox center 的位置
     Vector3d position;

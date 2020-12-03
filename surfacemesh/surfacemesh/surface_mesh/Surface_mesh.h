@@ -29,7 +29,11 @@
 /// \addtogroup surface_mesh surface_mesh
 /// @{
 
-/// A halfedge data structure for polygonal meshes.
+/**
+ * @brief The Surface_mesh class
+ * A halfedge data structure for polygonal meshes.
+ * 本结构中的坐标皆是基于局部坐标，即模型内部的坐标
+ */
 class DYNAMIC_SURFACEMESH_EXPORT Surface_mesh {
 
 /// Bandaid on types
