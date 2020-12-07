@@ -94,21 +94,63 @@ bool Model::hasDecoratePlugin(DecoratePlugin *plugin){
 /**
  * @brief Model::getTransformationMatrix
  * 快速获得转移矩阵
+ * the translation is backward ordered
  * @return
  */
 Eigen::Matrix4d Model::getTransformationMatrix()
 {
     Eigen::Projective3d T = Eigen::Isometry3d::Identity();
 
-    T.scale(scale);
+    // 3. translate
+    T.translate(position);
 
+    // 2. rotate
     T.rotate(Eigen::AngleAxisd(rotation.x(), Vector3d(1, 0, 0)));
     T.rotate(Eigen::AngleAxisd(rotation.y(), Vector3d(0, 1, 0)));
     T.rotate(Eigen::AngleAxisd(rotation.z(), Vector3d(0, 0, 1)));
 
-    T.translate(position);
+    // 1. scale
+    T.scale(scale);
 
     return T.matrix();
+}
+
+/**
+ * @brief Model::toWorldCoordinate
+ * give a local coordinate point, turn it to world coordinate
+ * @param point
+ * @return
+ */
+Eigen::Vector3d Model::toWorldCoordinate(const Eigen::Vector3d &point)
+{
+    Eigen::Matrix4d transMat = getTransformationMatrix();
+    return coordinateTrans(point, transMat);
+}
+
+/**
+ * @brief Model::toLocalCoordinate
+ * @param point
+ * @return 
+ */
+Eigen::Vector3d Model::toLocalCoordinate(const Eigen::Vector3d &point)
+{
+    Eigen::Matrix4d transMat = getTransformationMatrix().inverse();
+    return coordinateTrans(point, transMat);
+}
+
+/**
+ * @brief Model::coordinateTrans
+ * give a point and a transmat, do coordinate translation
+ * @param point
+ * @param transMat
+ * @return
+ */\
+Eigen::Vector3d Model::coordinateTrans(const Eigen::Vector3d &point, const Eigen::Matrix4d &transMat)
+{
+    Eigen::Vector4d target;
+    target << point, 1;
+    target = transMat * target;
+    return target.segment(0, 3);
 }
 
 

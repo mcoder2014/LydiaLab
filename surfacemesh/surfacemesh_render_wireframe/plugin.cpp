@@ -38,6 +38,10 @@ class WireframeRenderer : public SurfaceMeshRenderer{
         glColor3f(0.0, 0.0, 0.0);
         glDepthRange(0.0, 1.0);
         glDepthFunc(GL_LEQUAL);
+        glPushMatrix();
+        Matrix4d transformMatrix = mesh()->getTransformationMatrix();
+        glMultMatrixd(transformMatrix.data());
+
         if(!edges.empty())
             glDrawElements(GL_LINES, static_cast<GLsizei>(edges.size()), GL_UNSIGNED_INT, &edges[0]);
         glDepthFunc(GL_LESS);
@@ -63,7 +67,7 @@ class WireframeRenderer : public SurfaceMeshRenderer{
         }
         glEnd();
     #endif
-    
+        glPopMatrix();
         glEnable(GL_LIGHTING);
     }
     

@@ -99,6 +99,10 @@ public:
             // 临时关闭深度测试写入功能
             glDepthMask(false);
 
+            glPushMatrix();
+            Matrix4d transformMatrix = mesh()->getTransformationMatrix();
+            glMultMatrixd(transformMatrix.data());
+
             {
                 if(!has_vertex_color){
                     QColor& c = mesh()->color;
@@ -122,6 +126,8 @@ public:
                 glDisableClientState(GL_NORMAL_ARRAY);
 
             }
+
+            glPopMatrix();
             // 恢复深度写入功能
             glDepthMask(true);
 

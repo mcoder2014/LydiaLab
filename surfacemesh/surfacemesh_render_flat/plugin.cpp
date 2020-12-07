@@ -123,8 +123,18 @@ class FlatRenderer : public SurfaceMeshRenderer{
         glShadeModel(GL_FLAT);
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
-        if(has_face_color) glEnableClientState(GL_COLOR_ARRAY);
-        if(triangles.size()) glDrawElements(GL_TRIANGLES, (GLsizei)triangles.size(), GL_UNSIGNED_INT, &triangles[0]);
+        glPushMatrix();
+
+        // 加入一层坐标转换
+        Matrix4d transformMatrix = mesh()->getTransformationMatrix();
+        glMultMatrixd(transformMatrix.data());
+
+        if(has_face_color)
+            glEnableClientState(GL_COLOR_ARRAY);
+        if(triangles.size())
+            glDrawElements(GL_TRIANGLES, (GLsizei)triangles.size(), GL_UNSIGNED_INT, &triangles[0]);
+
+        glPopMatrix();
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisable(GL_LIGHTING);

@@ -50,6 +50,12 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
 
         glEnable(GL_POLYGON_OFFSET_FILL);
         glPolygonOffset(1.0, 1);
+
+        // world translation
+        glPushMatrix();
+        Matrix4d transformMatrix = mesh()->getTransformationMatrix();
+        glMultMatrixd(transformMatrix.data());
+
         render_flat(); /// DrawFill<nm,cm,tm>(); /// < in meshlab
         glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -58,6 +64,7 @@ class FlatwireRenderer : public SurfaceMeshRenderer{
 
         render_wire(); /// DrawWire<nm,CMNone>(); /// < in meshlab
 
+        glPopMatrix();
         glDisable(GL_COLOR_MATERIAL);
 
         glPopAttrib();

@@ -104,9 +104,6 @@ protected:
 /// @{ Transformation
 protected:
 
-    // 局部坐标和世界坐标的转换矩阵
-    // Matrix4d transformationMatrix;
-
     // 模型 bbox center 的位置
     Vector3d position;
 
@@ -125,6 +122,12 @@ public:
     inline void setPosition(const Vector3d& position){this->position = position;}
     inline void setRotation(const Vector3d& rotation){this->rotation = rotation;}
     inline void setScale(const Vector3d& scale){this->scale = scale;}
+
+    Vector3d toWorldCoordinate(const Vector3d& point);
+    Vector3d toLocalCoordinate(const Vector3d& point);
+
+private:
+    Vector3d coordinateTrans(const Vector3d& point, const Matrix4d& transMat);
 
 /// @}
 };

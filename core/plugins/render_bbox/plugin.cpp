@@ -27,6 +27,10 @@ public:
         /// --- Inherited from VCG ---
         glPushAttrib(GL_ENABLE_BIT);
         glDisable(GL_LIGHTING);
+        glPushMatrix();
+        Matrix4d transformMatrix = model()->getTransformationMatrix();
+        glMultMatrixd(transformMatrix.data());
+
         glBegin(GL_LINE_STRIP);
         glVertex3f((float)min[0],(float)min[1],(float)min[2]);
         glVertex3f((float)max[0],(float)min[1],(float)min[2]);
@@ -51,6 +55,7 @@ public:
         glVertex3f((float)min[0],(float)max[1],(float)min[2]);
         glVertex3f((float)min[0],(float)max[1],(float)max[2]);
         glEnd();
+        glPopMatrix();
         glPopAttrib();    
     }
 };
