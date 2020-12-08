@@ -33,6 +33,7 @@ Model::Model(QString path, QString name){
 /**
  * @brief Model::assign
  * Model 部分的拷贝
+ * not copy renderer, cause render is default shadow copy
  * @param model
  */
 void Model::assign(const Model &model)
@@ -42,7 +43,7 @@ void Model::assign(const Model &model)
     this->color = model.color;
     this->isVisible = model.isVisible;
     this->isModified = model.isModified;
-    this->_renderer = model._renderer;
+    this->_renderer = nullptr;
     this->position = model.position;
     this->rotation = model.rotation;
     this->scale = model.scale;
@@ -67,6 +68,11 @@ void Model::decorateLayersWidgedItem(QTreeWidgetItem* parent){
  * @param plugin
  */
 void Model::setRenderer(RenderPlugin* plugin){
+    if( nullptr == plugin) {
+        // 用来清空render
+        _renderer = nullptr;
+        return;
+    }
     Q_ASSERT(plugin->isApplicable(this));
     if(_renderer != nullptr){
         // 如果有旧的渲染器，先停止并释放旧的渲染器
