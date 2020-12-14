@@ -58,7 +58,7 @@ isEmpty(STARLABPREFIX){
 #
 # Where do I go and look for libraries? This is highly platform dependant
 #-------------------------------------------------------------------------------
-win32:CONFIG(debu, debug|release) {
+win32:CONFIG(debug, debug|release) {
     LIBRARIESPATH  = $$STARLABPREFIX/LydiaLabD
     EXECUTABLEPATH = $$STARLABPREFIX/LydiaLabD
     PLUGINSPATH    = $$STARLABPREFIX/LydiaLabD/plugins
