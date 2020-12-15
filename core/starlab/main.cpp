@@ -8,10 +8,21 @@
 #include "StarlabSettings.h"
 #include "FileOpenEater.h"
 #include "interfaces/FilterPlugin.h"
+#include <stdio.h>
+
+extern char **environ;
 
 using namespace Starlab;
 
+void envirment()
+{
+    for (char **env = environ; *env; ++env)
+        qDebug("%s\n", *env);
+}
+
 int main(int argc, char *argv[]) { 
+    envirment();
+
     /// Create QT GUI app
     StarlabApplicationGUI app(argc,argv);
 
