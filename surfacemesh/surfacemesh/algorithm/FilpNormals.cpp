@@ -1,5 +1,7 @@
 #include "FilpNormals.h"
 
+using SurfaceMesh::Vertex;
+
 /**
  * @brief filpNormals
  * 翻转面片
@@ -36,4 +38,22 @@ void filpNormals(SurfaceMesh::SurfaceMeshModel *model)
     model->updateBoundingBox();
     model->update_vertex_normals();
     model->update_face_normals();
+}
+
+/**
+ * @brief offsetAlongVNormals
+ * 沿着点法线移动距离，需要已经有法线数据
+ * @param model
+ * @param distance
+ */
+void offsetAlongVNormals(SurfaceMesh::SurfaceMeshModel *model, double distance)
+{
+    Surface_mesh::Vertex_property<Vector3d> vnormals
+            = model->get_vertex_property<Vector3d>(SurfaceMesh::VNORMAL);
+    Surface_mesh::Vertex_property<Vector3d> vpoints
+            = model->get_vertex_property<Vector3d>(SurfaceMesh::VPOINT);
+
+    for(Vertex vertex : model->vertices()) {
+        vpoints[vertex] += vnormals[vertex].normalized() * distance;
+    }
 }

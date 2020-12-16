@@ -43,7 +43,6 @@ void Model::assign(const Model &model)
     this->color = model.color;
     this->isVisible = model.isVisible;
     this->isModified = model.isModified;
-    this->_renderer = nullptr;
     this->position = model.position;
     this->rotation = model.rotation;
     this->scale = model.scale;
