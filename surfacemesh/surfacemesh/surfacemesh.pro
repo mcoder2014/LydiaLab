@@ -10,6 +10,10 @@ OTHER_FILES = surfacemesh.prf
 
 # THIS IS FOR OUR MODEL WRAPPER
 HEADERS += SurfaceMeshModel.h \
+    algorithm/CoordinateTool.h \
+    algorithm/FilpNormals.h \
+    algorithm/Mirror.h \
+    algorithm/RemoveUnconnectedVertex.h \
     dynamic_surfacemesh_global.h \
     SurfaceMeshHelper.h \
     SurfaceMeshPlugins.h \
@@ -27,7 +31,11 @@ HEADERS += SurfaceMeshModel.h \
     SurfaceMesh/NoiseGenerator.h \    
     helpers/FaceBarycenterHelper.h
  
-SOURCES += SurfaceMeshModel.cpp
+SOURCES += SurfaceMeshModel.cpp \
+    algorithm/CoordinateTool.cpp \
+    algorithm/FilpNormals.cpp \
+    algorithm/Mirror.cpp \
+    algorithm/RemoveUnconnectedVertex.cpp
 
 # THESE ARE THE ONES OF THE REAL LIBRARY
 HEADERS +=
