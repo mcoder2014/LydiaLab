@@ -35,11 +35,13 @@ bool Application::saveModel(Model* model, QString path){
     /// Extract or set default extension
     QString extension = fileInfo.suffix().toLower();
     // qDebug() << "requested extension: " << extension;
-    if( extension.isEmpty() ) extension = "off";
+    if( extension.isEmpty() )
+        extension = "ply";
     
     /// Checks a suitable plugin exists
     InputOutputPlugin* iIO = pluginManager()->modelExtensionToPlugin[extension];
-    if( !iIO ) throw StarlabException("Cannot find plugin suitable for the provided extension %s", qPrintable(extension));
+    if( !iIO )
+        throw StarlabException("Cannot find plugin suitable for the provided extension %s", qPrintable(extension));
     iIO->save(model,path);
     
     return true;

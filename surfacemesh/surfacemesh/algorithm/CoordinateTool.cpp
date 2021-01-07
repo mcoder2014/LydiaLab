@@ -34,3 +34,30 @@ void transformation(Surface_mesh *mesh, Eigen::Matrix4d transformMatrix)
     }
 
 }
+
+/**
+ * @brief getTransformMatrix
+ * 通过三个新坐标基向量在旧坐标系中的向量，构建转换矩阵
+ * 返回的矩阵： 旧坐标系转换成新坐标系的转换矩阵
+ *  newPos = transMat * oldPos
+ * @param ox
+ * @param oy
+ * @param oz
+ * @param origin
+ * @return
+ */
+Eigen::Matrix4d getTransformMatrix(Eigen::Vector3d ox, Eigen::Vector3d oy, Eigen::Vector3d oz, Vector3d origin)
+{
+    // 先将坐标系平移到原点
+    Matrix4d transMatrix = Matrix4d::Identity();
+    transMatrix(0, 3) = -origin.x();
+    transMatrix(1, 3) = -origin.y();
+    transMatrix(2, 3) = -origin.z();
+
+    // 构造旋转矩阵
+    Matrix4d rotationMatrix = Matrix4d::Identity();
+    rotationMatrix.topLeftCorner(3,3) << ox, oy, oz;
+    rotationMatrix.transpose();
+
+    return rotationMatrix * transMatrix;
+}

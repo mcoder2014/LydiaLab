@@ -120,7 +120,7 @@ void LayerDialog::updateDialog(){
     for(Model* model : document->models()){
         // Ask model to generate an item
         QTreeWidgetItem* item = model->getLayersWidgetItem();
-        if(item==nullptr) {
+        if(item == nullptr) {
             item = new LayersWidgetModelItem(model);
         }
         model->decorateLayersWidgedItem(item);
